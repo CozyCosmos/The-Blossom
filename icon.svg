@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="112" fill="#0E1A13"/>
+  <rect width="512" height="512" rx="112" fill="url(#g)" opacity="0.5"/>
+  <defs>
+    <radialGradient id="g" cx="50%" cy="38%" r="70%">
+      <stop offset="0%" stop-color="#1f3d29"/><stop offset="100%" stop-color="#0E1A13"/>
+    </radialGradient>
+  </defs>
+  <g transform="translate(256,256)">
+    <g id="petals">
+      <!-- 5 petals around center -->
+      <g transform="rotate(-90)"><path d="M0,0 C -78,-46 -86,-156 0,-206 C 86,-156 78,-46 0,0 Z" fill="#52B788" opacity="0.9"/></g>
+      <g transform="rotate(-18)"><path d="M0,0 C -78,-46 -86,-156 0,-206 C 86,-156 78,-46 0,0 Z" fill="#5B8DEF" opacity="0.9"/></g>
+      <g transform="rotate(54)"><path d="M0,0 C -78,-46 -86,-156 0,-206 C 86,-156 78,-46 0,0 Z" fill="#B07CE8" opacity="0.9"/></g>
+      <g transform="rotate(126)"><path d="M0,0 C -78,-46 -86,-156 0,-206 C 86,-156 78,-46 0,0 Z" fill="#E8B04B" opacity="0.9"/></g>
+      <g transform="rotate(198)"><path d="M0,0 C -78,-46 -86,-156 0,-206 C 86,-156 78,-46 0,0 Z" fill="#F4A4B0" opacity="0.9"/></g>
+    </g>
+    <circle r="46" fill="#D4AC60"/>
+    <circle r="46" fill="none" stroke="#fff" stroke-opacity="0.4" stroke-width="3"/>
+  </g>
+</svg>
