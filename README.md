@@ -64,16 +64,25 @@ in **Edge/Chrome → ⋮ → Apps → Install**.
 
 ---
 
-## 🔄 Syncing between Windows & Android
+## 🔄 Backup, sync & moving between versions
 
-Everything is stored locally per-device. To move data across:
+Everything is stored locally per-device. Two ways to move data:
 
-1. On the device with the latest data: **⚙️ Settings → ⬇ Export save**. This downloads a
-   `blossom-save-YYYY-MM-DD.json` file.
-2. Transfer that file to the other device (Drive / cable / email).
-3. On the other device: **⚙️ Settings → ⬆ Import save** and pick the file. Confirm to replace.
+- **Blossom code (easiest):** **⚙️ Settings → 📋 Copy my code** puts a compact text code on your
+  clipboard. On the other device, **📥 Paste a code** → paste → Import. The code is compressed
+  (~1–3 KB for a fresh profile) and **version-proof** — it's run through the app's upgrade routine on
+  import, so a code made today still imports into a future version with all your habits/settings intact.
+- **Save file:** **⬇ Save file** downloads a `.json`; **⬆ Load file** reads it back. **📊 CSV** exports
+  a spreadsheet for a coach/journal.
 
-You can also **Export data as CSV** for a coach, journal, or spreadsheet.
+**Will my data survive updates?** Yes. When you load a newer `index.html`, your saved data (in the
+browser, keyed by the site/origin) is read and auto-migrated. If you ever switch hosting URL or device,
+use a **code** or **save file** to carry everything over.
+
+## 🛠 Make Home yours
+
+Tap **⚙ Customize layout** on Home to **reorder** sections (↑ ↓), **hide/show** them (👁), and **＋ Section**
+to add your own custom sections (each becomes a page you can write in). Tap **✓ Done** when finished.
 
 *(Phase 4 will add optional automatic cloud sync — see Roadmap.)*
 
