@@ -42,6 +42,7 @@ h1,h2,h3{margin:0;font-weight:700;letter-spacing:-.02em;}
 .serif{font-family:'Georgia','Times New Roman',serif;}
 
 #sky{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+#skyTintTop{position:fixed;inset:0;z-index:60;pointer-events:none;mix-blend-mode:soft-light;transition:background 1.5s;display:none;}
 #app{position:relative;z-index:1;}
 .sky-tint{position:absolute;inset:0;transition:background 1.5s;}
 .sky-stars{position:absolute;inset:0;animation:skypan 200s linear infinite;}
@@ -77,7 +78,7 @@ h1,h2,h3{margin:0;font-weight:700;letter-spacing:-.02em;}
 .backbtn{font-size:15px;color:var(--pink);font-weight:600;display:flex;align-items:center;gap:4px;flex:none;}
 
 .content{padding:16px 16px 30px;display:flex;flex-direction:column;gap:14px;}
-.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);}
+.card{background:color-mix(in srgb,var(--card) 88%,transparent);border:1px solid var(--line);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);backdrop-filter:blur(2px);}
 .card.tight{padding:12px 14px;}
 .card h3{font-size:15px;margin-bottom:10px;display:flex;align-items:center;gap:8px;}
 .section-h{display:flex;align-items:center;justify-content:space-between;margin:2px 2px 0;}
@@ -208,6 +209,11 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
 .cat-check{width:20px;flex:none;color:var(--gold);font-weight:800;text-align:center;}
 .set-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:5px 0;}
 .set-row span{font-size:13.5px;}
+.set-sec{font-size:15px;color:var(--gold);margin:0 0 8px;}
+.dbg-row{display:flex;align-items:center;gap:10px;padding:4px 0;}
+.dbg-row .dl{flex:1;min-width:0;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.dbg-row input[type=range]{flex:1;}
+.dbg-row .lv{width:30px;text-align:right;font-weight:700;color:var(--gold);font-size:12px;}
 .input.mini{width:78px;flex:none;padding:6px 8px;text-align:center;}
 .cat-em{font-size:26px;flex:none;}
 body.noemoji .cat-em{display:none;}
@@ -361,6 +367,7 @@ body.noemoji .skill-ic,body.noemoji .nt-ic,body.noemoji .mt-ic,body.noemoji .lvl
 </head>
 <body>
 <div id="sky" style="display:none"></div>
+<div id="skyTintTop"></div>
 <canvas id="particles"></canvas>
 <canvas id="fxcanvas"></canvas>
 <div id="app"><div id="appbar"></div><div id="screen" class="screen"></div></div>
@@ -404,7 +411,7 @@ const KEY='blossom_data_v1';
 const DEFAULT=()=>({
   meta:{version:3,created:todayStr()},
   profile:{name:'',purpose:'',values:[],quote:'Help your future blossom like this cosmos.'},
-  settings:{theme:'dark',weeklyReviewDay:0,particles:['flowers'],dayStart:0,dayEnd:24,colors:{},gradient:'',preset:'dark',customParticles:[],customThemes:[],editLabels:false,appName:'The Blossom',showEmojis:false,chime:false,haptics:true,ambience:'',ambienceVol:0.4,onboarded:false,focusId:'',focusDate:'',graceDays:1,tracks:[],alarmTrack:'',blossomView:'top',blossomDisplay:'flower',clickSparkle:true,clickEmoji:'',clickCount:10,clickSpeed:1,xpScale:6,xpCurve:50,health:{habits:true,goals:true,trackers:true},healthWindow:14,sky:{on:false,auto:true,hour:14,speed:1,radius:38,centerY:64}},
+  settings:{theme:'dark',weeklyReviewDay:0,particles:['flowers'],dayStart:0,dayEnd:24,colors:{},gradient:'',preset:'dark',customParticles:[],customThemes:[],presetOverrides:{},editLabels:false,appName:'The Blossom',showEmojis:false,chime:false,haptics:true,ambience:'',ambienceVol:0.4,onboarded:false,focusId:'',focusDate:'',graceDays:1,tracks:[],alarmTrack:'',blossomView:'top',blossomDisplay:'flower',clickSparkle:true,clickEmoji:'',clickCount:10,clickSpeed:1,xpScale:6,xpCurve:50,health:{habits:true,goals:true,trackers:true},healthWindow:14,sky:{on:false,auto:true,hour:14,speed:1,radius:38,centerY:64}},
   aspects:{},
   aspectOrder:[],
   notes:[], todos:[], habits:[], goals:[], alarms:[], timers:[], events:[], routines:[],
@@ -471,6 +478,7 @@ function migrate(d){
   if(d.settings.xpCurve==null)d.settings.xpCurve=50;
   if(d.settings.healthWindow==null)d.settings.healthWindow=14;
   if(!d.settings.health)d.settings.health={habits:true,goals:true,trackers:true};
+  if(!d.settings.presetOverrides)d.settings.presetOverrides={};
   if(!d.settings.sky)d.settings.sky={on:false,auto:true,hour:14,weather:'auto'};
   if(d.settings.sky.speed==null)d.settings.sky.speed=1;
   if(d.settings.sky.radius==null)d.settings.sky.radius=38;
@@ -543,6 +551,12 @@ const habitDone=(h,d)=>(h.logs[d]||0)>=habitRepeat(h);
 const totalXpForLevel=L=>((S.settings&&S.settings.xpCurve)||50)*L*(L-1);
 function levelFromXp(xp){let L=1;while(totalXpForLevel(L+1)<=xp)L++;return L;}
 function levelInfo(xp){const L=levelFromXp(xp),a=totalXpForLevel(L),b=totalXpForLevel(L+1);return{level:L,pct:Math.round((xp-a)/(b-a)*100),cur:xp-a,need:b-a};}
+// debug: force a blossom/petal/skill to an exact level by setting its XP bucket (rollups accounted for)
+function setNodeLevel(kind,id,L){const target=totalXpForLevel(Math.max(0,L));
+  if(kind==='skill'){S.xp['s:'+id]=target;}
+  else if(kind==='petal'){const fp=findPetal(id);if(!fp)return;const sum=(fp.petal.skills||[]).reduce((a,s)=>a+skillXP(s.id),0);S.xp['p:'+id]=Math.max(0,target-sum);}
+  else if(kind==='blossom'){const b=S.aspects[id];if(!b)return;let sum=0;blossomPetals(b).forEach(p=>sum+=petalXP(p));S.xp['b:'+id]=Math.max(0,target-sum);}
+  save();}
 function flyXP(amt){const e=document.createElement('div');e.className='xpfly';e.textContent='+'+amt+' XP';e.style.left=(innerWidth/2-20)+'px';e.style.top=(innerHeight-160)+'px';document.body.appendChild(e);setTimeout(()=>e.remove(),1000);}
 
 function aspectScore(key){const H=(S.settings&&S.settings.health)||{habits:true,goals:true,trackers:true};const win=(S.settings&&S.settings.healthWindow)||14;
@@ -620,9 +634,11 @@ const THEME_PRESETS={
 };
 function applyPresetClick(cl){if(!cl)return;S.settings.clickSparkle=cl.on!==false;S.settings.clickEmoji=cl.emoji||'';S.settings.clickColor=cl.color||'';S.settings.clickCount=cl.count!=null?cl.count:10;S.settings.clickSpeed=cl.speed!=null?cl.speed:1;}
 function applyBundle(b){S.settings.theme=b.theme||'dark';S.settings.colors=Object.assign({},b.colors||{});S.settings.gradient=b.gradient||'';S.settings.blossomDisplay=b.display||'flower';S.settings.particles=(b.particles||[]).slice();S.settings.customParticles=(b.customParticles||[]).map(c=>({...c}));applyPresetClick(b.click);applyTheme();applySky();startParticles();}
-function applyPreset(name){const p=THEME_PRESETS[name];if(!p)return;S.settings.preset=name;applyBundle(p);save();}
+function applyPreset(name){const p=THEME_PRESETS[name];if(!p)return;S.settings.preset=name;const ov=(S.settings.presetOverrides||{})[name];applyBundle(ov?Object.assign({},p,ov):p);save();}
 function activeCustomTheme(){const p=S.settings.preset||'';if(p.indexOf('ct:')!==0)return null;return (S.settings.customThemes||[]).find(t=>t.id===p.slice(3));}
 function applyCustomTheme(id){const ct=(S.settings.customThemes||[]).find(t=>t.id===id);if(!ct)return;S.settings.preset='ct:'+id;applyBundle(ct);save();}
+// the editable object behind the active preset — a custom theme OR a builtin's override
+function activeTarget(){const p=S.settings.preset;if(p&&p.indexOf('ct:')===0)return (S.settings.customThemes||[]).find(t=>t.id===p.slice(3));if(THEME_PRESETS[p]){S.settings.presetOverrides=S.settings.presetOverrides||{};return (S.settings.presetOverrides[p]=S.settings.presetOverrides[p]||{});}return null;}
 /* gradient builders for custom presets */
 function buildGradient(type,c){c=c||{};const a1=c['green-soft']||'#52B788',a2=c.pink||'#F4A4B0',a3=c.gold||'#D4AC60',bg=c.bg||(S.settings.theme==='light'?'#fbf7ef':'#0e1a13');
   if(type==='none'||!type)return '';
@@ -642,7 +658,7 @@ function applyTheme(){const root=document.documentElement;root.setAttribute('dat
 let _skyAngle=null,_skyCustom=false;// MONOTONIC degrees — never wraps, so rotation never reverses
 function skyAngleNow(){const s=S.settings.sky||{};if(s.auto===false)return (((s.hour!=null?s.hour:14)-12)/24)*360;if(_skyAngle==null)_skyAngle=((new Date().getHours()+new Date().getMinutes()/60-12)/24)*360;return _skyAngle;}
 // sun & moon ride one wheel that pivots around a single point — endlessly, one direction, no reverse/pause
-function applySky(){const sky=document.getElementById('sky');if(!sky)return;const s=S.settings.sky||{};if(!s.on){sky.style.display='none';sky.innerHTML='';return;}sky.style.display='';
+function applySky(){const sky=document.getElementById('sky');if(!sky)return;const s=S.settings.sky||{};const top=document.getElementById('skyTintTop');if(!s.on){sky.style.display='none';sky.innerHTML='';if(top)top.style.display='none';return;}sky.style.display='';if(top)top.style.display='';
   const stars=Array.from({length:64},(_,i)=>`<i class="sky-star" style="left:${(i*53)%100}%;top:${(i*37)%64}%;animation-delay:${(i%11)/3}s"></i>`).join('');
   sky.innerHTML=`<div class="sky-tint" id="skyTint"></div><div class="sky-stars" id="skyStars">${stars}</div>
     <div class="sky-orbit" id="skyOrbit"><div class="sky-orb sun" id="skySun"><div class="sky-halo"></div><div class="sky-disc"></div></div><div class="sky-orb moon" id="skyMoon"><div class="sky-halo"></div><div class="sky-disc"></div></div></div>`;
@@ -655,8 +671,9 @@ function moveSky(){const orbit=document.getElementById('skyOrbit');if(!orbit)ret
   if(moon)moon.style.transform='translate(-50%,-50%) translateY('+R+'px)';
   orbit.style.transform='rotate('+ang.toFixed(2)+'deg)';
   const rad=ang*Math.PI/180;const e=Math.cos(rad);// sun elevation: 1=noon, -1=midnight
-  let tint;if(e>0.12)tint='rgba(255,244,210,0.05)';else if(e>-0.12)tint='rgba(255,138,72,'+(0.10+0.18*(1-Math.abs(e)/0.12)).toFixed(2)+')';else tint='rgba(12,18,46,0.5)';
+  let tint,top;if(e>0.12){tint='rgba(255,244,210,0.05)';top='rgba(255,240,205,0.06)';}else if(e>-0.12){const k=1-Math.abs(e)/0.12;tint='rgba(255,138,72,'+(0.10+0.18*k).toFixed(2)+')';top='rgba(255,150,90,'+(0.10+0.18*k).toFixed(2)+')';}else{tint='rgba(12,18,46,0.5)';top='rgba(36,46,104,0.4)';}
   const tn=document.getElementById('skyTint');if(tn)tn.style.background=tint;
+  const tt=document.getElementById('skyTintTop');if(tt)tt.style.background=top;
   const op=Math.max(0,Math.min(1,(-e+0.05)/0.35));const st=document.getElementById('skyStars');if(st)st.style.opacity=op.toFixed(2);}
 function renderTabbar(v){const active=TABMAP[v.screen]||'home';$('#tabbar').innerHTML=TABS.map(([s,ic,l])=>`<button class="tab ${active===s?'active':''}" data-act="tab" data-screen="${s}"><span class="ic">${ic}</span>${l}</button>`).join('');}
 function renderAppbar(v){
@@ -1070,7 +1087,13 @@ function ensureAudio(){if(!audioCtx){try{audioCtx=new (window.AudioContext||wind
 async function startAlarmSound(trackId){stopAlarmSound();const tid=trackId||S.settings.alarmTrack;if(tid){const blob=await idbGet(tid);if(blob){alarmAudio=new Audio(URL.createObjectURL(blob));alarmAudio.loop=true;alarmAudio.play().catch(()=>{});return;}}ensureAudio();if(!audioCtx)return;let on=false;const beep=()=>{on=!on;const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type='sine';o.frequency.value=on?880:660;o.connect(g);g.connect(audioCtx.destination);const t=audioCtx.currentTime;g.gain.setValueAtTime(0.0001,t);g.gain.linearRampToValueAtTime(0.3,t+0.02);g.gain.linearRampToValueAtTime(0.0001,t+0.34);o.start(t);o.stop(t+0.36);};beep();beepTimer=setInterval(beep,460);}
 function stopAlarmSound(){if(beepTimer){clearInterval(beepTimer);beepTimer=null;}if(alarmAudio){try{alarmAudio.pause();}catch(e){}alarmAudio=null;}}
 /* gentle chime + haptics */
-function playChime(){if(!S.settings.chime)return;ensureAudio();if(!audioCtx)return;const ctx=audioCtx,t=ctx.currentTime;[0,0.11].forEach((dt,i)=>{const o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.value=i?1320:880;o.connect(g);g.connect(ctx.destination);g.gain.setValueAtTime(0.0001,t+dt);g.gain.exponentialRampToValueAtTime(0.18,t+dt+0.02);g.gain.exponentialRampToValueAtTime(0.0001,t+dt+0.5);o.start(t+dt);o.stop(t+dt+0.52);});}
+function playChime(){if(!S.settings.chime)return;ensureAudio();if(!audioCtx)return;const ctx=audioCtx,t=ctx.currentTime;
+  const notes=[523.25,659.25,783.99,1046.50];// C5 E5 G5 C6 — gentle uplifting arpeggio
+  notes.forEach((f,i)=>{const dt=i*0.085;const o=ctx.createOscillator(),o2=ctx.createOscillator(),g=ctx.createGain(),g2=ctx.createGain();
+    o.type='sine';o2.type='sine';o.frequency.value=f;o2.frequency.value=f*2.001;g2.gain.value=0.22;// soft octave shimmer
+    o2.connect(g2);g2.connect(g);o.connect(g);g.connect(ctx.destination);
+    g.gain.setValueAtTime(0.0001,t+dt);g.gain.exponentialRampToValueAtTime(0.12,t+dt+0.03);g.gain.exponentialRampToValueAtTime(0.0001,t+dt+0.7);
+    o.start(t+dt);o2.start(t+dt);o.stop(t+dt+0.74);o2.stop(t+dt+0.74);});}
 function haptic(ms){try{if(S.settings.haptics&&navigator.vibrate)navigator.vibrate(ms||14);}catch(e){}}
 /* ambience (generated + custom mp3) */
 let ambNodes=null,ambAudio=null;
@@ -1195,9 +1218,11 @@ function cosmosSVG(keys){const N=keys.length;const cols=N===1?1:2;const cw=320/c
     body+=`<g data-act="open-aspect" data-aspect="${k}" style="cursor:pointer"><text x="${cx.toFixed(1)}" y="${(row*ch+ch-12).toFixed(1)}" text-anchor="middle" fill="var(--text)" font-size="12.5" font-weight="700">${esc(nm.length>20?nm.slice(0,19)+'…':nm)} · Lv ${lv}</text></g>`;});
   return `<div class="growth-scene"><svg viewBox="0 0 320 ${VH}" width="100%" style="display:block;margin:0 auto;overflow:visible">${sf}${body}</svg></div>`;}
 function starBaseCol(){return S.settings.theme==='light'?'#caa12e':'#fff6cc';}
-function _starNode(x,y,level,attrs){const g=growth(level);const r=2.4+2.2*g,a=(0.34+0.55*g).toFixed(2),sh=r*0.34;const sc=starBaseCol();
+function _starNode(x,y,level,attrs){const g=growth(level);const r=3.4+3.2*g,a=(0.42+0.5*g).toFixed(2),sh=r*0.34;const sc=starBaseCol();
   const p=`M${x.toFixed(1)} ${(y-r).toFixed(1)} L${(x+sh).toFixed(1)} ${(y-sh).toFixed(1)} L${(x+r).toFixed(1)} ${y.toFixed(1)} L${(x+sh).toFixed(1)} ${(y+sh).toFixed(1)} L${x.toFixed(1)} ${(y+r).toFixed(1)} L${(x-sh).toFixed(1)} ${(y+sh).toFixed(1)} L${(x-r).toFixed(1)} ${y.toFixed(1)} L${(x-sh).toFixed(1)} ${(y-sh).toFixed(1)} Z`;
-  return `<g class="gstar" ${attrs||''}><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(r+3.5).toFixed(1)}" fill="${sc}" opacity="${(0.05+0.12*g).toFixed(2)}"/><path d="${p}" fill="${lighten(sc,0.18*g)}" opacity="${a}"/></g>`;}
+  return `<g class="gstar" ${attrs||''}><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(r+5).toFixed(1)}" fill="${sc}" opacity="${(0.06+0.14*g).toFixed(2)}"/><path d="${p}" fill="${lighten(sc,0.18*g)}" opacity="${a}"/></g>`;}
+// decorative twinkling background stars for the display scenes (golden-angle scatter)
+function _bgStars(n,rMin,rMax){const sc=starBaseCol();let out='';for(let i=0;i<n;i++){const ang=i*2.399963,rr=rMin+((i*53)%Math.max(1,(rMax-rMin)));const x=Math.cos(ang)*rr,y=Math.sin(ang)*rr;const r=(i%6===0?2.2:i%3===0?1.6:1.1);out+=`<circle class="cdot" cx="${x.toFixed(0)}" cy="${y.toFixed(0)}" r="${r}" fill="${sc}" style="animation-delay:${((i%9)*0.4).toFixed(1)}s;animation-duration:${(2.4+(i%5)*0.5).toFixed(1)}s"/>`;}return out;}
 // scatter one star per skill across concentric rings (fits as many as there are skills)
 function _starScatter(stars,cx,cy,baseR,maxR){if(!stars||!stars.length)return '';const K=stars.length;
   const rings=Math.min(4,Math.max(1,Math.ceil(K/13)));let out='',placed=0;
@@ -1211,16 +1236,16 @@ function _flowerLocal(opts){const N=opts.nodes.length||1;const wf=Math.max(0.5,M
     const r=128*ls,a2=ang*Math.PI/180,x=Math.cos(a2-Math.PI/2)*r*0.82,y=Math.sin(a2-Math.PI/2)*r*0.82;
     labels+=`<text x="${x.toFixed(1)}" y="${(y+4).toFixed(1)}" text-anchor="middle" fill="${col}" font-size="13" font-weight="800" pointer-events="none" style="paint-order:stroke" stroke="var(--bg)" stroke-width="3">${nd.level}</text>`;});
   const cl=growth(opts.coreLevel||1),cr=15+8*cl;const core=opts.bid?`data-act="open-aspect" data-aspect="${opts.bid}"`:'';
-  return `${_starScatter(opts.stars,0,0,146,178)}${petals}<g class="petal" ${core}><circle r="${cr.toFixed(1)}" fill="var(--gold)"/><circle r="${cr.toFixed(1)}" fill="none" stroke="#fff" stroke-opacity=".4" stroke-width="1.5"/></g>${labels}`;}
-function _sunLocal(opts){const N=opts.nodes.length||1,R=Math.min(122,64+N*8);const dur=Math.round(44+N*6);
+  return `${_bgStars(22,120,205)}${_starScatter(opts.stars,0,0,150,184)}${petals}<g class="petal" ${core}><circle r="${cr.toFixed(1)}" fill="var(--gold)"/><circle r="${cr.toFixed(1)}" fill="none" stroke="#fff" stroke-opacity=".4" stroke-width="1.5"/></g>${labels}`;}
+function _sunLocal(opts){const N=opts.nodes.length||1,R=Math.min(150,82+N*9);const dur=Math.round(44+N*6);
   let planets='',rings='';
-  opts.nodes.forEach((nd,i)=>{const ang=-90+(N>1?i*360/N:0);const frac=(i*0.6180339887)%1;const Rk=R*(0.5+0.55*frac);const th=ang*Math.PI/180;const x=Math.cos(th)*Rk,y=Math.sin(th)*Rk;const g=growth(nd.level);const col=safeHex(nd.hex);const pr=11+13*g;
+  opts.nodes.forEach((nd,i)=>{const ang=-90+(N>1?i*360/N:0);const frac=(i*0.6180339887)%1;const Rk=R*(0.64+0.46*frac);const th=ang*Math.PI/180;const x=Math.cos(th)*Rk,y=Math.sin(th)*Rk;const g=growth(nd.level);const col=safeHex(nd.hex);const pr=15+17*g;
     rings+=`<circle r="${Rk.toFixed(1)}" fill="none" stroke="var(--line)" stroke-dasharray="2 6" opacity="0.22"/>`;
-    planets+=`<g class="petal" data-act="${nd.act}" ${nd.data||''} data-px="${x.toFixed(1)}" data-py="${y.toFixed(1)}"><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(pr+5).toFixed(1)}" fill="${col}" opacity="0.16"/><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${pr.toFixed(1)}" fill="${lighten(col,0.12+0.26*g)}"/><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${pr.toFixed(1)}" fill="none" stroke="#fff" stroke-opacity="0.35"/><text x="${x.toFixed(1)}" y="${(y+4).toFixed(1)}" text-anchor="middle" fill="#fff" font-size="11" font-weight="800" pointer-events="none">${nd.level}</text></g>`;});
-  const cl=growth(opts.coreLevel||1),col=safeHex(opts.coreHex||'#ffcf6b'),sr=20+12*cl;let rays='';
-  for(let i=0;i<12;i++){const a=i/12*6.2832;rays+=`<line x1="${(Math.cos(a)*(sr+5)).toFixed(1)}" y1="${(Math.sin(a)*(sr+5)).toFixed(1)}" x2="${(Math.cos(a)*(sr+12+7*cl)).toFixed(1)}" y2="${(Math.sin(a)*(sr+12+7*cl)).toFixed(1)}" stroke="${lighten(col,0.2)}" stroke-width="2.6" stroke-linecap="round" opacity="${(0.4+0.4*cl).toFixed(2)}"/>`;}
-  const sun=`<g class="petal" ${opts.bid?`data-act="open-aspect" data-aspect="${opts.bid}"`:''}><circle r="${(sr+14).toFixed(1)}" fill="${lighten(col,0.2)}" opacity="0.14"/>${rays}<circle r="${sr.toFixed(1)}" fill="${lighten(col,0.2)}"/><circle r="${sr.toFixed(1)}" fill="none" stroke="#fff" stroke-opacity="0.4" stroke-width="1.5"/></g>`;
-  return `${rings}${_starScatter(opts.stars,0,0,R+22,R+46)}${sun}<g class="orbit-grp" data-cx="0" data-cy="0" data-dur="${dur}">${planets}</g>`;}
+    planets+=`<g class="petal" data-act="${nd.act}" ${nd.data||''} data-px="${x.toFixed(1)}" data-py="${y.toFixed(1)}"><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(pr+6).toFixed(1)}" fill="${col}" opacity="0.16"/><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${pr.toFixed(1)}" fill="${lighten(col,0.12+0.26*g)}"/><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${pr.toFixed(1)}" fill="none" stroke="#fff" stroke-opacity="0.35"/><text x="${x.toFixed(1)}" y="${(y+4.5).toFixed(1)}" text-anchor="middle" fill="#fff" font-size="13" font-weight="800" pointer-events="none">${nd.level}</text></g>`;});
+  const cl=growth(opts.coreLevel||1),col=safeHex(opts.coreHex||'#ffcf6b'),sr=28+16*cl;let rays='';
+  for(let i=0;i<12;i++){const a=i/12*6.2832;rays+=`<line x1="${(Math.cos(a)*(sr+5)).toFixed(1)}" y1="${(Math.sin(a)*(sr+5)).toFixed(1)}" x2="${(Math.cos(a)*(sr+14+8*cl)).toFixed(1)}" y2="${(Math.sin(a)*(sr+14+8*cl)).toFixed(1)}" stroke="${lighten(col,0.2)}" stroke-width="3" stroke-linecap="round" opacity="${(0.4+0.4*cl).toFixed(2)}"/>`;}
+  const sun=`<g class="petal" ${opts.bid?`data-act="open-aspect" data-aspect="${opts.bid}"`:''}><circle r="${(sr+16).toFixed(1)}" fill="${lighten(col,0.2)}" opacity="0.14"/>${rays}<circle r="${sr.toFixed(1)}" fill="${lighten(col,0.2)}"/><circle r="${sr.toFixed(1)}" fill="none" stroke="#fff" stroke-opacity="0.4" stroke-width="1.5"/></g>`;
+  return `${_bgStars(34,40,210)}${rings}${_starScatter(opts.stars,0,0,R+26,R+52)}${sun}<g class="orbit-grp" data-cx="0" data-cy="0" data-dur="${dur}">${planets}</g>`;}
 let orbitRAF=null;
 function startOrbits(){if(orbitRAF){cancelAnimationFrame(orbitRAF);orbitRAF=null;}
   const grps=[...document.querySelectorAll('#screen .orbit-grp')];if(!grps.length)return;
@@ -1382,10 +1407,11 @@ function wizSave(){const d=wiz.data;const cosmos={purpose:d.purpose,goal:d.goal,
 function noteMenu(id){const n=getNote(id);sheet(`<h2>Page</h2><div class="menu-item" data-act="note-pin" data-id="${id}"><span class="mi-ic">📌</span>${n.pinned?'Unpin':'Pin to top'}</div><div class="menu-item" data-act="note-icon" data-id="${id}"><span class="mi-ic">😀</span>Change icon</div><div class="menu-item" style="color:var(--pink)" data-act="note-delete" data-id="${id}"><span class="mi-ic">🗑</span>Delete page & contents</div>`);}
 
 function settingsThemeChips(){return `<button class="chip ${S.settings.theme==='dark'?'on':''}" data-act="pe-theme" data-theme="dark">🌑 Dark</button><button class="chip ${S.settings.theme==='light'?'on':''}" data-act="pe-theme" data-theme="light">☀️ Light</button>`;}
-function settingsPresetBox(){const cur=S.settings.preset;const cts=S.settings.customThemes||[];const ct=activeCustomTheme();
+function settingsPresetBox(){const cur=S.settings.preset;const cts=S.settings.customThemes||[];const ov=S.settings.presetOverrides||{};
   return `<div class="chips">${Object.keys(THEME_PRESETS).map(k=>`<button class="chip ${cur===k?'on':''}" data-act="apply-preset" data-preset="${k}">${THEME_PRESETS[k].label}</button>`).join('')}${cts.map(c=>`<button class="chip ${cur==='ct:'+c.id?'on':''}" data-act="apply-ct" data-id="${c.id}">🎨 ${esc(c.name)}</button>`).join('')}<button class="chip" data-act="create-preset">＋ New</button></div>
-   ${ct?`<button class="btn sm block" style="margin-top:8px" data-act="edit-preset" data-id="${ct.id}">✎ Edit “${esc(ct.name)}”</button>`:`<p class="muted small" style="margin:6px 2px 0">Each preset bundles a theme, growth display & particle effects. Make a <b>＋ New</b> preset to customize colors, gradient, display & particles.</p>`}`;}
-function settingsColorGrid(){return [['bg','Background'],['card','Boxes'],['text','Text'],['line','Borders'],['green-soft','Buttons'],['pink','Accent'],['gold','Highlight'],['muted','Subtle text']].map(([v,l])=>`<label class="muted small" style="display:flex;align-items:center;gap:8px"><input type="color" data-themevar="${v}" value="${cssColorHex(v)}" style="width:34px;height:30px;border:none;background:none;padding:0">${l}</label>`).join('');}
+   <button class="btn sm block" style="margin-top:8px" data-act="edit-preset" data-key="${cur}">✎ Edit current preset</button>
+   <p class="muted small" style="margin:6px 2px 0">Editing tweaks the selected preset (defaults included) — colors, gradient, display & particles.</p>`;}
+function settingsColorGrid(){return [['bg','Background'],['bg-2','Background 2'],['card','Boxes'],['card-2','Boxes 2'],['line','Borders'],['text','Text'],['muted','Subtle text'],['green-soft','Buttons'],['pink','Accent'],['gold','Highlight']].map(([v,l])=>`<label class="muted small" style="display:flex;align-items:center;gap:8px"><input type="color" data-themevar="${v}" value="${cssColorHex(v)}" style="width:34px;height:30px;border:none;background:none;padding:0">${l}</label>`).join('');}
 function settingsParticleBox(){return `<div class="chips">${Object.keys(PARTICLE_TYPES).map(t=>`<button class="chip ${(S.settings.particles||[]).includes(t)?'on':''}" data-act="toggle-particle" data-p="${t}">${PARTICLE_TYPES[t].label}</button>`).join('')}<button class="chip ${(S.settings.particles||[]).length?'':'on'}" data-act="particles-off">Off</button></div>
   <div class="chips" style="margin-top:8px">${(S.settings.customParticles||[]).map((cp,i)=>`<span style="display:inline-flex;align-items:center;background:var(--bg-2);border:1px solid var(--line);border-radius:999px;overflow:hidden"><button class="chip ${cp.on!==false?'on':''}" style="border:none;border-radius:0;padding:5px 9px" data-act="toggle-custom-particle" data-i="${i}">${esc(cp.emoji)}</button><button style="padding:5px 6px;color:var(--muted)" data-act="edit-custom-particle" data-i="${i}">✎</button><button style="padding:5px 8px 5px 4px;color:var(--pink)" data-act="del-custom-particle" data-i="${i}">✕</button></span>`).join('')}</div>
   <button class="btn sm" style="margin-top:6px" data-act="add-custom-particle">＋ Custom particle</button>`;}
@@ -1394,18 +1420,20 @@ function settingsSkyBox(){const s=S.settings.sky||{};return `<div class="chips">
    ${s.on?`${s.auto===false?`<label class="set-row"><span>Time: ${Math.round(s.hour!=null?s.hour:14)}:00</span><input type="range" min="0" max="23" value="${s.hour!=null?s.hour:14}" data-skyhour style="flex:1"></label>`:(()=>{const sp=[['1','Real'],['300','Cozy'],['1200','Fast'],['7200','Time-lapse']];const isP=sp.some(o=>+o[0]===(s.speed||1));const showC=_skyCustom||!isP;return `<div style="margin-bottom:6px"><span class="muted small">Day speed</span><div class="chips" style="margin-top:4px">${sp.map(o=>`<button class="chip ${(!showC&&String(s.speed||1)===o[0])?'on':''}" data-act="sky-speed" data-speed="${o[0]}">${o[1]}</button>`).join('')}<button class="chip ${showC?'on':''}" data-act="sky-speed-custom">⌨ Custom</button></div>${showC?`<label class="set-row" style="margin-top:4px"><span>Custom speed ×</span><input class="input mini" type="number" min="1" max="200000" data-skyspeednum value="${s.speed||1}" style="width:90px"></label>`:''}</div>`;})()}
     <label class="set-row"><span>Orbit distance</span><input type="range" min="15" max="75" value="${s.radius||38}" data-skyradius style="flex:1"></label>
     <label class="set-row"><span>Center height</span><input type="range" min="20" max="95" value="${s.centerY!=null?s.centerY:64}" data-skycenter style="flex:1"></label>`:'<p class="muted small" style="margin:6px 2px 0">A gentle sky behind everything — the sun & moon ride one slow wheel around a shared point, glow trailing. Adjust speed, orbit distance & center height below.</p>'}`;}
-function syncActivePreset(){const ct=activeCustomTheme();if(!ct)return;ct.theme=S.settings.theme;ct.colors=Object.assign({},S.settings.colors);ct.gradient=S.settings.gradient;ct.display=S.settings.blossomDisplay;ct.particles=(S.settings.particles||[]).slice();ct.customParticles=(S.settings.customParticles||[]).map(c=>({...c}));ct.click={on:S.settings.clickSparkle,emoji:S.settings.clickEmoji,color:S.settings.clickColor,count:S.settings.clickCount,speed:S.settings.clickSpeed};}
-let _presetEditId=null;
+function syncActivePreset(){const t=activeTarget();if(!t)return;t.theme=S.settings.theme;t.colors=Object.assign({},S.settings.colors);t.gradient=S.settings.gradient;t.display=S.settings.blossomDisplay;t.particles=(S.settings.particles||[]).slice();t.customParticles=(S.settings.customParticles||[]).map(c=>({...c}));t.click={on:S.settings.clickSparkle,emoji:S.settings.clickEmoji,color:S.settings.clickColor,count:S.settings.clickCount,speed:S.settings.clickSpeed};}
+let _presetEditKey=null;
 function openClickEditor(){settingsSave();promptSheet('✨ Click effect',[{k:'ch',label:'Icon (emoji/character — blank = ✨ sparkle)',placeholder:'⭐ / 🌸 / ✦'},{k:'color',label:'Color',type:'color'},{k:'count',label:'Amount',type:'number',placeholder:'10'},{k:'speed',label:'Speed',type:'select',options:[['0.5','Slow'],['1','Normal'],['1.8','Fast']]}],d=>{S.settings.clickEmoji=(d.ch||'').slice(0,2);S.settings.clickColor=d.color||'';S.settings.clickCount=Math.max(1,Math.min(40,parseInt(d.count)||10));S.settings.clickSpeed=parseFloat(d.speed)||1;syncActivePreset();save();},{ch:S.settings.clickEmoji||'',color:S.settings.clickColor||'#fff6cc',count:S.settings.clickCount||10,speed:String(S.settings.clickSpeed||1)});$('#modal-root')._returnTo=openSettings;}
-function openPresetEditor(id){const ct=(S.settings.customThemes||[]).find(t=>t.id===id);if(!ct)return;if(S.settings.preset!=='ct:'+id)applyCustomTheme(id);_presetEditId=id;renderPresetEditor();}
-function renderPresetEditor(){const id=_presetEditId;const ct=(S.settings.customThemes||[]).find(t=>t.id===id);if(!ct){closeSheet();return;}
+function openPresetEditor(key){key=key||S.settings.preset;if(key&&key.indexOf('ct:')===0){const id=key.slice(3);if(!(S.settings.customThemes||[]).some(t=>t.id===id))return;if(S.settings.preset!==key)applyCustomTheme(id);}else if(THEME_PRESETS[key]){if(S.settings.preset!==key)applyPreset(key);}else return;_presetEditKey=key;renderPresetEditor();}
+function renderPresetEditor(){const key=_presetEditKey;const isCustom=key&&key.indexOf('ct:')===0;const ct=isCustom?(S.settings.customThemes||[]).find(t=>t.id===key.slice(3)):null;if(isCustom&&!ct){closeSheet();return;}const tgt=activeTarget()||{};
+  const nameField=isCustom?`<div class="field"><label>Name</label><input class="input" data-ctname="${ct.id}" value="${esc(ct.name)}" placeholder="My preset"></div>`:`<div class="field"><label>Editing default</label><div class="muted small">${(THEME_PRESETS[key]||{}).label||''} — your changes are saved for this preset.</div></div>`;
+  const footer=isCustom?`<button class="btn sm" style="color:var(--pink)" data-act="del-preset" data-id="${ct.id}">🗑 Delete</button>`:`<button class="btn sm" data-act="reset-preset" data-key="${key}">↺ Reset to default</button>`;
   sheet(`<h2>✎ Preset</h2>
-   <div class="field"><label>Name</label><input class="input" data-ctname="${ct.id}" value="${esc(ct.name)}" placeholder="My preset"></div>
+   ${nameField}
    <div class="field"><label>🌱 Growth display</label><div class="chips">${DISPLAY_LIST.map(dk=>`<button class="chip ${(S.settings.blossomDisplay||'flower')===dk?'on':''}" data-act="pe-display" data-display="${dk}">${DISPLAYS[dk].label}</button>`).join('')}</div></div>
-   <div class="field"><label>🌈 Background gradient</label><div class="chips">${GRADIENT_TYPES.map(g=>`<button class="chip ${(ct.gradientType||'')===g[0]?'on':''}" data-act="pe-grad" data-grad="${g[0]}">${g[1]}</button>`).join('')}</div></div>
+   <div class="field"><label>🌈 Background gradient</label><div class="chips">${GRADIENT_TYPES.map(g=>`<button class="chip ${(tgt.gradientType||'')===g[0]?'on':''}" data-act="pe-grad" data-grad="${g[0]}">${g[1]}</button>`).join('')}</div></div>
    <div class="field"><label>🎨 Colors</label><div id="colorGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:8px">${settingsColorGrid()}</div></div>
    <div class="field"><label>✨ Particles</label><div id="pbox">${settingsParticleBox()}</div></div>
-   <div class="row"><button class="btn primary" data-act="pe-done">Done</button><button class="btn sm" style="color:var(--pink)" data-act="del-preset" data-id="${id}">🗑 Delete</button></div>`);
+   <div class="row"><button class="btn primary" data-act="pe-done">Done</button>${footer}</div>`);
   $('#modal-root')._returnTo=openSettings;}
 function openParticleForm(i){const cp=i>=0?S.settings.customParticles[i]:{emoji:'',color:'#ffffff',mode:'fall',count:14,size:16,sizeVar:25,speed:1};
   promptSheet(i>=0?'Edit particle':'Custom particle',[{k:'emoji',label:'Emoji or character',placeholder:'⭐ / ✦ / 🍩'},{k:'color',label:'Color (for non-emoji)',type:'color'},{k:'mode',label:'Motion',type:'select',options:[['fall','↓ Fall down'],['rise','↑ Float up'],['drift','✦ Drift around'],['streakLR','→ Streak right'],['streakRL','← Streak left'],['twinkle','🌟 Twinkle'],['cloud','☁️ Cloud float'],['shoot','💫 Shooting star'],['bubblepop','🫧 Bubble pop'],['fish','🐟 Swim around']]},{k:'speed',label:'Speed',type:'select',options:[['0.5','Slow'],['1','Normal'],['2','Fast']]},{k:'count',label:'How many',type:'number',placeholder:'14'},{k:'size',label:'Size (px)',type:'number',placeholder:'16'},{k:'sizeVar',label:'Size variation',type:'select',options:[['0','None'],['25','Small'],['50','Medium'],['80','Big']]}],
@@ -1431,24 +1459,30 @@ function settingsXpHealthBox(){const s=S.settings,H=s.health||{habits:true,goals
 function settingsDebugBox(){return `<div class="muted small" style="margin-bottom:8px">Jump anything to any level for testing. Levels are computed from XP, so this just sets XP.</div>
    <button class="btn sm block" data-act="debug-set-levels">🎚️ Set blossom / petal / skill level…</button>
    <div class="row" style="margin-top:6px"><button class="btn sm" data-act="debug-maxall">Max all skills</button><button class="btn sm" style="color:var(--pink)" data-act="debug-resetxp">Reset all XP</button></div>`;}
-function settingsBody(){return `
+function settingsBody(){const sec=(t)=>`<div class="divider" style="margin:18px 0 10px"></div><h3 class="set-sec">${t}</h3>`;return `
+  <h3 class="set-sec" style="margin-top:0">👤 Profile</h3>
   <div class="field"><label>Your name</label><input class="input" data-set="name" value="${esc(S.profile.name)}" placeholder="Name"/></div>
   <div class="field"><label>Purpose statement</label><textarea class="input" data-set="purpose">${esc(S.profile.purpose)}</textarea></div>
   <div class="field"><label>Home quote</label><input class="input" data-set="quote" value="${esc(S.profile.quote)}"/></div>
   <div class="field"><label>App name (shown in header & tab)</label><input class="input" data-set="appname" value="${esc(S.settings.appName)}" placeholder="The Blossom"/></div>
-  <div class="field"><label>🎨 Presets <span class="muted small">— theme · display · particles</span></label><div id="presetBox">${settingsPresetBox()}</div></div>
+  ${sec('🎨 Appearance')}
+  <div class="field"><label>Presets <span class="muted small">— theme · display · particles</span></label><div id="presetBox">${settingsPresetBox()}</div></div>
   <div class="field"><label>✨ Click effect</label><div id="clickBox">${settingsClickBox()}</div></div>
   <div class="field"><label>🌤️ Atmosphere <span class="muted small">— reactive sky</span></label><div id="skyBox">${settingsSkyBox()}</div></div>
-  <div class="field"><label>🎚️ Leveling & Health</label><div id="xpBox">${settingsXpHealthBox()}</div></div>
+  ${sec('🌱 Growth')}
+  <div class="field"><label>🎚️ XP & Health</label><div id="xpBox">${settingsXpHealthBox()}</div></div>
+  ${sec('✦ Personalize')}
   <div class="field"><label>Emojis in titles & buttons</label><div class="chips" id="emojiChips">${settingsEmojiChip()}</div></div>
   <div class="field"><label>🏷 Tags <span class="muted small">— colored labels for notes, tasks, goals & habits</span></label><div id="tagsBox">${settingsTagsBox()}</div></div>
   <div class="field"><label>✎ Edit labels mode</label><div class="chips" id="labelChips">${settingsLabelChips()}</div></div>
   <div class="field"><label>🔔 Sounds & feel</label><div class="chips" id="soundChips">${settingsSoundChips()}</div></div>
   <div class="field"><label>🔔 Custom alarm sound (mp3)</label><div id="ambBox">${settingsAmbienceBox()}</div></div>
+  ${sec('📅 Calendar & review')}
   <div class="field"><label>Weekly review day</label><select class="input" data-set="reviewday">${['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'].map((d,i)=>`<option value="${i}" ${S.settings.weeklyReviewDay==i?'selected':''}>${d}</option>`).join('')}</select></div>
   <div class="field"><label>Calendar timeline hours</label><div class="row"><select class="input" data-set="daystart">${Array.from({length:24},(_,i)=>`<option value="${i}" ${S.settings.dayStart==i?'selected':''}>${(i%12||12)}${i<12?'am':'pm'}</option>`).join('')}</select><select class="input" data-set="dayend">${Array.from({length:25},(_,i)=>`<option value="${i}" ${S.settings.dayEnd==i?'selected':''}>${i===24?'12am':(i%12||12)+(i<12?'am':'pm')}</option>`).join('')}</select></div></div>
-  <div class="field"><label>🐞 Debug <span class="muted small">— testing tools</span></label><div id="debugBox">${settingsDebugBox()}</div></div>
-  <div class="divider" style="margin:14px 0"></div><h3 style="margin-bottom:8px">🔄 Backup & sync</h3><p class="muted small" style="margin:0 0 10px">Your data lives on this device. A <b>Blossom code</b> is a portable text version of everything — copy it, paste it into the app on any device or future version. (A save <i>file</i> works too.)</p>
+  ${sec('🐞 Debug')}
+  <div class="field"><div id="debugBox">${settingsDebugBox()}</div></div>
+  <div class="divider" style="margin:18px 0 10px"></div><h3 class="set-sec">🔄 Backup & sync</h3><p class="muted small" style="margin:0 0 10px">Your data lives on this device. A <b>Blossom code</b> is a portable text version of everything — copy it, paste it into the app on any device or future version. (A save <i>file</i> works too.)</p>
   <div class="row"><button class="btn primary" data-act="copy-code">📋 Copy my code</button><button class="btn gold" data-act="paste-code">📥 Paste a code</button></div>
   <div class="row" style="margin-top:8px"><button class="btn sm" data-act="export-data">⬇ Save file</button><button class="btn sm" data-act="import-data">⬆ Load file</button><button class="btn sm" data-act="export-csv">📊 CSV</button></div>
   <button class="btn block sm" style="margin-top:10px;color:var(--pink)" data-act="wipe">🗑 Reset all data</button>
@@ -1679,13 +1713,14 @@ document.addEventListener('click',e=>{
     /* settings (update in place — no flicker) */
     case 'apply-preset':applyPreset(el.dataset.preset);render();{const b=$('#presetBox');if(b)b.innerHTML=settingsPresetBox();const c=$('#clickBox');if(c)c.innerHTML=settingsClickBox();}break;
     case 'apply-ct':applyCustomTheme(el.dataset.id);render();{const b=$('#presetBox');if(b)b.innerHTML=settingsPresetBox();const c=$('#clickBox');if(c)c.innerHTML=settingsClickBox();}break;
-    case 'create-preset':{const id='ct'+uid();const colors={};['bg','bg-2','card','card-2','line','text','muted','green-soft','pink','gold'].forEach(v=>colors[v]=cssColorHex(v));S.settings.customThemes.push({id,name:'My preset',theme:S.settings.theme,colors,gradient:S.settings.gradient||'',gradientType:'',display:S.settings.blossomDisplay||'flower',particles:(S.settings.particles||[]).slice(),customParticles:(S.settings.customParticles||[]).map(c=>({...c})),click:{on:S.settings.clickSparkle,emoji:S.settings.clickEmoji,color:S.settings.clickColor,count:S.settings.clickCount,speed:S.settings.clickSpeed}});S.settings.preset='ct:'+id;save();openPresetEditor(id);}break;
-    case 'edit-preset':openPresetEditor(el.dataset.id);break;
+    case 'create-preset':{const id='ct'+uid();const colors={};['bg','bg-2','card','card-2','line','text','muted','green-soft','pink','gold'].forEach(v=>colors[v]=cssColorHex(v));S.settings.customThemes.push({id,name:'My preset',theme:S.settings.theme,colors,gradient:S.settings.gradient||'',gradientType:'',display:S.settings.blossomDisplay||'flower',particles:(S.settings.particles||[]).slice(),customParticles:(S.settings.customParticles||[]).map(c=>({...c})),click:{on:S.settings.clickSparkle,emoji:S.settings.clickEmoji,color:S.settings.clickColor,count:S.settings.clickCount,speed:S.settings.clickSpeed}});S.settings.preset='ct:'+id;save();openPresetEditor('ct:'+id);}break;
+    case 'edit-preset':openPresetEditor(el.dataset.key||S.settings.preset);break;
+    case 'reset-preset':{const k=el.dataset.key;if(S.settings.presetOverrides)delete S.settings.presetOverrides[k];applyPreset(k);save();closeSheet();render();}break;
     case 'del-preset':{S.settings.customThemes=S.settings.customThemes.filter(x=>x.id!==el.dataset.id);if(S.settings.preset==='ct:'+el.dataset.id)applyPreset('dark');save();closeSheet();render();}break;
     case 'pe-done':closeSheet();render();break;
     case 'pe-theme':{S.settings.theme=el.dataset.theme;applyTheme();syncActivePreset();save();el.parentElement.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));el.classList.add('on');{const g=$('#modal-root #colorGrid');if(g)g.innerHTML=settingsColorGrid();}}break;
     case 'pe-display':{S.settings.blossomDisplay=el.dataset.display;syncActivePreset();save();render();el.parentElement.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));el.classList.add('on');}break;
-    case 'pe-grad':{const ct=activeCustomTheme();const g=el.dataset.grad;if(ct){ct.gradientType=g;ct.gradient=buildGradient(g,S.settings.colors);S.settings.gradient=ct.gradient;}else{S.settings.gradient=buildGradient(g,S.settings.colors);}applyTheme();save();el.parentElement.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));el.classList.add('on');}break;
+    case 'pe-grad':{const ct=activeTarget();const g=el.dataset.grad;S.settings.gradient=buildGradient(g,S.settings.colors);if(ct){ct.gradientType=g;ct.gradient=S.settings.gradient;}applyTheme();save();el.parentElement.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));el.classList.add('on');}break;
     case 'toggle-particle':{const t=el.dataset.p;S.settings.particles=S.settings.particles||[];S.settings.particles=S.settings.particles.includes(t)?S.settings.particles.filter(x=>x!==t):[...S.settings.particles,t];syncActivePreset();save();startParticles();const pb=$('#pbox');if(pb)pb.innerHTML=settingsParticleBox();}break;
     case 'particles-off':S.settings.particles=[];syncActivePreset();save();startParticles();{const pb=$('#pbox');if(pb)pb.innerHTML=settingsParticleBox();}break;
     case 'toggle-click-sparkle':S.settings.clickSparkle=!S.settings.clickSparkle;syncActivePreset();save();{const c=$('#clickBox');if(c)c.innerHTML=settingsClickBox();}break;
@@ -1696,9 +1731,12 @@ document.addEventListener('click',e=>{
     case 'sky-speed-custom':_skyCustom=true;{const b=$('#skyBox');if(b){b.innerHTML=settingsSkyBox();const inp=b.querySelector('[data-skyspeednum]');if(inp)inp.focus();}}break;
     case 'set-blossom-display':S.settings.blossomDisplay=el.dataset.display;save();render();{const b=$('#displayBox');if(b)b.innerHTML=settingsDisplayBox();}break;
     case 'health-toggle':{const part=el.dataset.part;S.settings.health=S.settings.health||{habits:true,goals:true,trackers:true};S.settings.health[part]=S.settings.health[part]===false;save();render();{const b=$('#xpBox');if(b)b.innerHTML=settingsXpHealthBox();}}break;
-    case 'debug-set-levels':{settingsSave();let html='<h2>🎚️ Set levels</h2><p class="muted small" style="margin:0 0 8px">Change a skill\'s level — petals & blossoms roll up automatically.</p>';
+    case 'debug-set-levels':{settingsSave();const sl=(label,kind,id,lv,pad)=>`<div class="dbg-row" style="padding-left:${pad}px"><span class="dl">${esc(label)}</span><input type="range" min="0" max="100" value="${lv}" data-dbg="${kind}" data-id="${id}"><span class="lv" id="dlv-${kind}-${id}">${lv}</span></div>`;
+      let html='<h2>🎚️ Set levels</h2><p class="muted small" style="margin:0 0 8px">Slide any blossom, petal or skill to a level (0–100) for testing.</p>';
       if(!aspectKeys().length)html+='<div class="empty">Add a blossom first.</div>';
-      aspectKeys().forEach(k=>{const a=AS(k);html+=`<div style="margin:10px 0 2px"><b>${a.emoji} ${esc(a.name)}</b> <span class="muted small">Lv ${levelFromXp(aspectXP(k))}</span></div>`;blossomPetals(a).forEach(p=>{html+=`<div class="muted small" style="margin:5px 0 2px">${esc(p.name)}</div>`;(p.skills||[]).forEach(sk=>{html+=`<label class="set-row" style="padding-left:10px"><span>${esc(sk.name)}</span><input class="input mini" type="number" min="1" max="99" data-dbglevel="${sk.id}" value="${levelFromXp(skillXP(sk.id))}"></label>`;});});});
+      aspectKeys().forEach(k=>{const a=AS(k);html+=sl((a.emoji||'🌸')+' '+a.name,'blossom',k,levelFromXp(aspectXP(k)),0);
+        blossomPetals(a).forEach(p=>{html+=sl('• '+p.name,'petal',p.id,levelFromXp(petalXP(p)),14);
+          (p.skills||[]).forEach(sk=>{html+=sl('· '+sk.name,'skill',sk.id,levelFromXp(skillXP(sk.id)),28);});});});
       html+='<button class="btn block" style="margin-top:12px" data-act="debug-done">Done</button>';sheet(html);$('#modal-root')._returnTo=openSettings;}break;
     case 'debug-done':closeSheet();render();break;
     case 'debug-maxall':aspectKeys().forEach(k=>blossomPetals(AS(k)).forEach(p=>(p.skills||[]).forEach(sk=>{S.xp['s:'+sk.id]=totalXpForLevel(20);})));save();render();toast('🐞 Maxed all skills to Lv 20');break;
@@ -1737,10 +1775,11 @@ document.addEventListener('click',e=>{
 /* input */
 document.addEventListener('input',e=>{
   if(e.target.matches('[data-tslide]')){e.target.nextElementSibling.textContent=e.target.value+'/'+e.target.max;return;}
-  if(e.target.matches('[data-themevar]')){const v=e.target.dataset.themevar;S.settings.colors[v]=e.target.value;const ct=activeCustomTheme();if(ct){ct.colors=ct.colors||{};ct.colors[v]=e.target.value;if(ct.gradientType){ct.gradient=buildGradient(ct.gradientType,ct.colors);S.settings.gradient=ct.gradient;}}applyTheme();save();return;}
+  if(e.target.matches('[data-themevar]')){const v=e.target.dataset.themevar;S.settings.colors[v]=e.target.value;const ct=activeTarget();if(ct){ct.colors=Object.assign({},S.settings.colors);if(ct.gradientType){ct.gradient=buildGradient(ct.gradientType,ct.colors);S.settings.gradient=ct.gradient;}}applyTheme();save();return;}
   if(e.target.matches('[data-skyhour]')){S.settings.sky=S.settings.sky||{};S.settings.sky.hour=parseInt(e.target.value);S.settings.sky.auto=false;applySky();save();const lab=e.target.previousElementSibling;if(lab)lab.textContent='Time: '+e.target.value+':00';return;}
   if(e.target.matches('[data-skyspeed]')){S.settings.sky=S.settings.sky||{};S.settings.sky.speed=parseInt(e.target.value)||1;save();return;}
   if(e.target.matches('[data-skyradius]')){S.settings.sky=S.settings.sky||{};S.settings.sky.radius=parseInt(e.target.value)||38;moveSky();save();return;}
+  if(e.target.matches('[data-dbg]')){const kind=e.target.dataset.dbg,id=e.target.dataset.id,lv=Math.max(0,parseInt(e.target.value)||0);setNodeLevel(kind,id,lv);const lab=document.getElementById('dlv-'+kind+'-'+id);if(lab)lab.textContent=lv;return;}
   if(e.target.matches('[data-skycenter]')){S.settings.sky=S.settings.sky||{};S.settings.sky.centerY=parseInt(e.target.value)||64;moveSky();save();return;}
   if(e.target.matches('[data-skyspeednum]')){S.settings.sky=S.settings.sky||{};S.settings.sky.speed=Math.max(1,parseInt(e.target.value)||1);save();const sel=$('#skyBox')&&$('#skyBox').querySelector('[data-skyspeed]');if(sel)sel.value=String(S.settings.sky.speed);return;}
   if(e.target.matches('[data-ctname]')){const ct=(S.settings.customThemes||[]).find(t=>t.id===e.target.dataset.ctname);if(ct){ct.name=e.target.value;save();const chip=document.querySelector('[data-act="apply-ct"][data-id="'+ct.id+'"]');if(chip)chip.textContent='🎨 '+ct.name;}return;}
@@ -1758,7 +1797,6 @@ document.addEventListener('input',e=>{
 document.addEventListener('change',e=>{if(e.target.matches('.docedit input[type=checkbox]')){if(e.target.checked)e.target.setAttribute('checked','checked');else e.target.removeAttribute('checked');flushEditor();}
   if(e.target.matches('[data-clockopt-en]')){const w=$('#modal-root').querySelector(`[data-clockopt-wrap="${e.target.dataset.clockoptEn}"]`);if(w)w.style.display=e.target.checked?'':'none';}
   if(e.target.matches('[data-xpset]')){const k=e.target.dataset.xpset;let v=parseInt(e.target.value)||0;v=Math.max(+e.target.min||1,Math.min(+e.target.max||999,v));S.settings[k]=v;save();render();}
-  if(e.target.matches('[data-dbglevel]')){const id=e.target.dataset.dbglevel,lv=Math.max(1,parseInt(e.target.value)||1);S.xp['s:'+id]=totalXpForLevel(lv);save();}
   if(e.target.matches('[data-clickset]')){const k=e.target.dataset.clickset;S.settings[k]=e.target.type==='number'?(parseInt(e.target.value)||1):(parseFloat(e.target.value)||1);save();}});
 /* Enter inside notes: keep new lines working everywhere, incl. inside toggles */
 document.addEventListener('keydown',e=>{
