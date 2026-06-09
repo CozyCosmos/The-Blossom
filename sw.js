@@ -1,5 +1,5 @@
 /* The Blossom — service worker (offline shell + alarm notifications) */
-const CACHE = 'blossom-v5';
+const CACHE = 'blossom-v6';
 const ASSETS = ['./', './index.html', './manifest.webmanifest', './icon.svg'];
 
 self.addEventListener('install', e => {
