@@ -42,6 +42,7 @@ h1,h2,h3{margin:0;font-weight:700;letter-spacing:-.02em;}
 .serif{font-family:'Georgia','Times New Roman',serif;}
 
 #particles{position:fixed;inset:0;z-index:0;pointer-events:none;}
+#fxcanvas{position:fixed;inset:0;z-index:9999;pointer-events:none;}
 #app{position:relative;z-index:1;max-width:680px;margin:0 auto;min-height:100%;display:flex;flex-direction:column;padding-bottom:calc(var(--tab-h) + env(safe-area-inset-bottom));}
 .screen{flex:1;animation:fade .25s ease;}
 @keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
@@ -145,8 +146,51 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
 
 .flower-wrap{display:grid;place-items:center;padding:6px 0 10px;}
 .petal{cursor:pointer;transition:filter .2s;}.petal:active{filter:brightness(1.2);}
+.blossom-stage{position:relative;display:flex;align-items:center;justify-content:center;touch-action:pan-y;}
+.blossom-stage .flower-wrap{flex:1;min-width:0;}
+.bv-arrow{position:absolute;top:50%;transform:translateY(-50%);width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-size:22px;line-height:1;color:var(--muted);background:color-mix(in srgb,var(--card) 70%,transparent);border:1px solid var(--line);z-index:2;cursor:pointer;}
+.bv-arrow:active{filter:brightness(1.25);}.bv-arrow.left{left:0;}.bv-arrow.right{right:0;}
+.bv-dots{display:flex;justify-content:center;gap:8px;margin:0 0 8px;flex-wrap:wrap;}
+.bv-dot{display:inline-flex;align-items:center;gap:5px;padding:3px 10px 3px 6px;border-radius:999px;border:1px solid var(--line);color:var(--muted);font-size:11.5px;cursor:pointer;background:transparent;}
+.bv-dot i{width:7px;height:7px;border-radius:50%;background:var(--muted);opacity:.5;}
+.bv-dot.on{color:var(--text);border-color:color-mix(in srgb,var(--gold) 60%,var(--line));background:color-mix(in srgb,var(--gold) 14%,transparent);}
+.bv-dot.on i{background:var(--gold);opacity:1;}
 .aspect-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 .aspect-tile{border-radius:18px;padding:15px;display:flex;flex-direction:column;gap:5px;border:1px solid var(--line);position:relative;overflow:hidden;}
+.growth-scene{padding:4px 0 2px;}
+.growth-scene .petal{cursor:pointer;transition:filter .15s;}
+.growth-scene .petal:active{filter:brightness(1.18);}
+.gstar{cursor:pointer;transition:filter .15s;}
+.peek-tip{position:fixed;z-index:10000;display:none;pointer-events:none;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:7px 11px;box-shadow:0 6px 22px rgba(0,0,0,.3);max-width:200px;}
+.peek-tip b{display:block;font-size:14px;}
+.peek-tip span{display:block;font-size:11px;color:var(--muted);margin-top:1px;}
+.gstar:active{filter:brightness(1.4);}
+.garden-flowers{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px;}
+.gf-tile{display:flex;flex-direction:column;align-items:center;gap:6px;padding:8px 6px 10px;border-radius:18px;border:1px solid var(--line);background:var(--card-2);}
+.gf-tile .growth-scene{width:100%;}
+.gleg{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:6px;}
+.gleg-chip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--text);font-size:12px;cursor:pointer;}
+.gleg-chip i{width:8px;height:8px;border-radius:50%;flex:none;}
+.garden{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.garden-tile{display:flex;flex-direction:column;align-items:center;gap:3px;text-align:center;padding:14px 10px 12px;border-radius:18px;border:1px solid var(--line);background:var(--card-2);cursor:pointer;}
+.garden-tile:active{filter:brightness(1.08);}
+.garden-tile .g-glyph{height:84px;display:grid;place-items:center;}
+.garden-tile .g-name{font-size:14px;}
+.petal-row{display:flex;align-items:center;gap:12px;padding:12px 4px;border-bottom:1px solid var(--line);cursor:pointer;}
+.petal-row:last-child{border-bottom:none;}
+.petal-ic{width:46px;height:46px;flex:none;display:grid;place-items:center;}
+.display-preview{display:flex;align-items:center;gap:10px;margin-top:8px;padding:8px 4px;}
+.display-preview span{display:grid;place-items:center;}
+.cat-list{display:flex;flex-direction:column;gap:8px;max-height:56vh;overflow:auto;}
+.cat-item{display:flex;align-items:center;gap:12px;padding:12px;border-radius:14px;background:var(--card-2);border:1px solid var(--line);cursor:pointer;text-align:left;width:100%;}
+.cat-item:active{filter:brightness(1.08);}
+.cat-item.sel{border-color:color-mix(in srgb,var(--gold) 70%,var(--line));background:color-mix(in srgb,var(--gold) 14%,var(--card-2));}
+.cat-check{width:20px;flex:none;color:var(--gold);font-weight:800;text-align:center;}
+.set-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:5px 0;}
+.set-row span{font-size:13.5px;}
+.input.mini{width:78px;flex:none;padding:6px 8px;text-align:center;}
+.cat-em{font-size:26px;flex:none;}
+body.noemoji .cat-em{display:none;}
 .aspect-tile .em{position:absolute;right:10px;top:8px;font-size:24px;opacity:.55;}
 .aspect-tile .lv{font-size:24px;font-weight:800;}.aspect-tile .nm{font-weight:700;}
 .aspect-add{border:1.5px dashed var(--line);border-radius:18px;display:grid;place-items:center;min-height:96px;color:var(--muted);font-weight:700;background:transparent;}
@@ -168,13 +212,17 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
 .page-title{flex:1;font-size:25px;font-weight:800;border:none;background:transparent;outline:none;padding:2px 0;}
 
 /* doc editor (Notion + Docs feel) */
-.doctoolbar{position:sticky;top:62px;z-index:20;display:flex;gap:3px;flex-wrap:wrap;background:var(--bg-2);border:1px solid var(--line);border-radius:13px;padding:6px;margin:10px 0;}
+.doctoolbar{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(var(--tab-h) + 8px + env(safe-area-inset-bottom));z-index:46;width:calc(100% - 20px);max-width:660px;display:flex;gap:3px;flex-wrap:nowrap;overflow-x:auto;background:var(--bg-2);border:1px solid var(--line);border-radius:13px;padding:6px;box-shadow:var(--shadow);scrollbar-width:none;}
+.doctoolbar::-webkit-scrollbar{display:none;}
+.doctoolbar button{flex:none;}
 .doctoolbar button{min-width:34px;height:34px;padding:0 9px;border-radius:9px;font-size:14px;font-weight:700;color:var(--muted);background:transparent;}
 .doctoolbar button:active{background:var(--card-2);}
 .doctoolbar .sep{width:1px;background:var(--line);margin:4px 2px;}
-.docedit{min-height:78vh;outline:none;font-size:16px;line-height:1.65;padding:6px 2px 40vh;cursor:text;}
+.docedit{min-height:60vh;outline:none;font-size:16px;line-height:1.6;padding:6px 2px 36vh;cursor:text;}
 .docedit:empty:before{content:attr(data-ph);color:var(--muted-2);}
 .docedit:focus{outline:none;}
+.docedit p{margin:0 0 4px;min-height:1.4em;}
+.docedit p:empty:before,.docedit div:empty:before{content:"";display:inline-block;}
 .docedit h1{font-size:24px;margin:14px 0 4px;}
 .docedit h2{font-size:19px;margin:12px 0 4px;}
 .docedit blockquote{border-left:3px solid var(--gold);margin:8px 0;padding:2px 0 2px 12px;color:var(--muted);font-style:italic;}
@@ -293,6 +341,7 @@ body.noemoji .skill-ic,body.noemoji .nt-ic,body.noemoji .mt-ic,body.noemoji .lvl
 </head>
 <body>
 <canvas id="particles"></canvas>
+<canvas id="fxcanvas"></canvas>
 <div id="app"><div id="appbar"></div><div id="screen" class="screen"></div></div>
 <button id="fab" class="fab" style="display:none">＋</button>
 <nav class="tabbar"><div class="inner" id="tabbar"></div></nav>
@@ -307,6 +356,7 @@ const todayStr=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMo
 const esc=s=>(s==null?'':String(s)).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmtDate=d=>new Date(d+'T00:00').toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});
 const fmtShort=d=>new Date(d+'T00:00').toLocaleDateString(undefined,{month:'short',day:'numeric'});
+const fmtEdited=ts=>{if(!ts)return '';const d=new Date(ts);return d.toLocaleDateString(undefined,{month:'short',day:'numeric'})+', '+d.toLocaleTimeString(undefined,{hour:'2-digit',minute:'2-digit'});};
 const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
 const daysBetween=(a,b)=>Math.round((new Date(b)-new Date(a))/864e5);
 const DOW=['Su','Mo','Tu','We','Th','Fr','Sa'];
@@ -320,6 +370,8 @@ const ASPECT_DEFAULTS={
   emotional:{name:'Emotional',emoji:'💗',hex:'#E8B04B',builtin:true,skills:['Self-Awareness','Resilience','Mindfulness','Emotional Intelligence','Purpose & Gratitude']},
 };
 const ASPECT_PALETTE=['#E07A5F','#3DCCC7','#F2CC8F','#9B5DE5','#48BFE3','#F15BB5','#80B918','#FF8FAB'];
+// which growth-display matches each theme preset (used as the default; user can override)
+const PRESET_DISPLAY={dark:'flower',light:'flower',space:'space',ocean:'space',flower:'flower',sunset:'flower'};
 const AS=k=>S.aspects[k]||{name:k,emoji:'🌱',hex:'var(--muted)',skills:[]};
 const aspectKeys=()=>S.aspectOrder.filter(k=>S.aspects[k]);
 const aspectHex=k=>(S.aspects[k]||{}).hex||'var(--muted)';
@@ -331,18 +383,22 @@ const KEY='blossom_data_v1';
 const DEFAULT=()=>({
   meta:{version:3,created:todayStr()},
   profile:{name:'',purpose:'',values:[],quote:'Help your future blossom like this cosmos.'},
-  settings:{theme:'dark',weeklyReviewDay:0,particles:['flowers'],dayStart:0,dayEnd:24,colors:{},gradient:'',preset:'dark',customParticles:[],customThemes:[],editLabels:false,appName:'The Blossom',showEmojis:false,chime:true,haptics:true,ambience:'',ambienceVol:0.4,onboarded:false,focusId:'',focusDate:'',graceDays:1,tracks:[],alarmTrack:''},
-  aspects:JSON.parse(JSON.stringify(ASPECT_DEFAULTS)),
-  aspectOrder:['physical','mental','social','emotional'],
+  settings:{theme:'dark',weeklyReviewDay:0,particles:['flowers'],dayStart:0,dayEnd:24,colors:{},gradient:'',preset:'dark',customParticles:[],customThemes:[],editLabels:false,appName:'The Blossom',showEmojis:false,chime:true,haptics:true,ambience:'',ambienceVol:0.4,onboarded:false,focusId:'',focusDate:'',graceDays:1,tracks:[],alarmTrack:'',blossomView:'top',blossomDisplay:'flower',clickSparkle:false,clickEmoji:'',xpScale:6,xpCurve:50,health:{habits:true,goals:true,trackers:true},healthWindow:14},
+  aspects:{},
+  aspectOrder:[],
   notes:[], todos:[], habits:[], goals:[], alarms:[], timers:[], events:[], routines:[],
   trackers:[{id:'mood',name:'Mood',emoji:'😊',max:10,color:'#F4A4B0'},{id:'energy',name:'Energy',emoji:'⚡',max:10,color:'#D4AC60'},{id:'focus',name:'Focus',emoji:'🎯',max:10,color:'#52B788'}],
-  trackerLog:{}, journal:[], body:{view:'front',muscles:{}}, people:[], reviews:[], xp:{}, labels:{},
+  trackerLog:{}, journal:[], body:{view:'front',muscles:{}}, people:[], reviews:[], xp:{}, labels:{}, tags:[],
   home:{order:['focus','overview','growth','today','notes','habits','goals','trackers','journal','bloom','tools'],hidden:[],custom:[],collapsed:[]},
 });
 const HOME_DEFAULT_ORDER=['focus','overview','growth','today','notes','habits','goals','trackers','journal','bloom','tools'];
 const SECTION_LABELS={overview:'Overview',growth:'Growth',today:'Today',notes:'Notes',habits:'Habits',goals:'Goals',trackers:'Trackers',journal:'Journal',tools:'Records & Alarms'};
+var storageOK=true,storageWasEmpty=false;
 let S=load();
-function load(){let d;try{const raw=localStorage.getItem(KEY);d=raw?Object.assign(DEFAULT(),JSON.parse(raw)):DEFAULT();}catch(e){d=DEFAULT();}return migrate(d);}
+function load(){let d,raw=null;try{raw=localStorage.getItem(KEY);}catch(e){storageOK=false;}
+  if(raw==null&&storageOK)storageWasEmpty=true;
+  try{d=raw?Object.assign(DEFAULT(),JSON.parse(raw)):DEFAULT();}catch(e){d=DEFAULT();}
+  return migrate(d);}
 function blocksToHtml(blocks){return (blocks||[]).map(b=>{const tx=esc(b.text||'');
   if(b.type==='h1')return `<h1>${tx}</h1>`;if(b.type==='h2')return `<h2>${tx}</h2>`;
   if(b.type==='quote')return `<blockquote>${tx}</blockquote>`;if(b.type==='bullet')return `<ul><li>${tx}</li></ul>`;
@@ -371,19 +427,45 @@ function migrate(d){
   if(!d.settings.tracks)d.settings.tracks=[];
   if(d.settings.alarmTrack==null)d.settings.alarmTrack='';
   if(!d.labels)d.labels={};
+  if(!d.tags)d.tags=[];
   if(!d.home)d.home={order:HOME_DEFAULT_ORDER.slice(),hidden:[],custom:[]};
   if(!d.home.custom)d.home.custom=[];if(!d.home.hidden)d.home.hidden=[];if(!d.home.order)d.home.order=HOME_DEFAULT_ORDER.slice();if(!d.home.collapsed)d.home.collapsed=[];
   HOME_DEFAULT_ORDER.forEach(id=>{if(!d.home.order.includes(id))d.home.order.push(id);});
   if(d.settings.graceDays==null)d.settings.graceDays=1;
+  if(!d.settings.blossomView)d.settings.blossomView='top';
+  if(d.settings.clickSparkle==null)d.settings.clickSparkle=false;
+  if(d.settings.clickEmoji==null)d.settings.clickEmoji='';
   if(!d.timers)d.timers=[];
   (d.habits||[]).forEach(h=>{if(!h.goalIds)h.goalIds=h.goalId?[h.goalId]:[];delete h.goalId;});
   if(d.settings.dayStart==null)d.settings.dayStart=0;
   if(d.settings.dayEnd==null)d.settings.dayEnd=24;
-  if(!d.aspects){d.aspects=JSON.parse(JSON.stringify(ASPECT_DEFAULTS));}
-  // ensure builtin aspects exist & have skills
-  for(const k in ASPECT_DEFAULTS){if(!d.aspects[k])d.aspects[k]=JSON.parse(JSON.stringify(ASPECT_DEFAULTS[k]));if(!d.aspects[k].skills)d.aspects[k].skills=ASPECT_DEFAULTS[k].skills.slice();}
+  if(!d.aspects)d.aspects={};
   if(!d.aspectOrder)d.aspectOrder=Object.keys(d.aspects);
   Object.keys(d.aspects).forEach(k=>{if(!d.aspectOrder.includes(k))d.aspectOrder.push(k);});
+  if(d.settings.blossomDisplay==null)d.settings.blossomDisplay=PRESET_DISPLAY[d.settings.preset]||'flower';
+  if(d.settings.blossomDisplay==='forest')d.settings.blossomDisplay='flower';
+  if(d.settings.xpScale==null)d.settings.xpScale=6;
+  if(d.settings.xpCurve==null)d.settings.xpCurve=50;
+  if(d.settings.healthWindow==null)d.settings.healthWindow=14;
+  if(!d.settings.health)d.settings.health={habits:true,goals:true,trackers:true};
+  if(!d.xp)d.xp={};
+  // ---- migrate 2-level (aspect→skill strings) to 3-level (blossom→petal→skill objects) ----
+  const _nameToId={};// per-blossom: name -> skillId, used to re-link items
+  Object.keys(d.aspects).forEach(k=>{const a=d.aspects[k];if(a.petals)return;// already migrated
+    _nameToId[k]={};
+    const skills=(a.skills||[]).map(nm=>{const id='sk_'+uid();_nameToId[k][nm]=id;
+      // carry old XP keyed `k::name` -> `s:`+id
+      const ok=k+'::'+nm;if(d.xp[ok]!=null){d.xp['s:'+id]=(d.xp['s:'+id]||0)+d.xp[ok];delete d.xp[ok];}
+      return {id,name:nm,desc:''};});
+    // old blossom-level XP `k::_` -> `b:`+k
+    const bk=k+'::_';if(d.xp[bk]!=null){d.xp['b:'+k]=(d.xp['b:'+k]||0)+d.xp[bk];delete d.xp[bk];}
+    a.petals=[{id:'pt_'+uid(),name:'Core',desc:'',skills}];delete a.skills;});
+  // re-link items: skillPairs (`k::name`) -> skillIds; rebuild skill root-note keys
+  [...(d.habits||[]),...(d.goals||[]),...(d.events||[])].forEach(it=>{
+    if(it.skillIds)return;const ids=[];
+    (it.skillPairs||[]).forEach(p=>{const[k,nm]=p.split('::');if(_nameToId[k]&&_nameToId[k][nm])ids.push(_nameToId[k][nm]);});
+    if(ids.length)it.skillIds=ids;});
+  (d.notes||[]).forEach(n=>{if(n.kind==='skill'&&n.skillKey&&!n.skillId){const[k,nm]=n.skillKey.split('::');if(_nameToId[k]&&_nameToId[k][nm]){n.skillId=_nameToId[k][nm];}}});
   if(d.pulses&&d.pulses.length){d.pulses.forEach(p=>{d.trackerLog[p.date]={mood:p.mood,energy:p.energy,focus:p.focus};});delete d.pulses;}
   _migNotes=d.notes||[];
   (d.notes||[]).forEach(n=>{if(n.html==null){n.html=n.blocks?blocksToHtml(n.blocks):(n.body?('<p>'+esc(n.body)+'</p>'):'');}delete n.blocks;delete n.body;delete n.mode;if(!n.icon)n.icon=n.kind==='skill'?'🌱':'📄';if(!n.tags)n.tags=[];});
@@ -393,7 +475,12 @@ function migrate(d){
 let saveTimer,saveWarned=false;function save(){clearTimeout(saveTimer);saveTimer=setTimeout(saveNow,140);}
 function storageKB(){try{return Math.round((localStorage.getItem(KEY)||'').length/1024);}catch(e){return 0;}}
 function saveNow(){let json;try{json=JSON.stringify(S);}catch(e){console.warn('Blossom serialize error',e);if(!saveWarned){saveWarned=true;toast('⚠ Save error: '+(e.name||'data'));}return;}
-  try{localStorage.setItem(KEY,json);saveWarned=false;}catch(e){if(!saveWarned){saveWarned=true;const kb=Math.round(json.length/1024);toast('⚠ Couldn’t save ('+kb+' KB · '+(e.name||'error')+')');console.warn('Blossom save failed',e,kb+'KB');}}}
+  try{localStorage.setItem(KEY,json);saveWarned=false;storageOK=true;}
+  catch(e){storageOK=false;
+    // localStorage is blocked (private mode / embedded preview / site-data off) — keep a backup in IndexedDB
+    idbPut('save:state',json).catch(()=>{});
+    if(!saveWarned){saveWarned=true;console.warn('Blossom save fell back to IndexedDB',e);
+      toast('🔒 On-device storage is blocked here — using a backup store. Open in a normal browser tab to save permanently.');}}}
 
 /* ===== 3. DOMAIN ===== */
 function habitStreak(h){let s=0,gr=S.settings.graceDays||0,d=new Date();if(!habitDone(h,todayStr()))d.setDate(d.getDate()-1);for(;;){const k=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');if(habitDone(h,k)){s++;}else if(gr>0){gr--;}else break;d.setDate(d.getDate()-1);}return s;}
@@ -401,27 +488,39 @@ function longestStreak(h){const days=Object.keys(h.logs).filter(k=>habitDone(h,k
 function habitConsistency(h,days=14){let c=0,t=new Date();for(let i=0;i<days;i++){const dd=new Date(t.getTime()-i*864e5);const k=dd.getFullYear()+'-'+String(dd.getMonth()+1).padStart(2,'0')+'-'+String(dd.getDate()).padStart(2,'0');if(habitDone(h,k))c++;}return Math.round(c/days*100);}
 function rubric(p){if(p>=90)return{g:'A',c:'var(--physical)'};if(p>=75)return{g:'B',c:'var(--gold)'};if(p>=60)return{g:'C',c:'var(--emotional)'};return{g:'Re-root',c:'var(--pink)'};}
 
-const xpKey=(a,s)=>a+'::'+(s||'_');
-function gainXP(a,s,amt){if(!a)return;const k=xpKey(a,s);S.xp[k]=Math.max(0,(S.xp[k]||0)+amt);if(amt>0)flyXP(amt);}
-const skillXP=(a,s)=>S.xp[xpKey(a,s)]||0;
-function aspectXP(a){let t=0;for(const k in S.xp)if(k.indexOf(a+'::')===0)t+=S.xp[k];return t;}
+/* ---- Blossom → Petal → Skill resolution & XP (id-based rollups) ---- */
+function blossomPetals(b){return (b&&b.petals)||[];}
+function findSkill(skillId){for(const bid of Object.keys(S.aspects)){const b=S.aspects[bid];for(const p of blossomPetals(b)){const s=(p.skills||[]).find(x=>x.id===skillId);if(s)return{bid,blossom:b,petal:p,skill:s};}}return null;}
+function findPetal(petalId){for(const bid of Object.keys(S.aspects)){const b=S.aspects[bid];const p=blossomPetals(b).find(x=>x.id===petalId);if(p)return{bid,blossom:b,petal:p};}return null;}
+function xpBump(key,amt){S.xp[key]=Math.max(0,(S.xp[key]||0)+amt);if(amt>0)flyXP(amt);}
+const skillXP=id=>S.xp['s:'+id]||0;
+function petalXP(p){let t=S.xp['p:'+p.id]||0;(p.skills||[]).forEach(s=>t+=skillXP(s.id));return t;}
+function aspectXP(bid){const b=S.aspects[bid];if(!b)return 0;let t=S.xp['b:'+bid]||0;blossomPetals(b).forEach(p=>t+=petalXP(p));return t;}
 const itemAspects=x=>(x.aspects&&x.aspects.length?x.aspects:(x.aspect?[x.aspect]:[]));
-function gainItemXP(it,amt){const pairs=(it.skillPairs&&it.skillPairs.length)?it.skillPairs:itemAspects(it).map(a=>a+'::');if(!pairs.length)return;const per=amt/pairs.length;pairs.forEach(p=>{const[a,s]=p.split('::');gainXP(a,s||null,Math.round(per));});}
+const itemSkills=x=>(x.skillIds&&x.skillIds.length?x.skillIds:[]);
+function itemSkillNames(x){return itemSkills(x).map(id=>{const fs=findSkill(id);return fs?fs.skill.name:null;}).filter(Boolean);}
+function gainItemXP(it,amt){const sids=itemSkills(it);let buckets;
+  if(sids.length)buckets=sids.map(id=>'s:'+id);
+  else buckets=itemAspects(it).map(b=>'b:'+b);
+  if(!buckets.length)return;const per=amt/buckets.length;buckets.forEach(k=>xpBump(k,Math.round(per)));}
+/* back-compat: award XP to a blossom by id (resolves a skill name if given) */
+function gainXP(bid,skillName,amt){if(!bid||!S.aspects[bid])return;if(skillName){const b=S.aspects[bid];for(const p of blossomPetals(b)){const sk=(p.skills||[]).find(x=>x.name===skillName);if(sk){xpBump('s:'+sk.id,amt);return;}}}xpBump('b:'+bid,amt);}
 /* XP weight from importance / difficulty / time (each 1..5, default 3) */
-function xpWeight(it){const imp=it.importance||3,dif=it.difficulty||3,tim=it.effort||3;return Math.max(3,Math.round(6*(imp+dif+tim)/3));}
+function xpWeight(it){const imp=it.importance||3,dif=it.difficulty||3,tim=it.effort||3;const scale=(S.settings&&S.settings.xpScale)||6;return Math.max(1,Math.round(scale*(imp+dif+tim)/3));}
 /* goal XP tracked so re-sliding progress can't farm XP */
 function syncGoalXP(g){const target=Math.round((clamp(g.progress||0,0,100)/100)*xpWeight(g));const given=g.xpGiven||0;const delta=target-given;if(delta!==0){gainItemXP(g,delta);g.xpGiven=target;}}
 const habitRepeat=h=>(h.cosmos&&h.cosmos.repeat)||1;
 const habitDone=(h,d)=>(h.logs[d]||0)>=habitRepeat(h);
-const totalXpForLevel=L=>50*L*(L-1);
+const totalXpForLevel=L=>((S.settings&&S.settings.xpCurve)||50)*L*(L-1);
 function levelFromXp(xp){let L=1;while(totalXpForLevel(L+1)<=xp)L++;return L;}
 function levelInfo(xp){const L=levelFromXp(xp),a=totalXpForLevel(L),b=totalXpForLevel(L+1);return{level:L,pct:Math.round((xp-a)/(b-a)*100),cur:xp-a,need:b-a};}
 function flyXP(amt){const e=document.createElement('div');e.className='xpfly';e.textContent='+'+amt+' XP';e.style.left=(innerWidth/2-20)+'px';e.style.top=(innerHeight-160)+'px';document.body.appendChild(e);setTimeout(()=>e.remove(),1000);}
 
-function aspectScore(key){const hs=S.habits.filter(h=>itemAspects(h).includes(key)),gs=S.goals.filter(g=>itemAspects(g).includes(key));let parts=[];
-  if(hs.length)parts.push(hs.reduce((a,h)=>a+habitConsistency(h),0)/hs.length);
-  if(gs.length)parts.push(gs.reduce((a,g)=>a+(g.progress||0),0)/gs.length);
-  const r=lastTrackerAvg();if(r!=null)parts.push(r);
+function aspectScore(key){const H=(S.settings&&S.settings.health)||{habits:true,goals:true,trackers:true};const win=(S.settings&&S.settings.healthWindow)||14;
+  const hs=S.habits.filter(h=>itemAspects(h).includes(key)),gs=S.goals.filter(g=>itemAspects(g).includes(key));let parts=[];
+  if(H.habits!==false&&hs.length)parts.push(hs.reduce((a,h)=>a+habitConsistency(h,win),0)/hs.length);
+  if(H.goals!==false&&gs.length)parts.push(gs.reduce((a,g)=>a+(g.progress||0),0)/gs.length);
+  if(H.trackers!==false){const r=lastTrackerAvg();if(r!=null)parts.push(r);}
   if(!parts.length)return 0;return Math.round(parts.reduce((a,b)=>a+b,0)/parts.length);}
 function lastTrackerAvg(){const dates=Object.keys(S.trackerLog).sort().slice(-7);if(!dates.length)return null;let sum=0,n=0;dates.forEach(dt=>{S.trackers.forEach(tr=>{const v=S.trackerLog[dt][tr.id];if(v!=null){sum+=v/tr.max*100;n++;}});});return n?sum/n:null;}
 function todayCompletion(){const t=todayStr();const items=agendaFor(t);const total=items.length;if(!total)return 0;const done=items.filter(it=>it.done).length;return Math.round(done/total*100);}
@@ -434,7 +533,7 @@ function agendaFor(ds){const wd=new Date(ds+'T00:00').getDay();const items=[];
   S.goals.forEach(g=>{const days=(g.cosmos&&g.cosmos.days)||[];if(days.includes(DOW[wd]))items.push({kind:'goaltask',id:g.id,text:'🎯 '+g.name,aspect:g.aspect,done:false});
     if(g.targetDate===ds)items.push({kind:'goaltarget',id:g.id,text:'🏁 Target: '+g.name,aspect:g.aspect,done:(g.progress||0)>=100});
     (g.cosmos&&g.cosmos.milestones||[]).forEach(m=>{if(m.date===ds)items.push({kind:'milestone',id:g.id,text:'⛳ '+m.text,aspect:g.aspect,done:false});});});
-  S.events.filter(e=>e.date===ds).forEach(e=>items.push({kind:'event',id:e.id,text:(e.start?e.start+' ':'')+e.title,aspect:e.aspect,done:false}));
+  S.events.forEach(e=>{const end=e.endDate||e.date;if(ds>=e.date&&ds<=end){const span=end>e.date;const tot=span?daysBetween(e.date,end)+1:0;const dn=span?daysBetween(e.date,ds)+1:0;items.push({kind:'event',id:e.id,text:(e.start?e.start+' ':'')+e.title+(span?` (day ${dn}/${tot})`:''),aspect:e.aspect,done:false});}});
   return items;}
 function dayAspectDots(ds){return [...new Set(agendaFor(ds).map(i=>i.aspect).filter(Boolean))].slice(0,4);}
 
@@ -455,7 +554,7 @@ function go(v){flushEditor();nav.push(v);render();window.scrollTo(0,0);}
 function back(){flushEditor();if(nav.length>1){nav.pop();render();window.scrollTo(0,0);}}
 function setTab(s){flushEditor();nav=[{screen:s}];render();window.scrollTo(0,0);}
 const TABS=[['calendar','📅','Calendar'],['home','🏠','Home'],['blossom','🌸','Blossom']];
-const TABMAP={home:'home',calendar:'calendar',day:'calendar',blossom:'blossom',aspect:'blossom',skill:'blossom',map:'blossom',habit:'home',goal:'home',cosmos:'home',notes:'home',note:'home',journal:'home',jentry:'home',records:'home',alarms:'home'};
+const TABMAP={home:'home',calendar:'calendar',day:'calendar',blossom:'blossom',aspect:'blossom',petal:'blossom',skill:'blossom',map:'blossom',habit:'home',goal:'home',cosmos:'home',notes:'home',note:'home',journal:'home',jentry:'home',records:'home',alarms:'home'};
 function render(){const v=view();applyTheme();renderAppbar(v);renderTabbar(v);
   $('#screen').innerHTML=(SCREENS[v.screen]||SCREENS.home)(v);
   const fab=$('#fab');if(['home','calendar','blossom','notes','aspect','skill','map'].includes(v.screen)){fab.style.display='grid';fab.dataset.ctx=v.screen;}else fab.style.display='none';
@@ -465,7 +564,8 @@ function render(){const v=view();applyTheme();renderAppbar(v);renderTabbar(v);
   applyEmojiPref();
   resolveImages();
   if($('.docedit')){try{document.execCommand('defaultParagraphSeparator',false,'p');}catch(_){}}
-  if(v.screen==='note'){const n=getNote(v.id);if(n&&!n.title&&!(n.html||'').trim()){const ti=$('.page-title');if(ti){ti.focus();}}}}
+  if(v.screen==='note'){const n=getNote(v.id);if(n&&!n.title&&!(n.html||'').trim()){const ti=$('.page-title');if(ti){ti.focus();}}}
+  startOrbits();if(typeof clearPeek==='function')clearPeek();}
 function applyLabels(){document.querySelectorAll('#screen .section-h h3, #screen .empty').forEach(el=>{if(el.dataset.def===undefined)el.dataset.def=el.textContent;const ov=S.labels[el.dataset.def];if(ov!==undefined)el.textContent=ov;el.classList.toggle('lbl-edit',!!S.settings.editLabels);});}
 const EMOJI_RE=/[\p{Extended_Pictographic}\u{1F000}-\u{1FAFF}️‍]/gu;
 function applyEmojiPref(){if(S.settings.showEmojis)return;['#appbar','#screen'].forEach(sel=>{const root=$(sel);if(!root)return;
@@ -496,7 +596,8 @@ function renderAppbar(v){
   if(v.screen==='note'){const n=getNote(v.id);title=(n&&(n.icon+' '+(n.title||'Untitled')))||'Note';}
   if(v.screen==='jentry'){const j=ownerOf('journal',v.id);title='📖 '+((j&&j.title)||'Entry');}
   if(v.screen==='aspect'){const a=AS(v.aspect);title=a.emoji+' '+a.name;}
-  if(v.screen==='skill')title=v.skill;
+  if(v.screen==='petal'){const fp=findPetal(v.petal);title='🌸 '+(fp?fp.petal.name:'Petal');}
+  if(v.screen==='skill'){const fs=findSkill(v.skill);title='⭐ '+(fs?fs.skill.name:'Skill');}
   if(v.screen==='day')title=fmtShort(v.date);
   if(v.screen==='habit'){const h=S.habits.find(x=>x.id===v.id);title=h?h.name:'Habit';}
   if(v.screen==='goal'){const g=S.goals.find(x=>x.id===v.id);title=g?g.name:'Goal';}
@@ -525,7 +626,7 @@ SCREENS.home=function(){
     habits:()=>`<div class="section-h"><h3>🔥 Habits</h3><button class="add" data-act="new-cosmos" data-kind="habit">+ Habit</button></div>${S.habits.length?`<div class="hstrip">${S.habits.map(habitCardHTML).join('')}</div>`:'<div class="card"><div class="empty">Create a habit</div></div>'}`,
     goals:()=>`<div class="section-h"><h3>🎯 Goals</h3><button class="add" data-act="new-cosmos" data-kind="goal">+ Goal</button></div>${S.goals.length?S.goals.map(goalCardHTML).join(''):'<div class="card"><div class="empty">Create a goal</div></div>'}`,
     trackers:()=>`<div class="section-h"><h3>📈 Trackers</h3><button class="add" data-act="manage-trackers">Manage</button></div><div class="card" data-trackers>${trackersHTML()}</div>`,
-    journal:()=>`<div class="section-h"><h3>📖 Journal</h3><button class="add" data-act="new-journal-today">+ Entry</button></div><div class="card tight">${recentJournal.length?recentJournal.map(j=>`<div class="note-tile" data-act="open-jentry" data-id="${j.id}"><span class="nt-ic">📖</span><div class="nt-body"><b>${esc(j.title||fmtShort(j.date))} ${j.aspect?AS(j.aspect).emoji:''}</b><small>${esc(fmtShort(j.date))} · ${esc(htmlPreview(j.html))||'empty'}</small></div></div>`).join(''):'<div class="empty">Write freely — tag entries by aspect & mood.</div>'}<button class="btn sm block" style="margin-top:8px" data-act="open-journal">Open journal →</button></div>`,
+    journal:()=>`<div class="section-h"><h3>📖 Journal</h3><button class="add" data-act="new-journal-today">+ Entry</button></div><div class="card tight">${recentJournal.length?recentJournal.map(j=>`<div class="note-tile" data-act="open-jentry" data-id="${j.id}"><span class="nt-ic">📖</span><div class="nt-body"><b>${esc(j.title||fmtShort(j.date))} ${j.aspect?AS(j.aspect).emoji:''}</b><small>edited ${esc(fmtEdited(j.updatedAt||j.createdAt))}</small></div></div>`).join(''):'<div class="empty">Write freely — tag entries by aspect & mood.</div>'}<button class="btn sm block" style="margin-top:8px" data-act="open-journal">Open journal →</button></div>`,
     tools:()=>`<div class="row"><button class="btn" data-act="open-records">🗓 Daily Records</button><button class="btn" data-act="open-alarms">⏰ Alarms & Timers</button></div><div class="card tight" style="margin-top:10px">${alarms.length?alarms.map(alarmHTML).join(''):'<div class="empty">No alarms yet — tap Alarms & Timers.</div>'}</div>`,
     focus:()=>focusSectionHTML(t,agenda),
     bloom:()=>{const ins=weeklyInsight();return ins?`<div class="section-h"><h3>🌼 This week</h3></div><div class="card"><p class="serif" style="margin:0;line-height:1.55;font-size:15px">${esc(ins)}</p></div>`:'';},
@@ -570,9 +671,9 @@ function agendaHTML(a,ds){const checkable=a.kind==='habit'||a.kind==='todo';
   return `<div class="agenda-item"><div class="ai-bar" style="background:${aspectHex(a.aspect)||'var(--line)'}"></div>
     ${checkable?`<button class="check ${a.done?'on':''} ${a.kind==='habit'?'round':''}" data-act="${a.kind==='habit'?'checkin':'toggle-todo'}" data-id="${a.id}" data-date="${ds}">${a.done?'✓':''}</button>`:`<span style="width:24px;text-align:center">${a.kind==='event'?'🕒':'•'}</span>`}
     <div class="ai-b" data-act="${a.kind==='habit'?'open-habit':a.kind==='event'?'edit-event':a.kind.startsWith('goal')||a.kind==='milestone'?'open-goal':'edit-todo'}" data-id="${a.id}"><b class="${a.done?'li-text done':''}">${esc(a.text)}</b>${a.kind==='habit'?`<small> · ${a.rep>1?'<b style="color:var(--gold)">'+(a.count||0)+'/'+a.rep+'</b> · ':''}${a.streak}🔥</small>`:''}</div></div>`;}
-function noteTileHTML(n){const kids=childNotes(n.id).length;return `<div class="note-tile" data-act="open-note" data-id="${n.id}"><span class="nt-ic">${n.pinned?'<span class="pin">📌</span>':(n.icon||'📄')}</span><div class="nt-body"><b>${esc(n.title||'Untitled')}</b><small>${kids?kids+' inside · ':''}${n.tags.map(t=>AS(t).emoji).join('')||esc(htmlPreview(n.html))||'empty'}</small></div></div>`;}
-function habitCardHTML(h){const s=habitStreak(h);const done=h.logs[todayStr()];return `<div class="habit-card"><div class="hn" data-act="open-habit" data-id="${h.id}">${esc(h.name)}</div><div style="display:flex;justify-content:space-between;align-items:center"><span class="streak">${s}🔥</span><span class="tag-dot" style="background:${aspectHex(h.aspect)}"></span></div><button class="checkin ${done?'done':''}" data-act="checkin" data-id="${h.id}" data-date="${todayStr()}">${done?'✓ Done today':'Check in'}</button></div>`;}
-function goalCardHTML(g){const p=clamp(g.progress||0,0,100);const dr=g.targetDate?daysBetween(todayStr(),g.targetDate):null;const term=g.term==='long'?'🌳':'🌱';return `<div class="goal-card" data-act="open-goal" data-id="${g.id}"><div style="display:flex;justify-content:space-between;align-items:center"><b>${term} ${esc(g.name)}</b><span class="tag-dot" style="background:${aspectHex(g.aspect)}"></span></div><div class="bar"><i style="width:${p}%;background:${aspectHex(g.aspect)}"></i></div><small class="muted">${p}% · ${g.skill||AS(g.aspect).name}${dr!=null?` · ${dr>=0?dr+' days left':'overdue'}`:''}</small></div>`;}
+function noteTileHTML(n){const kids=childNotes(n.id).length;return `<div class="note-tile" data-act="open-note" data-id="${n.id}"><span class="nt-ic">${n.pinned?'<span class="pin">📌</span>':(n.icon||'📄')}</span><div class="nt-body"><b>${esc(n.title||'Untitled')}</b><small>${kids?kids+' inside · ':''}edited ${esc(fmtEdited(n.updatedAt))}</small>${tagPills(n.tagIds)?`<div style="margin-top:3px">${tagPills(n.tagIds)}</div>`:''}</div></div>`;}
+function habitCardHTML(h){const s=habitStreak(h);const t=todayStr();const rep=habitRepeat(h);const cnt=h.logs[t]||0;const done=habitDone(h,t);return `<div class="habit-card"><div class="hn" data-act="open-habit" data-id="${h.id}">${esc(h.name)}</div><div style="display:flex;justify-content:space-between;align-items:center"><span class="streak">${s}🔥</span><span class="tag-dot" style="background:${aspectHex(h.aspect)}"></span></div>${tagPills(h.tagIds)?`<div>${tagPills(h.tagIds)}</div>`:''}<button class="checkin ${done?'done':''}" data-act="checkin" data-id="${h.id}" data-date="${t}">${done?'✓ Done':(rep>1?`+1 · ${cnt}/${rep}${h.cosmos&&h.cosmos.unit?' '+esc(h.cosmos.unit):''}`:'Check in')}</button></div>`;}
+function goalCardHTML(g){const p=clamp(g.progress||0,0,100);const dr=g.targetDate?daysBetween(todayStr(),g.targetDate):null;const term=g.term==='long'?'🌳':'🌱';return `<div class="goal-card" data-act="open-goal" data-id="${g.id}"><div style="display:flex;justify-content:space-between;align-items:center"><b>${term} ${esc(g.name)}</b><span class="tag-dot" style="background:${aspectHex(g.aspect)}"></span></div><div class="bar"><i style="width:${p}%;background:${aspectHex(g.aspect)}"></i></div><small class="muted">${p}% · ${esc(itemSkillNames(g)[0]||AS(g.aspect).name)}${dr!=null?` · ${dr>=0?dr+' days left':'overdue'}`:''}</small>${tagPills(g.tagIds)?`<div style="margin-top:2px">${tagPills(g.tagIds)}</div>`:''}</div>`;}
 function alarmHTML(a){return `<div class="list-item"><button class="check round ${a.enabled?'on':''}" data-act="toggle-alarm" data-id="${a.id}" title="On/off (skip)">${a.enabled?'✓':''}</button><span class="li-text" data-act="edit-alarm" data-id="${a.id}"><b>${a.time}</b> &nbsp;${esc(a.label)}${a.trackId?' 🎵':''}</span><button class="btn sm" data-act="snooze-alarm" data-id="${a.id}" data-label="${esc(a.label||'Alarm')}">💤</button><button class="iconbtn" style="width:30px;height:30px;font-size:13px" data-act="del-alarm" data-id="${a.id}">✕</button></div>`;}
 function trackersHTML(){const t=todayStr();const today=S.trackerLog[t]||{};
   return `<p class="muted small" style="margin:0 0 10px">Rate today, then Save — each save is a record on your Daily Records page.</p>
@@ -591,7 +692,8 @@ SCREENS.note=function(v){const n=getNote(v.id);if(!n)return '<div class="content
     <div class="page-head"><button class="page-emoji" data-act="note-icon" data-id="${n.id}">${n.icon||'📄'}</button>
       <input class="page-title" value="${esc(n.title)}" placeholder="Untitled" data-act="note-title" data-id="${n.id}"/>
       <button class="iconbtn" data-act="note-menu" data-id="${n.id}">⋯</button></div>
-    <div class="chips" style="margin:8px 0 0">${aspectKeys().map(k=>`<button class="chip ${n.tags.includes(k)?'on':''}" data-act="note-tag" data-id="${n.id}" data-tag="${k}">${AS(k).emoji}</button>`).join('')}</div>
+    <div class="chips" style="margin:8px 0 0">${aspectKeys().map(k=>`<button class="chip ${n.tags.includes(k)?'on':''}" data-act="note-tag" data-id="${n.id}" data-tag="${k}">${S.settings.showEmojis?AS(k).emoji+' ':''}${esc(AS(k).name)}</button>`).join('')}</div>
+    ${S.tags.length?`<div class="chips" style="margin:6px 0 0">${S.tags.map(tg=>{const on=(n.tagIds||[]).includes(tg.id);return `<button class="chip ${on?'on':''}" data-act="note-tagid" data-id="${n.id}" data-tag="${tg.id}" style="${on?'background:'+tg.color+';border-color:'+tg.color+';color:#fff':'border-color:'+tg.color}">${esc(tg.name)}</button>`;}).join('')}</div>`:''}
     ${docEditor('note',n)}
   </div>`;};
 function docEditor(t,o){
@@ -620,7 +722,7 @@ function refreshChips(){document.querySelectorAll('.docedit a.subpage[data-id]')
 let calCursor=new Date();let calSel=todayStr();let calView='week';
 function weekDays(ds){const d=new Date(ds+'T00:00');const start=new Date(d);start.setDate(d.getDate()-d.getDay());const out=[];for(let i=0;i<7;i++){const x=new Date(start);x.setDate(start.getDate()+i);out.push(x.getFullYear()+'-'+String(x.getMonth()+1).padStart(2,'0')+'-'+String(x.getDate()).padStart(2,'0'));}return out;}
 function timelineHTML(date){const startH=S.settings.dayStart??0,endH=S.settings.dayEnd??24,hh=48;const toMin=t=>{const[h,m]=t.split(':').map(Number);return h*60+m;};
-  const evs=S.events.filter(e=>e.date===date&&e.start).sort((a,b)=>a.start.localeCompare(b.start));
+  const evs=S.events.filter(e=>e.start&&date>=e.date&&date<=(e.endDate||e.date)).sort((a,b)=>a.start.localeCompare(b.start));
   const lanes=[];evs.forEach(e=>{const s=toMin(e.start);const en=e.end?toMin(e.end):s+60;e._s=s;e._e=Math.max(en,s+30);let li=lanes.findIndex(end=>end<=s);if(li<0){li=lanes.length;lanes.push(0);}lanes[li]=e._e;e._lane=li;});
   const nL=Math.max(1,lanes.length);
   let hrs='';for(let h=startH;h<endH;h++)hrs+=`<div class="tl-hour"><span>${(h%12||12)}${h<12?'a':'p'}</span></div>`;
@@ -631,14 +733,16 @@ function weekGridHTML(week){const startH=S.settings.dayStart??0,endH=S.settings.
   const head=`<div class="wgrid-head"><div></div>${week.map(ds=>{const dt=new Date(ds+'T00:00');return `<div class="wgh ${ds===t?'today':''} ${ds===calSel?'sel':''}" data-act="cal-sel" data-date="${ds}"><small>${['Su','Mo','Tu','We','Th','Fr','Sa'][dt.getDay()]}</small><b>${dt.getDate()}</b></div>`;}).join('')}</div>`;
   const allday=`<div class="wgrid-head"><div></div>${week.map(ds=>{const items=agendaFor(ds).filter(a=>a.kind!=='event'&&!(a.kind==='todo'&&(S.todos.find(td=>td.id===a.id)||{}).time));const dots=[...new Set(items.map(i=>i.aspect).filter(Boolean))].slice(0,3);return `<div class="wg-allday">${dots.map(a=>`<i style="background:${aspectHex(a)}"></i>`).join('')||(items.length?'<i style="background:var(--muted)"></i>':'')}</div>`;}).join('')}</div>`;
   let times='';for(let h=startH;h<endH;h++)times+=`<div class="wg-time" style="height:${hh}px"><span>${(h%12||12)}${h<12?'a':'p'}</span></div>`;
-  const cols=week.map(ds=>{const evs=S.events.filter(e=>e.date===ds&&e.start);const tt=S.todos.filter(td=>td.date===ds&&td.time).map(td=>({id:td.id,title:td.text,start:td.time,end:'',aspect:td.aspect,todo:1}));
+  const cols=week.map(ds=>{const wd2=new Date(ds+'T00:00').getDay();const evs=S.events.filter(e=>e.start&&ds>=e.date&&ds<=(e.endDate||e.date));const tt=S.todos.filter(td=>td.time&&((td.days&&td.days.length)?td.days.includes(DOW[wd2]):td.date===ds)).map(td=>({id:td.id,title:td.text,start:td.time,end:'',aspect:td.aspect,todo:1}));
     let lines='';for(let h=startH;h<endH;h++)lines+=`<div style="position:absolute;left:0;right:0;top:${(h-startH)*hh}px;border-top:1px solid var(--line)"></div>`;
     const blocks=[...evs,...tt].map(e=>{const s=toMin(e.start);const en=e.end?toMin(e.end):s+45;const top=(s-startH*60)/60*hh;const height=Math.max(13,(en-s)/60*hh-2);return `<div class="wg-ev" data-act="${e.todo?'edit-todo':'edit-event'}" data-id="${e.id}" style="top:${top}px;height:${height}px;background:${aspectHex(e.aspect)||'var(--muted-2)'}">${esc(e.title)}</div>`;}).join('');
     return `<div class="wg-day" style="height:${rows*hh}px">${lines}${blocks}</div>`;}).join('');
-  return `${head}${allday}<div class="gwrap"><div class="wgrid" style="min-width:${30+7*46}px"><div class="wg-times">${times}</div><div class="wg-days">${cols}</div></div></div>`;}
+  const spanEvs=S.events.filter(e=>e.endDate&&e.endDate>e.date&&e.date<=week[6]&&e.endDate>=week[0]);
+  let spanRow='';if(spanEvs.length){spanRow=`<div style="display:flex;margin-bottom:4px"><div style="width:30px;flex:none"></div><div style="flex:1;position:relative;height:${spanEvs.length*18}px">${spanEvs.map((e,i)=>{const sc=Math.max(0,daysBetween(week[0],e.date)),ec=Math.min(6,daysBetween(week[0],e.endDate));const left=sc/7*100,wp=(ec-sc+1)/7*100;return `<div data-act="edit-event" data-id="${e.id}" style="position:absolute;top:${i*18}px;left:${left}%;width:calc(${wp}% - 2px);height:16px;background:${aspectHex(e.aspect)||'var(--muted-2)'};border-radius:4px;color:#fff;font-size:9px;line-height:16px;padding:0 5px;overflow:hidden;white-space:nowrap">${esc(e.title)}</div>`;}).join('')}</div></div>`;}
+  return `${head}${spanRow}${allday}<div class="gwrap"><div class="wgrid" style="min-width:${30+7*46}px"><div class="wg-times">${times}</div><div class="wg-days">${cols}</div></div></div>`;}
 SCREENS.calendar=function(){
   const t=todayStr();
-  const toggle=`<div class="calview">${[['week','Week'],['month','Month'],['day','Day']].map(([v,l])=>`<button class="${calView===v?'on':''}" data-act="cal-view" data-view="${v}">${l}</button>`).join('')}</div>`;
+  const toggle=`<div class="calview">${[['day','Day'],['week','Week'],['month','Month']].map(([v,l])=>`<button class="${calView===v?'on':''}" data-act="cal-view" data-view="${v}">${l}</button>`).join('')}</div>`;
   let head='';
   if(calView==='month'){const y=calCursor.getFullYear(),m=calCursor.getMonth();const startDow=new Date(y,m,1).getDay();const dim=new Date(y,m+1,0).getDate();const cells=[];
     for(let i=0;i<startDow;i++)cells.push({d:new Date(y,m,0-(startDow-1-i)),other:true});for(let i=1;i<=dim;i++)cells.push({d:new Date(y,m,i),other:false});while(cells.length%7)cells.push({d:new Date(y,m+1,cells.length-startDow-dim+1),other:true});
@@ -662,30 +766,32 @@ SCREENS.day=function(v){const date=v.date;calSel=date;calView='day';return SCREE
 function calNav(dir){if(calView==='month'){calCursor.setMonth(calCursor.getMonth()+dir);}else if(calView==='week'){calSel=dateAdd(calSel,dir*7);calCursor=new Date(calSel+'T00:00');}else{calSel=dateAdd(calSel,dir);calCursor=new Date(calSel+'T00:00');}}
 
 /* ---- BLOSSOM ---- */
-SCREENS.blossom=function(){
-  const keys=aspectKeys();const levels=keys.map(k=>levelFromXp(aspectXP(k)));
+SCREENS.blossom=function(){const keys=aspectKeys();
   return `<div class="content">
-    <div class="card"><div class="flower-wrap">${flowerSVG(keys,levels)}</div>
-      <p class="serif" style="text-align:center;margin:0 0 4px;font-size:14px">${seasonInfo().emoji} ${seasonInfo().name} · your garden is ${gardenMomentum()}</p>
-      <p class="muted small" style="text-align:center;margin:0 0 8px">Tap a petal to explore that part of you.</p>
-      <button class="btn sm block" data-act="add-aspect">＋ Add an aspect (new petal)</button></div>
-    <div class="aspect-grid">${keys.map((k,i)=>{const a=AS(k);const li=levelInfo(aspectXP(k));return `<div class="aspect-tile" data-act="open-aspect" data-aspect="${k}" style="background:linear-gradient(160deg,${a.hex}22,var(--card))"><span class="em">${a.emoji}</span><span class="lv" style="color:${a.hex}">Lv ${li.level}</span><span class="nm">${esc(a.name)}</span><div class="bar thin" style="margin-top:3px"><i style="width:${li.pct}%;background:${a.hex}"></i></div><small class="muted">Health ${aspectScore(k)} · ${li.cur}/${li.need} XP</small></div>`;}).join('')}
-      <button class="aspect-add" data-act="add-aspect">＋ Add aspect</button></div>
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px"><h3 style="margin:0">🌌 Your Cosmos</h3><button class="btn sm" data-act="add-blossom">＋ Blossom</button></div>
+      ${keys.length?`${cosmosSVG(keys)}
+        <p class="muted small" style="text-align:center;margin:10px 0 0">Tap a ${dispNodeWord()} for a petal · a star for a skill · the centre opens the blossom.</p>`
+        :`<div class="empty" style="padding:22px 10px;text-align:center">Your cosmos is empty 🌱<br><br><button class="btn" data-act="add-blossom">Pick your first blossom</button></div>`}
+      <p class="serif" style="text-align:center;margin:12px 0 2px;font-size:14px">${seasonInfo().emoji} ${seasonInfo().name} · your cosmos is ${gardenMomentum()}</p></div>
     <button class="btn block" data-act="open-journal">📖 Journal & Reflections</button>
     <div class="card"><h3>📈 Tracker Graph</h3>${trackerGraphAll()}</div>
   </div>`;};
-SCREENS.aspect=function(v){const k=v.aspect,a=AS(k);if(k==='physical')seedBodyMap();const maps=mapsForAspect(k);const li=levelInfo(aspectXP(k));const habits=S.habits.filter(h=>itemAspects(h).includes(k)),goals=S.goals.filter(g=>itemAspects(g).includes(k));
+function notFoundScreen(){return '<div class="content"><div class="empty">Not found</div></div>';}
+SCREENS.aspect=function(v){const k=v.aspect,a=AS(k);if(!S.aspects[k])return notFoundScreen();if(k==='physical')seedBodyMap();const maps=mapsForAspect(k);const li=levelInfo(aspectXP(k));const petals=blossomPetals(a);const habits=S.habits.filter(h=>itemAspects(h).includes(k)),goals=S.goals.filter(g=>itemAspects(g).includes(k));
   return `<div class="content">
     <div class="card" style="background:linear-gradient(160deg,${a.hex}26,var(--card))">
-      <div style="display:flex;align-items:center;gap:14px"><div style="font-size:40px">${a.emoji}</div>
-        <div style="flex:1"><b style="font-size:19px">${esc(a.name)}</b> <span class="level-badge" style="color:${a.hex}">Lv ${li.level}</span>
+      <div style="display:flex;align-items:center;gap:14px"><div style="width:64px;flex:none">${blossomGlyph(k,60)}</div>
+        <div style="flex:1"><b style="font-size:19px">${S.settings.showEmojis?a.emoji+' ':''}${esc(a.name)}</b> <span class="level-badge" style="color:${a.hex}">Lv ${li.level}</span>
+          ${a.desc?`<div class="muted small" style="margin:2px 0">${esc(a.desc)}</div>`:''}
           <div class="bar thin" style="margin:6px 0 4px"><i style="width:${li.pct}%;background:${a.hex}"></i></div>
           <small class="muted">${li.cur}/${li.need} XP to Lv ${li.level+1} · Health ${aspectScore(k)}/100</small></div>
         <button class="iconbtn" data-act="edit-aspect" data-aspect="${k}">⋯</button></div></div>
+    ${petals.length?`<div class="card">${blossomScene(k)}<p class="muted small" style="text-align:center;margin:6px 0 0">Tap a ${dispNodeWord()} for a petal · tap a star for a skill.</p></div>`:''}
+    <div class="section-h"><h3>🌸 Petals</h3><button class="add" data-act="add-petal" data-aspect="${k}">+ Petal</button></div>
+    <div class="card tight">${petals.length?petals.map(p=>{const pl=levelInfo(petalXP(p));return `<div class="petal-row" data-act="open-petal" data-aspect="${k}" data-petal="${p.id}"><div class="petal-ic">${petalGlyph(p,a.hex,42)}</div><div style="flex:1"><div style="display:flex;justify-content:space-between"><b>${esc(p.name)}</b><span class="muted small">Lv ${pl.level} · ${(p.skills||[]).length} skills</span></div>${p.desc?`<small class="muted">${esc(p.desc)}</small>`:''}<div class="bar thin" style="margin-top:5px"><i style="width:${pl.pct}%;background:${a.hex}"></i></div></div><span class="chev">›</span></div>`;}).join(''):'<div class="empty">Add a petal — a sub-category of this blossom (e.g. Mental → Focus, Learning…).</div>'}</div>
     <div class="section-h"><h3>🗂 Groups</h3><button class="add" data-act="add-map" data-aspect="${k}">+ Group</button></div>
     <div class="card tight">${maps.length?maps.map(mapTileHTML).join(''):'<div class="empty">Add a group — a collection of pages (e.g. Body → Chest, Back; or Subjects, Routes…).</div>'}</div>
-    <div class="section-h"><h3>Skills</h3><button class="add" data-act="add-skill" data-aspect="${k}">+ Skill</button></div>
-    <div class="card tight">${a.skills.length?a.skills.map(sk=>{const sl=levelInfo(skillXP(k,sk));return `<div class="skill-row" data-act="open-skill" data-aspect="${k}" data-skill="${esc(sk)}"><div class="skill-ic">${skillIcon(sk)}</div><div style="flex:1"><div style="display:flex;justify-content:space-between"><b>${esc(sk)}</b><span class="muted small">Lv ${sl.level}</span></div><div class="bar thin" style="margin-top:5px"><i style="width:${sl.pct}%;background:${a.hex}"></i></div></div><span class="chev">›</span></div>`;}).join(''):'<div class="empty">No skills yet — add one to start leveling this aspect.</div>'}</div>
     <div class="section-h"><h3>🎯 Goals</h3><button class="add" data-act="new-cosmos" data-kind="goal" data-aspect="${k}">+ Goal</button></div>
     ${goals.length?(()=>{const longG=goals.filter(g=>g.term==='long'),shortG=goals.filter(g=>g.term!=='long');
       return (longG.length?`<div class="muted small" style="margin:4px 2px">🌳 Long-term</div>`+longG.map(goalWithHabits).join(''):'')+(shortG.length?`<div class="muted small" style="margin:10px 2px 4px">🌱 Short-term</div>`+shortG.map(goalWithHabits).join(''):'');})():'<div class="card"><div class="empty">Create a goal</div></div>'}
@@ -693,15 +799,108 @@ SCREENS.aspect=function(v){const k=v.aspect,a=AS(k);if(k==='physical')seedBodyMa
   </div>`;};
 function habitRowHTML(h){const done=habitDone(h,todayStr());return `<div class="agenda-item"><div class="ai-bar" style="background:${aspectHex(h.aspect)}"></div><button class="check round ${done?'on':''}" data-act="checkin" data-id="${h.id}" data-date="${todayStr()}">${done?'✓':''}</button><div class="ai-b" data-act="open-habit" data-id="${h.id}"><b>${esc(h.name)}</b><small> · ${habitStreak(h)}🔥</small></div></div>`;}
 function goalWithHabits(g){const hs=S.habits.filter(h=>(h.goalIds||[]).includes(g.id));return `<div style="margin-bottom:12px">${goalCardHTML(g)}<div style="margin:2px 0 0 12px">${hs.map(habitRowHTML).join('')}<button class="btn sm block" style="margin-top:4px" data-act="new-cosmos" data-kind="habit" data-goalid="${g.id}" data-aspect="${g.aspect}">＋ Habit for this goal</button></div></div>`;}
-function skillIcon(s){const m={'Strength':'🏋️','Endurance':'🏃','Flexibility & Mobility':'🧘','Nutrition':'🥗','Rest & Recovery':'😴','Skill Development':'🎯','Focus & Discipline':'⏳','Critical Thinking':'🧩','Learning & Knowledge':'📚','Time Management':'🗓️','Identity & Self-Development':'🪞','Communication':'💬','Values':'⚖️','Connection':'🫂','Collaboration':'👥','Presence & Reputation':'✨','Self-Awareness':'🔍','Resilience':'🛡️','Mindfulness':'🌬️','Emotional Intelligence':'💗','Purpose & Gratitude':'🙏'};return m[s]||'🌱';}
-function skillRootNote(k,sk,create=true){let n=S.notes.find(x=>x.kind==='skill'&&x.skillKey===k+'::'+sk);if(!n&&create){n=addNote(null,sk,'skill');n.skillKey=k+'::'+sk;n.tags=[k];save();}return n;}
-SCREENS.skill=function(v){const k=v.aspect,sk=v.skill,a=AS(k);const root=skillRootNote(k,sk);const kids=childNotes(root.id);const goals=S.goals.filter(g=>itemAspects(g).includes(k)&&(g.skills||[g.skill]).includes(sk));const habits=S.habits.filter(h=>itemAspects(h).includes(k)&&(h.skills||[h.skill]).includes(sk));const sl=levelInfo(skillXP(k,sk));
-  return `<div class="content"><div class="card" style="background:linear-gradient(160deg,${a.hex}22,var(--card))"><h3>${skillIcon(sk)} ${esc(sk)} <span class="level-badge" style="color:${a.hex};margin-left:auto">Lv ${sl.level}</span></h3><div class="bar thin" style="margin:8px 0 4px"><i style="width:${sl.pct}%;background:${a.hex}"></i></div><small class="muted">${sl.cur}/${sl.need} XP</small></div>
-    <div class="row"><button class="btn pink" data-act="new-cosmos" data-kind="habit" data-aspect="${k}" data-skill="${esc(sk)}">+ Habit</button><button class="btn gold" data-act="new-cosmos" data-kind="goal" data-aspect="${k}" data-skill="${esc(sk)}">+ Goal</button></div>
+function skillRootNote(skillId,name,create=true){let n=S.notes.find(x=>x.kind==='skill'&&x.skillId===skillId);if(!n&&create){n=addNote(null,name||'Skill','skill');n.skillId=skillId;save();}return n;}
+SCREENS.petal=function(v){const k=v.aspect,a=AS(k);const fp=findPetal(v.petal);if(!a||!fp)return notFoundScreen();const p=fp.petal;const pl=levelInfo(petalXP(p));const skills=p.skills||[];
+  const skillSet=new Set(skills.map(s=>s.id));
+  const habits=S.habits.filter(h=>itemSkills(h).some(id=>skillSet.has(id)));
+  const goals=S.goals.filter(g=>itemSkills(g).some(id=>skillSet.has(id)));
+  return `<div class="content">
+    <div class="card" style="background:linear-gradient(160deg,${a.hex}22,var(--card))">
+      <div style="display:flex;align-items:center;gap:12px"><div style="width:58px;flex:none">${petalGlyph(p,a.hex,54)}</div>
+        <div style="flex:1"><small class="muted">${esc(a.name)}</small><br><b style="font-size:18px">${esc(p.name)}</b> <span class="level-badge" style="color:${a.hex}">Lv ${pl.level}</span>
+          <div class="bar thin" style="margin:6px 0 4px"><i style="width:${pl.pct}%;background:${a.hex}"></i></div>
+          <small class="muted">${pl.cur}/${pl.need} XP</small></div>
+        <button class="iconbtn" data-act="edit-petal" data-aspect="${k}" data-petal="${p.id}">⋯</button></div>
+      ${p.desc?`<p class="muted small" style="margin:8px 0 0">${esc(p.desc)}</p>`:''}</div>
+    <div class="section-h"><h3>⭐ Skills</h3><button class="add" data-act="add-skill" data-aspect="${k}" data-petal="${p.id}">+ Skill</button></div>
+    <div class="card tight">${skills.length?skills.map(sk=>{const sl=levelInfo(skillXP(sk.id));return `<div class="skill-row"><div class="skill-ic" data-act="open-skill" data-skill="${sk.id}">${skillGlyph(sk,a.hex,34)}</div><div style="flex:1" data-act="open-skill" data-skill="${sk.id}"><div style="display:flex;justify-content:space-between"><b>${esc(sk.name)}</b><span class="muted small">Lv ${sl.level}</span></div>${sk.desc?`<small class="muted">${esc(sk.desc)}</small>`:''}<div class="bar thin" style="margin-top:5px"><i style="width:${sl.pct}%;background:${a.hex}"></i></div></div><button class="iconbtn" style="width:30px;height:30px;font-size:13px" data-act="edit-skill" data-skill="${sk.id}">⋯</button></div>`;}).join(''):'<div class="empty">No skills yet — add a specific thing to develop here.</div>'}</div>
+    ${goals.length?`<div class="section-h"><h3>🎯 Goals</h3></div>${goals.map(goalCardHTML).join('')}`:''}
+    ${habits.length?`<div class="section-h"><h3>🔥 Habits</h3></div><div class="hstrip">${habits.map(habitCardHTML).join('')}</div>`:''}
+  </div>`;};
+SCREENS.skill=function(v){const fs=findSkill(v.skill);if(!fs)return notFoundScreen();const bid=fs.bid,a=fs.blossom,p=fs.petal,sk=fs.skill;const root=skillRootNote(sk.id,sk.name);const kids=childNotes(root.id);const goals=S.goals.filter(g=>itemSkills(g).includes(sk.id));const habits=S.habits.filter(h=>itemSkills(h).includes(sk.id));const sl=levelInfo(skillXP(sk.id));
+  return `<div class="content"><div class="card" style="background:linear-gradient(160deg,${a.hex}22,var(--card))">
+    <div style="display:flex;align-items:center;gap:12px"><div style="width:48px;flex:none">${skillGlyph(sk,a.hex,44)}</div><div style="flex:1"><small class="muted">${esc(a.name)} · ${esc(p.name)}</small><br><b style="font-size:17px">${esc(sk.name)}</b> <span class="level-badge" style="color:${a.hex}">Lv ${sl.level}</span></div></div>
+    ${sk.desc?`<p class="muted small" style="margin:8px 0 0">${esc(sk.desc)}</p>`:''}
+    <div class="bar thin" style="margin:8px 0 4px"><i style="width:${sl.pct}%;background:${a.hex}"></i></div><small class="muted">${sl.cur}/${sl.need} XP</small></div>
+    <div class="row"><button class="btn pink" data-act="new-cosmos" data-kind="habit" data-aspect="${bid}" data-skillid="${sk.id}">+ Habit</button><button class="btn gold" data-act="new-cosmos" data-kind="goal" data-aspect="${bid}" data-skillid="${sk.id}">+ Goal</button></div>
     ${goals.length?`<div class="section-h"><h3>🎯 Goals</h3></div>${goals.map(goalCardHTML).join('')}`:''}
     ${habits.length?`<div class="section-h"><h3>🔥 Habits</h3></div><div class="hstrip">${habits.map(habitCardHTML).join('')}</div>`:''}
     <div class="section-h"><h3>📓 Entries & Notes</h3><button class="add" data-act="new-skill-entry" data-skill-root="${root.id}">+ Entry</button></div>
     <div class="card tight">${kids.length?kids.map(noteTileHTML).join(''):'<div class="empty">No entries yet. Each entry is a full page you can nest deeper.</div>'}</div></div>`;};
+
+/* ===== SUGGESTIONS CATALOG (life-area blossoms → petals → skills) ===== */
+const BLOSSOM_CATALOG=[
+ {key:'physical',name:'Physical',emoji:'💪',hex:'#52B788',desc:'Strength, energy, movement & the health of your body.',petals:[
+   {n:'Strength & Power',d:'Building force-producing capacity.',s:[['Maximal Strength','Lift heavy across big compound movements.'],['Hypertrophy','Grow muscle with progressive volume.'],['Power & Explosiveness','Move loads fast — jumps, throws, sprints.'],['Core Strength','Brace and transfer force through the trunk.']]},
+   {n:'Conditioning',d:'Cardiovascular fitness & stamina.',s:[['Aerobic Base','Build an easy, sustainable endurance engine.'],['Anaerobic Capacity','Tolerate and recover from hard efforts.'],['Work Capacity','Do more quality work per session.']]},
+   {n:'Mobility & Recovery',d:'Move well and bounce back.',s:[['Flexibility','Lengthen tissues through full range.'],['Joint Mobility','Own active range at every joint.'],['Recovery Practices','Stretch, mobilise, deload, recover.']]},
+   {n:'Nutrition',d:'Fuel the body intentionally.',s:[['Protein Intake','Hit daily protein for repair & growth.'],['Whole Foods','Build meals from minimally processed food.'],['Hydration','Stay consistently well-hydrated.'],['Eating Rhythm','Time meals to support energy & training.']]},
+   {n:'Sleep & Rest',d:'The foundation of recovery.',s:[['Sleep Consistency','Same sleep & wake time daily.'],['Sleep Quality','Dark, cool, screen-free wind-down.'],['Active Rest','Restore with gentle movement & downtime.']]},
+   {n:'Body Health',d:'Maintain the machine.',s:[['Posture','Carry yourself tall and aligned.'],['Injury Prevention','Train weak links, warm up well.'],['Body Awareness','Read tension, fatigue & pain signals.']]},
+ ]},
+ {key:'mental',name:'Mental',emoji:'🧠',hex:'#5B8DEF',desc:'Thinking, learning, focus & sound judgment.',petals:[
+   {n:'Attention & Focus',d:'Direct and sustain mental energy.',s:[['Sustained Attention','Hold focus through long, uninterrupted blocks.'],['Deep Work','Protect time for cognitively demanding work.'],['Selective Attention','Spend energy on the highest-leverage task.'],['Environmental Control','Design distraction out of your space.']]},
+   {n:'Learning',d:'Absorb, retain & apply knowledge.',s:[['Active Recall','Test yourself instead of re-reading.'],['Spaced Repetition','Review at growing intervals to retain.'],['Mental Models','Collect frameworks to interpret the world.'],['First-Principles','Break problems to fundamentals, rebuild.']]},
+   {n:'Critical Thinking',d:'Think clearly and accurately.',s:[['Logical Reasoning','Spot valid vs invalid arguments.'],['Probabilistic Thinking','Hold beliefs in degrees of confidence.'],['Bias Recognition','Seek evidence against your own views.'],['Systems Thinking','See loops, causes & second-order effects.']]},
+   {n:'Creativity',d:'Generate novel, useful ideas.',s:[['Divergent Thinking','Produce many options before choosing.'],['Pattern Recognition','Spot recurring structures across domains.'],['Constraint Thinking','Solve well within real limits.']]},
+   {n:'Self-Awareness',d:'Understand your own mind.',s:[['Metacognition','Notice how you think, not just what.'],['Identity Clarity','Know your values and principles.'],['Strengths & Gaps','See real advantages and blind spots.']]},
+   {n:'Discipline',d:'Act despite resistance.',s:[['Delayed Gratification','Trade comfort now for outcomes later.'],['Impulse Control','Pause between urge and action.'],['Consistency','Rely on systems over motivation.']]},
+   {n:'Wisdom & Judgment',d:'Know what matters and act on it.',s:[['Long-Term Thinking','Decide across years, not moments.'],['Prioritization','Find the vital few over the trivial many.'],['Reflection','Turn insight into changed behavior.']]},
+ ]},
+ {key:'emotional',name:'Emotional',emoji:'💗',hex:'#E8B04B',desc:'Feeling, regulating, and integrating emotion.',petals:[
+   {n:'Emotional Awareness',d:'Recognise what you feel.',s:[['Emotion Labeling','Name feelings with precision.'],['Granularity','Tell similar emotions apart.'],['Body Awareness','Notice emotion in the body early.'],['Trigger Recognition','Spot what sets you off.']]},
+   {n:'Regulation',d:'Influence emotion without suppressing it.',s:[['Acceptance','Let feelings exist without fighting them.'],['Self-Soothing','Calm yourself with healthy tools.'],['Reframing','Find truer, kinder interpretations.'],['Recovery','Return to baseline after a spike.']]},
+   {n:'Resilience',d:'Endure and grow through difficulty.',s:[['Distress Tolerance','Stay functional under stress.'],['Failure Processing','Extract the lesson from setbacks.'],['Adaptability','Adjust responses to context.'],['Hope','Act on what you can control.']]},
+   {n:'Expression',d:'Share emotion healthily.',s:[['Authentic Expression','Communicate real feeling, respectfully.'],['Vulnerability','Share struggles with trusted people.'],['Assertiveness','State needs and boundaries directly.']]},
+   {n:'Self-Compassion',d:'Relate to yourself fairly.',s:[['Self-Kindness','Speak to yourself like a good friend.'],['Shame Management','Separate behavior from identity.'],['Internal Security','Base worth on values, not outcomes.']]},
+   {n:'Positive Emotion',d:'Cultivate what enriches life.',s:[['Gratitude','Notice and savor what is good.'],['Joy','Engage what genuinely delights you.'],['Awe & Wonder','Seek nature, art & big ideas.']]},
+ ]},
+ {key:'social',name:'Social',emoji:'🤝',hex:'#B07CE8',desc:'Building, keeping & navigating relationships.',petals:[
+   {n:'Communication',d:'Transmit and receive clearly.',s:[['Active Listening','Understand fully before replying.'],['Clear Expression','Say more with fewer, better words.'],['Asking Questions','Open conversation with curiosity.'],['Storytelling','Carry meaning with context & arc.']]},
+   {n:'Relationship Building',d:'Create meaningful connections.',s:[['Rapport','Find common ground naturally.'],['Trust','Keep promises; be predictable.'],['Reciprocity','Give without keeping score.'],['Maintenance','Stay in touch on purpose.']]},
+   {n:'Social Confidence',d:'Be at ease around people.',s:[['Initiating','Start conversations regularly.'],['Presence','Stay engaged in the moment.'],['Rejection Tolerance','Act despite possible rejection.']]},
+   {n:'Conflict Resolution',d:'Disagree without damage.',s:[['De-escalation','Slow heated moments down.'],['Boundaries','State what is and isn’t okay.'],['Accountability','Own mistakes quickly.'],['Forgiveness','Move forward without resentment.']]},
+   {n:'Leadership & Influence',d:'Help groups move together.',s:[['Vision','Make the destination clear.'],['Motivation','Speak to real incentives & values.'],['Feedback','Give specific, kind, useful input.'],['Delegation','Hand over ownership, not just tasks.']]},
+   {n:'Community',d:'Belong and contribute.',s:[['Networking','Meet people and keep in touch.'],['Participation','Contribute, don’t just observe.'],['Generosity','Give value before asking.']]},
+ ]},
+ {key:'lifestyle',name:'Lifestyle',emoji:'🏡',hex:'#E07A5F',desc:'The daily systems that make everything else sustainable.',petals:[
+   {n:'Habits & Routines',d:'Behaviors that run on autopilot.',s:[['Habit Formation','Start tiny; anchor to what exists.'],['Habit Stacking','Attach new habits to old ones.'],['Morning Routine','Open the day with momentum.'],['Evening Routine','A calm, predictable shutdown.']]},
+   {n:'Productivity',d:'Turn intention into action.',s:[['Time Blocking','Give priorities a place on the clock.'],['Prioritization','Do the highest-impact task first.'],['Energy Management','Match hard work to peak energy.'],['Personal Systems','Reusable workflows for recurring tasks.']]},
+   {n:'Environment Design',d:'Shape surroundings to support you.',s:[['Friction Design','Make good easy, bad hard.'],['Workspace','A space built for focus.'],['Digital Setup','Tidy files, apps & notifications.']]},
+   {n:'Life Admin',d:'Run the practical side of life.',s:[['Calendar','One trusted source of truth.'],['Planning','Plan weekly, review daily.'],['Maintenance','Fix small problems early.']]},
+   {n:'Information Hygiene',d:'Manage what enters your mind.',s:[['Intentional Media','Choose inputs on purpose.'],['Attention Protection','Cut needless notifications.'],['Digital Minimalism','Remove what doesn’t serve you.']]},
+   {n:'Leisure & Play',d:'Recover, explore & enjoy.',s:[['Play','Do things for no useful reason.'],['Hobbies','Keep interests outside of work.'],['Novelty','Seek new experiences regularly.']]},
+ ]},
+ {key:'career',name:'Career & Finance',emoji:'💼',hex:'#F2CC8F',desc:'Craft, contribution, income & money — your professional & financial life.',petals:[
+   {n:'Craft & Skill',d:'Get genuinely good at the work.',s:[['Core Skills','Master the abilities your field rewards.'],['Deliberate Practice','Train at the edge of ability.'],['Quality Bar','Hold a high standard for output.']]},
+   {n:'Output & Execution',d:'Ship valuable work.',s:[['Project Delivery','Finish what you start, on time.'],['Focus Management','Protect deep, productive time.'],['Reliability','Be the person who follows through.']]},
+   {n:'Professional Relationships',d:'Work well with others.',s:[['Collaboration','Move a team toward a goal.'],['Communication','Write & speak with clarity.'],['Mentorship','Learn from and teach others.']]},
+   {n:'Growth & Direction',d:'Steer the long game.',s:[['Continuous Learning','Keep skills current & expanding.'],['Vision','Know where you’re heading & why.'],['Networking','Build genuine professional ties.']]},
+   {n:'Income',d:'Create and grow earning power.',s:[['Career Capital','Build rare, valuable skills.'],['Value Creation','Solve real problems for others.'],['Negotiation','Communicate value and ask.'],['Extra Streams','Add income beyond the main one.']]},
+   {n:'Financial Literacy',d:'Understand how money works.',s:[['Budgeting','Build a realistic spending plan.'],['Cash Flow','Know what comes in and goes out.'],['Compounding','Respect interest over time.'],['Opportunity Cost','Weigh what each choice gives up.']]},
+   {n:'Spending & Saving',d:'Use money intentionally; build margin.',s:[['Conscious Spending','Spend on what you value, cut the rest.'],['Emergency Fund','3–6 months of expenses set aside.'],['Savings Rate','Automate saving first.'],['Living Below Means','Keep a steady monthly surplus.']]},
+   {n:'Investing',d:'Grow assets over time.',s:[['Long-Term Investing','Invest consistently, stay the course.'],['Diversification','Spread risk across assets.'],['Risk Assessment','Know the downside before the upside.']]},
+   {n:'Money Psychology',d:'The behavior behind money.',s:[['Money Mindset','Examine inherited money beliefs.'],['Emotional Control','Don’t spend to soothe feelings.'],['Patience','Think in years and decades.']]},
+ ]},
+];
+function _catSkill(name,desc){return {id:'sk_'+uid(),name,desc:desc||''};}
+function _catPetal(p){return {id:'pt_'+uid(),name:p.n,desc:p.d||'',skills:(p.s||[]).map(s=>_catSkill(s[0],s[1]))};}
+function addCatalogBlossom(entry){let key=entry.key;if(S.aspects[key])key=entry.key+'_'+uid();
+  S.aspects[key]={name:entry.name,emoji:entry.emoji,hex:entry.hex,desc:entry.desc||'',builtin:false,petals:(entry.petals||[]).map(_catPetal)};
+  if(!S.aspectOrder.includes(key))S.aspectOrder.push(key);save();return key;}
+function catFor(b){return BLOSSOM_CATALOG.find(c=>c.name.toLowerCase()===((b&&b.name)||'').toLowerCase());}
+let _catSel=new Set();
+function openBlossomCatalog(){_catSel=new Set();renderBlossomCatalog();}
+function renderBlossomCatalog(){const have=new Set(Object.values(S.aspects).map(a=>(a.name||'').toLowerCase()));const n=_catSel.size;
+  sheet(`<h2>🌱 Add blossoms</h2><p class="muted small" style="margin:0 0 10px">Tap to select one or more — each arrives with petals & skills you can edit.</p>
+   <div class="cat-list">${BLOSSOM_CATALOG.map((b,i)=>{const sel=_catSel.has(i),added=have.has(b.name.toLowerCase());return `<button class="cat-item ${sel?'sel':''}" data-act="cat-toggle" data-i="${i}"><span class="cat-check">${sel?'✓':''}</span><span class="cat-em">${b.emoji}</span><div style="flex:1;min-width:0"><b>${esc(b.name)}</b>${added?' <span class="muted small">· added</span>':''}<br><small class="muted">${esc(b.desc)}</small><br><small class="muted" style="opacity:.7">${b.petals.length} petals · ${b.petals.reduce((m,p)=>m+(p.s||[]).length,0)} skills</small></div></button>`;}).join('')}</div>
+   <div class="row" style="margin-top:12px"><button class="btn" data-act="cat-custom-blossom">＋ Custom</button><button class="btn primary" data-act="cat-add-selected" ${n?'':'disabled'}>Add ${n||''} blossom${n===1?'':'s'}</button></div>`);}
+function openPetalCatalog(bid){const b=S.aspects[bid];if(!b)return;const cat=catFor(b);const have=new Set(blossomPetals(b).map(p=>(p.name||'').toLowerCase()));const sugg=cat?cat.petals.filter(p=>!have.has(p.n.toLowerCase())):[];
+  sheet(`<h2>🌸 Add a petal</h2>${sugg.length?`<p class="muted small">Suggested for ${esc(b.name)}:</p><div class="cat-list">${sugg.map(p=>`<button class="cat-item" data-act="cat-petal" data-bid="${bid}" data-name="${esc(p.n)}"><div style="flex:1;min-width:0"><b>${esc(p.n)}</b><br><small class="muted">${esc(p.d||'')} · ${p.s.length} skills</small></div><span class="chev">＋</span></button>`).join('')}</div>`:'<p class="muted small">No more suggestions for this blossom — add your own.</p>'}
+   <button class="btn block" style="margin-top:12px" data-act="cat-custom-petal" data-bid="${bid}">＋ Custom petal</button>`);}
+function openSkillCatalog(bid,petalId){const b=S.aspects[bid];const fp=findPetal(petalId);if(!b||!fp)return;const p=fp.petal;const cat=catFor(b);const catP=cat&&cat.petals.find(x=>x.n.toLowerCase()===(p.name||'').toLowerCase());const have=new Set((p.skills||[]).map(s=>(s.name||'').toLowerCase()));const sugg=catP?catP.s.filter(s=>!have.has(s[0].toLowerCase())):[];
+  sheet(`<h2>⭐ Add a skill</h2>${sugg.length?`<p class="muted small">Suggested for ${esc(p.name)}:</p><div class="cat-list">${sugg.map(s=>`<button class="cat-item" data-act="cat-skill" data-petal="${petalId}" data-name="${esc(s[0])}" data-desc="${esc(s[1]||'')}"><div style="flex:1;min-width:0"><b>${esc(s[0])}</b><br><small class="muted">${esc(s[1]||'')}</small></div><span class="chev">＋</span></button>`).join('')}</div>`:''}
+   <button class="btn block" style="margin-top:12px" data-act="cat-custom-skill" data-petal="${petalId}">＋ Custom skill</button>`);}
 
 /* ---- MAPS & GROUPS (pages per group, any aspect) ---- */
 const mapsForAspect=k=>S.notes.filter(n=>n.kind==='map'&&n.mapAspect===k).sort((a,b)=>a.createdAt-b.createdAt);
@@ -720,12 +919,12 @@ SCREENS.map=function(v){const m=getNote(v.id);if(!m)return '<div class="content"
 SCREENS.habit=function(v){const h=S.habits.find(x=>x.id===v.id);if(!h)return '<div class="content"><div class="empty">Not found</div></div>';const cons=habitConsistency(h),r=rubric(cons),c=h.cosmos||{};
   return `<div class="content"><div class="card" style="background:linear-gradient(160deg,${aspectHex(h.aspect)}22,var(--card))"><h3>${esc(h.name)}</h3>
     <div class="kpi" style="margin-top:8px"><div class="k"><b>${habitStreak(h)}🔥</b><small>Current</small></div><div class="k"><b>${longestStreak(h)}</b><small>Longest</small></div><div class="k"><b>${cons}%</b><small>14-day</small></div><div class="k"><b style="color:${r.c}">${r.g}</b><small>Grade</small></div></div>
-    <button class="checkin ${habitDone(h,todayStr())?'done':''}" data-act="checkin" data-id="${h.id}" data-date="${todayStr()}" style="margin-top:12px">${habitDone(h,todayStr())?'✓ Done today':(habitRepeat(h)>1?`Check in (${h.logs[todayStr()]||0}/${habitRepeat(h)})`:'Check in today')}</button></div>
+    ${habitRepeat(h)>1?`<div style="margin-top:14px"><div style="display:flex;justify-content:space-between;align-items:center"><small class="muted">Today's ${esc((c.unit||'count'))}</small><b style="color:var(--gold)">${h.logs[todayStr()]||0} / ${habitRepeat(h)}${c.unit?' '+esc(c.unit):''}</b></div><input type="range" min="0" max="${habitRepeat(h)}" value="${h.logs[todayStr()]||0}" data-act="habit-count" data-id="${h.id}" style="width:100%;margin-top:8px"></div>`:`<button class="checkin ${habitDone(h,todayStr())?'done':''}" data-act="checkin" data-id="${h.id}" data-date="${todayStr()}" style="margin-top:12px">${habitDone(h,todayStr())?'✓ Done today':'Check in today'}</button>`}</div>
     ${cosmosSummaryCard(c)}<div class="card"><h3>Last 28 days</h3>${habitHeatmap(h)}</div>
     <div class="row"><button class="btn sm" data-act="edit-cosmos" data-kind="habit" data-id="${h.id}">✎ Edit COSMOS</button><button class="btn sm" data-act="del-habit" data-id="${h.id}">🗑 Delete</button></div></div>`;};
 SCREENS.goal=function(v){const g=S.goals.find(x=>x.id===v.id);if(!g)return '<div class="content"><div class="empty">Not found</div></div>';const c=g.cosmos||{},p=clamp(g.progress||0,0,100);const term=g.term==='long'?'🌳 Long-term':'🌱 Short-term';const dr=g.targetDate?daysBetween(todayStr(),g.targetDate):null;const hs=S.habits.filter(h=>(h.goalIds||[]).includes(g.id));
   return `<div class="content"><div class="card" style="background:linear-gradient(160deg,${aspectHex(g.aspect)}22,var(--card))">
-    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span class="level-badge">${term}</span><span class="pill">${AS(g.aspect).emoji} ${esc(AS(g.aspect).name)}</span>${g.skill?`<span class="pill">${esc(g.skill)}</span>`:''}</div>
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span class="level-badge">${term}</span><span class="pill">${AS(g.aspect).emoji} ${esc(AS(g.aspect).name)}</span>${itemSkillNames(g).map(nm=>`<span class="pill">${esc(nm)}</span>`).join('')}</div>
     <h3 style="margin:10px 0 2px;font-size:20px">${esc(g.name)}</h3>
     ${g.why?`<p class="muted small serif" style="margin:2px 0 0">“${esc(g.why)}”</p>`:''}
     <div class="bar" style="margin:14px 0 6px"><i style="width:${p}%;background:${aspectHex(g.aspect)}"></i></div>
@@ -743,13 +942,13 @@ SCREENS.journal=function(){const entries=S.journal.filter(j=>j.date===journalCur
   return `<div class="content"><div class="card"><div class="daynav"><button class="iconbtn" data-act="jrnl-prev">‹</button><div class="d"><b>${d.toLocaleDateString(undefined,{weekday:'long'})}</b><small>${esc(fmtDate(journalCursor))}</small></div><button class="iconbtn" data-act="jrnl-next">›</button></div><div class="row" style="margin-top:10px"><input class="input" type="date" value="${journalCursor}" data-act="jrnl-jump"><button class="btn sm" data-act="jrnl-today">Today</button></div></div>
     <div class="card" style="border-color:var(--gold)"><div class="muted small" style="margin-bottom:6px">${new Date().getHours()>=18?'🌙 Evening prompt':'🌸 Today\'s prompt'}</div><p class="serif" style="margin:0 0 10px;font-size:15px">${esc(todayPrompt())}</p><button class="btn gold sm" data-act="new-journal-prompt">Write about this</button></div>
     <button class="btn pink block" data-act="new-journal">✍️ Blank entry</button>
-    <div class="card tight">${entries.length?entries.map(j=>`<div class="note-tile" data-act="open-jentry" data-id="${j.id}"><span class="nt-ic">📖</span><div class="nt-body"><b>${esc(j.title||'Entry')} ${j.aspect?AS(j.aspect).emoji:''}</b><small>${esc(htmlPreview(j.html))||'empty'}</small></div></div>`).join(''):'<div class="empty">No entries on this day. Use ‹ › to browse other days.</div>'}</div></div>`;};
+    <div class="card tight">${entries.length?entries.map(j=>`<div class="note-tile" data-act="open-jentry" data-id="${j.id}"><span class="nt-ic">📖</span><div class="nt-body"><b>${esc(j.title||'Entry')} ${j.aspect?AS(j.aspect).emoji:''}</b><small>edited ${esc(fmtEdited(j.updatedAt||j.createdAt))}</small></div></div>`).join(''):'<div class="empty">No entries on this day. Use ‹ › to browse other days.</div>'}</div></div>`;};
 const JOURNAL_PROMPTS=['What grew today?','What made you smile?','What felt hard — and how did you meet it?','What gave you energy?','Where did you feel most like yourself?','What can you gently let go of?','What are you looking forward to?','What did you learn about yourself?'];
 function todayPrompt(){return new Date().getHours()>=18?'Three things you’re grateful for today…':JOURNAL_PROMPTS[new Date(journalCursor+'T00:00').getDate()%JOURNAL_PROMPTS.length];}
 SCREENS.jentry=function(v){const j=ownerOf('journal',v.id);if(!j)return '<div class="content"><div class="empty">Entry not found.</div></div>';
   return `<div class="content"><div class="crumbs"><a data-act="open-journal">Journal</a><span class="sep">›</span><span>${esc(fmtShort(j.date))}</span></div>
     <input class="page-title" value="${esc(j.title)}" placeholder="Entry title (optional)" data-act="jentry-title" data-id="${j.id}" style="margin-bottom:6px"/>
-    <div class="chips" style="margin:0 0 0">${aspectKeys().map(k=>`<button class="chip ${j.aspect===k?'on':''}" data-act="jentry-aspect" data-id="${j.id}" data-tag="${k}">${AS(k).emoji}</button>`).join('')}</div>
+    <div class="chips" style="margin:0 0 0">${aspectKeys().map(k=>`<button class="chip ${j.aspect===k?'on':''}" data-act="jentry-aspect" data-id="${j.id}" data-tag="${k}">${S.settings.showEmojis?AS(k).emoji+' ':''}${esc(AS(k).name)}</button>`).join('')}</div>
     ${docEditor('journal',j)}<button class="btn sm" style="margin-top:10px" data-act="del-jentry" data-id="${j.id}">🗑 Delete entry</button></div>`;};
 
 /* ---- RECORDS (daily history) ---- */
@@ -840,7 +1039,122 @@ function fireAlarm(label,trackId){startAlarmSound(trackId);notify('The Blossom',
 
 /* ===== 6. SVG ===== */
 function ringSVG(pct,size=78,color='var(--pink)'){const r=(size-12)/2,c=2*Math.PI*r,off=c*(1-pct/100);return `<div class="ring" style="width:${size}px;height:${size}px"><svg width="${size}" height="${size}"><circle cx="${size/2}" cy="${size/2}" r="${r}" stroke="var(--line)" stroke-width="8" fill="none"/><circle cx="${size/2}" cy="${size/2}" r="${r}" stroke="${color}" stroke-width="8" fill="none" stroke-linecap="round" stroke-dasharray="${c}" stroke-dashoffset="${off}"/></svg><div class="lbl" style="font-size:${size*0.23}px">${pct}%</div></div>`;}
-function flowerSVG(keys,levels){const cx=150,cy=150;const N=keys.length;const step=360/N;
+/* ===== GROWTH DISPLAYS (theme-matched, capped) ===== */
+let _gid=0;
+function growth(level){return Math.min(1,(Math.max(1,level||1)-1)/14);}// 0..1, caps ~Lv15 (size & brightness cap)
+function safeHex(h){return (typeof h==='string'&&h[0]==='#')?h:'#7faf95';}
+function _h2r(h){h=h.replace('#','');if(h.length===3)h=h.split('').map(c=>c+c).join('');return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)];}
+function _r2h(r){return '#'+r.map(x=>Math.max(0,Math.min(255,Math.round(x))).toString(16).padStart(2,'0')).join('');}
+function mixHex(a,b,t){const A=_h2r(safeHex(a)),B=_h2r(safeHex(b));return _r2h([0,1,2].map(i=>A[i]+(B[i]-A[i])*t));}
+function lighten(h,t){return mixHex(h,'#ffffff',t);}
+function svgBox(size,inner){return `<svg width="${size}" height="${size}" viewBox="0 0 100 100" style="display:block;overflow:visible" pointer-events="none">${inner}</svg>`;}
+// ---- shared: skill = a star that starts dim and glows brighter with level (brightness capped) ----
+function dStar(level,hex,size){const g=growth(level);const col=lighten(hex,0.1+0.45*g);const a=(0.32+0.58*g).toFixed(2);const r=30+12*g;
+  const glow=`<circle cx="50" cy="50" r="${(16+20*g).toFixed(0)}" fill="${col}" opacity="${(0.08+0.18*g).toFixed(2)}"/>`;
+  const p=`M50 ${(50-r).toFixed(1)} L${(50+r*0.28).toFixed(1)} ${(50-r*0.28).toFixed(1)} L${(50+r).toFixed(1)} 50 L${(50+r*0.28).toFixed(1)} ${(50+r*0.28).toFixed(1)} L50 ${(50+r).toFixed(1)} L${(50-r*0.28).toFixed(1)} ${(50+r*0.28).toFixed(1)} L${(50-r).toFixed(1)} 50 L${(50-r*0.28).toFixed(1)} ${(50-r*0.28).toFixed(1)} Z`;
+  return svgBox(size,`${glow}<path d="${p}" fill="${col}" opacity="${a}"/>`);}
+// ---- forest ----
+function dTree(level,hex,size){const g=growth(level);const col=lighten(hex,0.04+0.22*g);const th=20+18*g,baseY=90,topT=baseY-th,rc=12+16*g,cy=topT-rc*0.5;
+  return svgBox(size,`<rect x="${(50-3-g*1.5).toFixed(1)}" y="${topT.toFixed(1)}" width="${(6+g*3).toFixed(1)}" height="${th.toFixed(1)}" rx="2" fill="#7a5230"/>
+   <circle cx="${(50-rc*0.62).toFixed(1)}" cy="${(cy+rc*0.32).toFixed(1)}" r="${(rc*0.72).toFixed(1)}" fill="${col}"/>
+   <circle cx="${(50+rc*0.62).toFixed(1)}" cy="${(cy+rc*0.32).toFixed(1)}" r="${(rc*0.72).toFixed(1)}" fill="${col}"/>
+   <circle cx="50" cy="${cy.toFixed(1)}" r="${rc.toFixed(1)}" fill="${col}"/>
+   <circle cx="50" cy="${(cy-rc*0.25).toFixed(1)}" r="${(rc*0.58).toFixed(1)}" fill="${lighten(col,0.12)}"/>`);}
+function dRoot(level,hex,size){const g=growth(level);const col=lighten(hex,0.04+0.18*g);const len=22+30*g;
+  return svgBox(size,`<g stroke="${col}" stroke-width="${(3+g*2).toFixed(1)}" fill="none" stroke-linecap="round">
+   <path d="M50 16 L50 ${(16+len).toFixed(0)}"/>
+   <path d="M50 26 C 50 ${(26+len*0.3).toFixed(0)}, ${(32-12*g).toFixed(0)} ${(40+len*0.3).toFixed(0)}, ${(36-14*g).toFixed(0)} ${(34+len).toFixed(0)}"/>
+   <path d="M50 30 C 50 ${(30+len*0.3).toFixed(0)}, ${(68+12*g).toFixed(0)} ${(44+len*0.3).toFixed(0)}, ${(64+14*g).toFixed(0)} ${(38+len).toFixed(0)}"/></g>
+   <circle cx="50" cy="16" r="${(5+3*g).toFixed(1)}" fill="${lighten(col,0.12)}"/>`);}
+// ---- flower ----
+function dFlowerHead(level,hex,size){const g=growth(level);const col=lighten(hex,0.02+0.3*g);const n=6,pr=14+14*g;let p='';
+  for(let i=0;i<n;i++){const a=i/n*6.2832,cx=50+Math.cos(a)*pr*0.7,cy=50+Math.sin(a)*pr*0.7;p+=`<ellipse cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" rx="${(pr*0.5).toFixed(1)}" ry="${(pr*0.82).toFixed(1)}" fill="${col}" opacity="0.92" transform="rotate(${(a*57.3+90).toFixed(0)} ${cx.toFixed(1)} ${cy.toFixed(1)})"/>`;}
+  return svgBox(size,`${p}<circle cx="50" cy="50" r="${(8+5*g).toFixed(1)}" fill="${lighten(col,0.3)}"/><circle cx="50" cy="50" r="${(8+5*g).toFixed(1)}" fill="none" stroke="#fff" stroke-opacity="0.3"/>`);}
+function dPetal(level,hex,size){const g=growth(level);const id='pg'+(_gid++);const c1=safeHex(hex),c2=lighten(c1,0.4),c3=mixHex(c1,'#ff86c8',0.3*g);
+  return svgBox(size,`<defs><linearGradient id="${id}" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="${mixHex(c1,'#000',0.12)}"/><stop offset="0.55" stop-color="${c1}"/><stop offset="1" stop-color="${mixHex(c2,c3,g)}"/></linearGradient></defs>
+   <path d="M50 90 C 22 66, 26 24, 50 12 C 74 24, 78 66, 50 90 Z" fill="url(#${id})" opacity="${(0.7+0.25*g).toFixed(2)}"/>
+   <path d="M50 84 C 40 60, 42 32, 50 18" fill="none" stroke="#fff" stroke-opacity="0.25" stroke-width="1.5"/>`);}
+// ---- space ----
+function dSun(level,hex,size){const g=growth(level);const col=lighten(hex,0.12+0.28*g);const r=14+13*g;let rays='';const n=10;
+  for(let i=0;i<n;i++){const a=i/n*6.2832;rays+=`<line x1="${(50+Math.cos(a)*(r+4)).toFixed(1)}" y1="${(50+Math.sin(a)*(r+4)).toFixed(1)}" x2="${(50+Math.cos(a)*(r+9+8*g)).toFixed(1)}" y2="${(50+Math.sin(a)*(r+9+8*g)).toFixed(1)}" stroke="${col}" stroke-width="2.5" stroke-linecap="round" opacity="${(0.4+0.4*g).toFixed(2)}"/>`;}
+  return svgBox(size,`<circle cx="50" cy="50" r="${(r+12).toFixed(1)}" fill="${col}" opacity="${(0.1+0.12*g).toFixed(2)}"/>${rays}<circle cx="50" cy="50" r="${r.toFixed(1)}" fill="${col}"/><circle cx="50" cy="50" r="${r.toFixed(1)}" fill="none" stroke="#fff" stroke-opacity="0.3"/>`);}
+function dPlanet(level,hex,size){const g=growth(level);const id='pl'+(_gid++);const c1=safeHex(hex),c2=lighten(c1,0.42),r=15+12*g;
+  const ring=g>0.3?`<ellipse cx="50" cy="50" rx="${(r+12).toFixed(1)}" ry="${(r*0.4).toFixed(1)}" fill="none" stroke="${lighten(c1,0.3)}" stroke-width="${(2+2*g).toFixed(1)}" opacity="${(0.35+0.3*g).toFixed(2)}" transform="rotate(-20 50 50)"/>`:'';
+  return svgBox(size,`<defs><radialGradient id="${id}" cx="40%" cy="36%" r="72%"><stop offset="0" stop-color="${c2}"/><stop offset="1" stop-color="${mixHex(c1,'#160a36',0.35)}"/></radialGradient></defs>${ring}<circle cx="50" cy="50" r="${r.toFixed(1)}" fill="url(#${id})"/>`);}
+// ---- ocean ----
+function dShell(level,hex,size){const g=growth(level);const col=lighten(hex,0.05+0.25*g),r=20+15*g;let ribs='';const n=5;
+  for(let i=0;i<=n;i++){const a=Math.PI+(i/n)*Math.PI;ribs+=`<line x1="50" y1="82" x2="${(50+Math.cos(a)*r*0.92).toFixed(1)}" y2="${(82+Math.sin(a)*r*0.92).toFixed(1)}" stroke="${mixHex(col,'#04161f',0.25)}" stroke-width="1.4" opacity="0.55"/>`;}
+  return svgBox(size,`<path d="M${(50-r).toFixed(1)} 82 A ${r.toFixed(1)} ${r.toFixed(1)} 0 0 1 ${(50+r).toFixed(1)} 82 Z" fill="${col}"/>${ribs}<circle cx="50" cy="82" r="3" fill="${lighten(col,0.2)}"/>`);}
+function dBubble(level,hex,size){const g=growth(level);const id='bb'+(_gid++);const c1=safeHex(hex),r=14+13*g;
+  return svgBox(size,`<defs><radialGradient id="${id}" cx="38%" cy="34%" r="72%"><stop offset="0" stop-color="#ffffff" stop-opacity="0.92"/><stop offset="0.42" stop-color="${lighten(c1,0.32)}"/><stop offset="1" stop-color="${c1}"/></radialGradient></defs><circle cx="50" cy="50" r="${r.toFixed(1)}" fill="url(#${id})" opacity="${(0.78+0.18*g).toFixed(2)}"/><circle cx="${(50-r*0.3).toFixed(1)}" cy="${(50-r*0.34).toFixed(1)}" r="${(r*0.18).toFixed(1)}" fill="#fff" opacity="0.85"/>`);}
+// ---- sunset ----
+function dCloud(level,hex,size){const g=growth(level);const col=lighten(hex,0.12+0.3*g),r=11+9*g;
+  return svgBox(size,`<g fill="${col}" opacity="${(0.72+0.22*g).toFixed(2)}"><circle cx="38" cy="58" r="${r.toFixed(1)}"/><circle cx="54" cy="52" r="${(r*1.25).toFixed(1)}"/><circle cx="66" cy="58" r="${(r*0.9).toFixed(1)}"/><rect x="36" y="56" width="32" height="${(r+2).toFixed(1)}" rx="7"/></g>`);}
+const DISPLAYS={
+  flower:{label:'🌸 Flower',blossom:dFlowerHead,petal:dPetal,skill:dStar},
+  space:{label:'🌌 Space',blossom:dSun,petal:dPlanet,skill:dStar},
+};
+const DISPLAY_LIST=Object.keys(DISPLAYS);
+function activeDisplayId(){const d=S.settings.blossomDisplay;return DISPLAYS[d]?d:'flower';}
+function activeDisplay(){return DISPLAYS[activeDisplayId()];}
+function blossomGlyph(bid,size){return activeDisplay().blossom(levelFromXp(aspectXP(bid)),aspectHex(bid),size||72);}
+function petalGlyph(p,hex,size){return activeDisplay().petal(levelFromXp(petalXP(p)),hex,size||52);}
+function skillGlyph(sk,hex,size){return activeDisplay().skill(levelFromXp(skillXP(sk.id)),hex,size||40);}
+function dispNodeWord(){return activeDisplayId()==='space'?'planet':'petal';}
+
+/* ===== BIG INTERACTIVE PER-BLOSSOM SCENE (its own flower / solar system) ===== */
+// Each blossom = one flower (or sun). Its petals = the blossom's petals. One star per skill.
+function _blossomOpts(bid){const a=AS(bid);const petals=blossomPetals(a);
+  return {nodes:petals.map(p=>({level:levelFromXp(petalXP(p)),hex:a.hex,act:'open-petal',data:`data-aspect="${bid}" data-petal="${p.id}"`})),
+    stars:[].concat(...petals.map(p=>(p.skills||[]).map(s=>({level:levelFromXp(skillXP(s.id)),act:'open-skill',data:`data-skill="${s.id}"`})))),
+    coreLevel:levelFromXp(aspectXP(bid)),coreHex:a.hex,bid};}
+// one blossom drawn around local origin (0,0) so it can sit anywhere in a shared canvas
+function blossomLocal(opts){return activeDisplayId()==='space'?_sunLocal(opts):_flowerLocal(opts);}
+function _starfield(w,h){return Array.from({length:Math.round(w*h/2200)},(_,i)=>`<circle cx="${(8+((i*89)%(w-12))).toFixed(0)}" cy="${(8+((i*57)%(h-12))).toFixed(0)}" r="${(i%4)?0.8:1.5}" fill="#fff" opacity="${(0.14+((i*31)%50)/150).toFixed(2)}"/>`).join('');}
+// single-blossom scene (used on the blossom detail screen)
+function blossomScene(bid){const opts=_blossomOpts(bid);const sf=activeDisplayId()==='space'?_starfield(320,320):'';
+  return `<div class="growth-scene"><svg viewBox="0 0 320 320" width="100%" style="max-width:330px;display:block;margin:0 auto;overflow:visible">${sf}<g transform="translate(160,160) scale(0.82)">${blossomLocal(opts)}</g></svg></div>`;}
+// all blossoms living in ONE shared canvas (the Cosmos); grows downward as you add more
+function cosmosSVG(keys){const N=keys.length;const cols=N===1?1:2;const cw=320/cols,ch=178;const rows=Math.ceil(N/cols);const VH=rows*ch;
+  const sf=activeDisplayId()==='space'?_starfield(320,VH):'';let body='';
+  keys.forEach((k,i)=>{const col=i%cols,row=Math.floor(i/cols);const cx=col*cw+cw/2;const cy=row*ch+ch/2-12;const sc=(Math.min(cw/2,ch/2)-8)/188;
+    body+=`<g transform="translate(${cx.toFixed(1)},${cy.toFixed(1)}) scale(${sc.toFixed(3)})">${blossomLocal(_blossomOpts(k))}</g>`;
+    const nm=(S.settings.showEmojis?AS(k).emoji+' ':'')+AS(k).name,lv=levelFromXp(aspectXP(k));
+    body+=`<g data-act="open-aspect" data-aspect="${k}" style="cursor:pointer"><text x="${cx.toFixed(1)}" y="${(row*ch+ch-12).toFixed(1)}" text-anchor="middle" fill="var(--text)" font-size="12.5" font-weight="700">${esc(nm.length>20?nm.slice(0,19)+'…':nm)} · Lv ${lv}</text></g>`;});
+  return `<div class="growth-scene"><svg viewBox="0 0 320 ${VH}" width="100%" style="display:block;margin:0 auto;overflow:visible">${sf}${body}</svg></div>`;}
+function _starNode(x,y,level,attrs){const g=growth(level);const r=2.4+2.2*g,a=(0.34+0.55*g).toFixed(2),sh=r*0.34;
+  const p=`M${x.toFixed(1)} ${(y-r).toFixed(1)} L${(x+sh).toFixed(1)} ${(y-sh).toFixed(1)} L${(x+r).toFixed(1)} ${y.toFixed(1)} L${(x+sh).toFixed(1)} ${(y+sh).toFixed(1)} L${x.toFixed(1)} ${(y+r).toFixed(1)} L${(x-sh).toFixed(1)} ${(y+sh).toFixed(1)} L${(x-r).toFixed(1)} ${y.toFixed(1)} L${(x-sh).toFixed(1)} ${(y-sh).toFixed(1)} Z`;
+  return `<g class="gstar" ${attrs||''}><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(r+3.5).toFixed(1)}" fill="#fff6cc" opacity="${(0.05+0.12*g).toFixed(2)}"/><path d="${p}" fill="${lighten('#fff6cc',0.2*g)}" opacity="${a}"/></g>`;}
+// scatter one star per skill across concentric rings (fits as many as there are skills)
+function _starScatter(stars,cx,cy,baseR,maxR){if(!stars||!stars.length)return '';const K=stars.length;
+  const rings=Math.min(4,Math.max(1,Math.ceil(K/13)));let out='',placed=0;
+  for(let ri=0;ri<rings;ri++){const left=K-placed,n=Math.ceil(left/(rings-ri));const R=rings===1?baseR:baseR+(maxR-baseR)*ri/(rings-1);
+    for(let j=0;j<n&&placed<K;j++,placed++){const ang=-90+(n>1?j*360/n:0)+ri*15;const x=cx+Math.cos(ang*Math.PI/180)*R,y=cy+Math.sin(ang*Math.PI/180)*R;out+=_starNode(x,y,stars[placed].level,`data-act="${stars[placed].act}" ${stars[placed].data||''}`);}}
+  return out;}
+function _flowerLocal(opts){const N=opts.nodes.length||1;const wf=Math.max(0.5,Math.min(1.25,4.6/N));const pp='M0,0 C -52,-30 -58,-104 0,-138 C 58,-104 52,-30 0,0 Z';
+  let petals='',labels='';
+  opts.nodes.forEach((nd,i)=>{const ang=-90+(i+0.5)*360/N;const g=growth(nd.level);const ls=0.56+g*0.48;const col=safeHex(nd.hex);
+    petals+=`<g class="petal" data-act="${nd.act}" ${nd.data||''} transform="rotate(${ang.toFixed(1)}) scale(${wf.toFixed(2)},${ls.toFixed(2)})"><path d="${pp}" fill="${lighten(col,0.04+0.22*g)}" opacity="${(0.6+0.32*g).toFixed(2)}"/><path d="${pp}" fill="none" stroke="${col}" stroke-width="1.8" opacity="0.9"/><path d="M0,-16 C -14,-46 -10,-92 0,-118" fill="none" stroke="#fff" stroke-opacity="0.18" stroke-width="2"/></g>`;
+    const r=128*ls,a2=ang*Math.PI/180,x=Math.cos(a2-Math.PI/2)*r*0.82,y=Math.sin(a2-Math.PI/2)*r*0.82;
+    labels+=`<text x="${x.toFixed(1)}" y="${(y+4).toFixed(1)}" text-anchor="middle" fill="${col}" font-size="13" font-weight="800" pointer-events="none" style="paint-order:stroke" stroke="var(--bg)" stroke-width="3">${nd.level}</text>`;});
+  const cl=growth(opts.coreLevel||1),cr=15+8*cl;const core=opts.bid?`data-act="open-aspect" data-aspect="${opts.bid}"`:'';
+  return `${_starScatter(opts.stars,0,0,146,178)}${petals}<g class="petal" ${core}><circle r="${cr.toFixed(1)}" fill="var(--gold)"/><circle r="${cr.toFixed(1)}" fill="none" stroke="#fff" stroke-opacity=".4" stroke-width="1.5"/></g>${labels}`;}
+function _sunLocal(opts){const N=opts.nodes.length||1,R=Math.min(112,58+N*8);const dur=Math.round(44+N*6);
+  let planets='';
+  opts.nodes.forEach((nd,i)=>{const ang=-90+(N>1?i*360/N:0);const th=ang*Math.PI/180;const x=Math.cos(th)*R,y=Math.sin(th)*R;const g=growth(nd.level);const col=safeHex(nd.hex);const pr=9+12*g;
+    planets+=`<g class="petal" data-act="${nd.act}" ${nd.data||''} data-px="${x.toFixed(1)}" data-py="${y.toFixed(1)}"><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(pr+5).toFixed(1)}" fill="${col}" opacity="0.16"/><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${pr.toFixed(1)}" fill="${lighten(col,0.12+0.26*g)}"/><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${pr.toFixed(1)}" fill="none" stroke="#fff" stroke-opacity="0.35"/><text x="${x.toFixed(1)}" y="${(y+4).toFixed(1)}" text-anchor="middle" fill="#fff" font-size="11" font-weight="800" pointer-events="none">${nd.level}</text></g>`;});
+  const cl=growth(opts.coreLevel||1),col=safeHex(opts.coreHex||'#ffcf6b'),sr=14+10*cl;let rays='';
+  for(let i=0;i<11;i++){const a=i/11*6.2832;rays+=`<line x1="${(Math.cos(a)*(sr+4)).toFixed(1)}" y1="${(Math.sin(a)*(sr+4)).toFixed(1)}" x2="${(Math.cos(a)*(sr+9+6*cl)).toFixed(1)}" y2="${(Math.sin(a)*(sr+9+6*cl)).toFixed(1)}" stroke="${lighten(col,0.2)}" stroke-width="2.4" stroke-linecap="round" opacity="${(0.4+0.4*cl).toFixed(2)}"/>`;}
+  const sun=`<g class="petal" ${opts.bid?`data-act="open-aspect" data-aspect="${opts.bid}"`:''}><circle r="${(sr+12).toFixed(1)}" fill="${lighten(col,0.2)}" opacity="0.12"/>${rays}<circle r="${sr.toFixed(1)}" fill="${lighten(col,0.18)}"/><circle r="${sr.toFixed(1)}" fill="none" stroke="#fff" stroke-opacity="0.35"/></g>`;
+  return `<circle r="${R}" fill="none" stroke="var(--line)" stroke-dasharray="3 6" opacity="0.35"/>${_starScatter(opts.stars,0,0,R+15,R+38)}${sun}<g class="orbit-grp" data-cx="0" data-cy="0" data-dur="${dur}">${planets}</g>`;}
+let orbitRAF=null;
+function startOrbits(){if(orbitRAF){cancelAnimationFrame(orbitRAF);orbitRAF=null;}
+  const grps=[...document.querySelectorAll('#screen .orbit-grp')];if(!grps.length)return;
+  (function spin(){const t=performance.now()/1000;
+    for(const g of grps){const cx=+g.dataset.cx,cy=+g.dataset.cy,dur=+g.dataset.dur||60;const ang=(t/dur*360)%360;g.setAttribute('transform',`rotate(${ang.toFixed(2)} ${cx} ${cy})`);
+      for(const nd of g.children){const px=nd.getAttribute('data-px');if(px!=null)nd.setAttribute('transform',`rotate(${(-ang).toFixed(2)} ${px} ${nd.getAttribute('data-py')})`);}}
+    orbitRAF=requestAnimationFrame(spin);})();}
+function flowerTopUNUSED(keys,levels){const cx=150,cy=150;const N=keys.length;const step=360/N;
   // wide, rounded petal; width shrinks as more petals are added so they tessellate into a full flower
   const wf=Math.max(0.46,Math.min(1.35,5.0/N));
   const petalPath='M0,0 C -52,-30 -58,-104 0,-138 C 58,-104 52,-30 0,0 Z';
@@ -851,6 +1165,44 @@ function flowerSVG(keys,levels){const cx=150,cy=150;const N=keys.length;const st
     labels+=`<text x="${x}" y="${y+5}" text-anchor="middle" fill="${col}" font-size="14" font-weight="800" pointer-events="none" style="paint-order:stroke" stroke="var(--bg)" stroke-width="3">${lv}</text>`;});
   const se=seasonInfo();
   return `<svg width="300" height="300" viewBox="0 0 300 300" style="max-width:100%"><circle cx="150" cy="150" r="130" fill="none" stroke="${se.tint}" stroke-opacity=".22" stroke-width="6"/><circle cx="150" cy="150" r="124" fill="none" stroke="var(--line)" stroke-width="1" stroke-dasharray="3 6"/>${main}<circle cx="150" cy="150" r="26" fill="var(--gold)"/><circle cx="150" cy="150" r="26" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="1.5"/><text x="150" y="158" text-anchor="middle" font-size="24" pointer-events="none">🌸</text>${labels}</svg>`;}
+// front view — petals fan upward from a base, like a lotus opening toward you
+function flowerLotus(keys,levels){const cx=150,baseY=246,N=keys.length;
+  const gap=Math.min(34,150/Math.max(N,1));const wf=Math.max(0.5,Math.min(1.0,3.6/N));
+  const petalPath='M0,0 C -52,-30 -58,-104 0,-138 C 58,-104 52,-30 0,0 Z';
+  // draw outermost petals first so the centre ones sit on top
+  const order=keys.map((k,i)=>({k,i})).sort((a,b)=>Math.abs(b.i-(N-1)/2)-Math.abs(a.i-(N-1)/2));
+  let main='',labels='';
+  order.forEach(({k,i})=>{const lv=levels[i];const ls=0.74+Math.min(lv,12)/12*0.34;const ang=(i-(N-1)/2)*gap;const col=AS(k).hex;
+    const op=0.6+Math.min(lv,12)/12*0.32;
+    main+=`<g class="petal" data-act="open-aspect" data-aspect="${k}" transform="translate(${cx},${baseY}) rotate(${ang}) scale(${wf},${ls})"><path d="${petalPath}" fill="${col}" opacity="${op}"/><path d="${petalPath}" fill="none" stroke="${col}" stroke-width="1.8" opacity="0.95"/><path d="M0,-16 C -12,-48 -8,-94 0,-120" fill="none" stroke="#fff" stroke-opacity="0.22" stroke-width="2"/></g>`;
+    const d=132*ls;const th=ang*Math.PI/180;const x=cx+Math.sin(th)*d,y=baseY-Math.cos(th)*d;
+    labels+=`<text x="${x}" y="${Math.max(16,y)}" text-anchor="middle" fill="${col}" font-size="13" font-weight="800" pointer-events="none" style="paint-order:stroke" stroke="var(--bg)" stroke-width="3">${lv}</text>`;});
+  const se=seasonInfo();
+  return `<svg width="300" height="300" viewBox="0 0 300 300" style="max-width:100%">
+    <ellipse cx="150" cy="252" rx="120" ry="20" fill="${se.tint}" opacity="0.12"/>
+    <ellipse cx="150" cy="252" rx="120" ry="20" fill="none" stroke="var(--line)" stroke-width="1" stroke-dasharray="3 6"/>
+    ${main}
+    <ellipse cx="150" cy="248" rx="30" ry="14" fill="var(--gold)"/>
+    <ellipse cx="150" cy="248" rx="30" ry="14" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="1.5"/>
+    <text x="150" y="253" text-anchor="middle" font-size="20" pointer-events="none">🌸</text>
+    ${labels}</svg>`;}
+// orbital / galaxy view — aspects circle a glowing core like planets
+function flowerCosmos(keys,levels){const cx=150,cy=152,N=keys.length;const R=104;const dur=Math.max(42,N*16);
+  const stars=Array.from({length:26},(_,i)=>{const sx=15+((i*97)%270),sy=12+((i*53)%276),sr=(i%3)?1:1.8,sa=0.3+((i*37)%50)/100;return `<circle cx="${sx}" cy="${sy}" r="${sr}" fill="#fff" opacity="${sa.toFixed(2)}"/>`;}).join('');
+  let planets='';
+  keys.forEach((k,i)=>{const lv=levels[i];const ang=-90+i*360/N;const th=ang*Math.PI/180;const x=cx+Math.cos(th)*R,y=cy+Math.sin(th)*R;const col=AS(k).hex;const pr=11+Math.min(lv,12)/12*11;
+    // data-px/py let the JS spinner counter-rotate each planet so its level number stays upright while it orbits
+    planets+=`<g class="petal" data-act="open-aspect" data-aspect="${k}" data-px="${x.toFixed(2)}" data-py="${y.toFixed(2)}"><circle cx="${x}" cy="${y}" r="${pr+6}" fill="${col}" opacity="0.18"/><circle cx="${x}" cy="${y}" r="${pr}" fill="${col}" opacity="0.92"/><circle cx="${x}" cy="${y}" r="${pr}" fill="none" stroke="#fff" stroke-opacity="0.4" stroke-width="1.5"/><text x="${x}" y="${y+4}" text-anchor="middle" fill="#fff" font-size="12" font-weight="800" pointer-events="none">${lv}</text></g>`;});
+  return `<svg width="300" height="300" viewBox="0 0 300 300" style="max-width:100%">
+    ${stars}
+    <circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="var(--line)" stroke-width="1" stroke-dasharray="3 6" opacity="0.55"/>
+    <g id="cosmosOrbit" data-cx="${cx}" data-cy="${cy}" data-dur="${dur}">
+      ${planets}
+    </g>
+    <circle cx="${cx}" cy="${cy}" r="40" fill="var(--gold)" opacity="0.2"/>
+    <circle cx="${cx}" cy="${cy}" r="26" fill="var(--gold)"/>
+    <circle cx="${cx}" cy="${cy}" r="26" fill="none" stroke="#fff" stroke-opacity=".4" stroke-width="1.5"/>
+    <text x="${cx}" y="${cy+8}" text-anchor="middle" font-size="24" pointer-events="none">🌸</text></svg>`;}
 function seasonInfo(){const m=new Date().getMonth();return (m<2||m===11)?{name:'Winter',emoji:'❄️',tint:'#9fc7e8'}:m<5?{name:'Spring',emoji:'🌷',tint:'#f4a4b0'}:m<8?{name:'Summer',emoji:'☀️',tint:'#e8b04b'}:{name:'Autumn',emoji:'🍂',tint:'#d98a52'};}
 function gardenMomentum(){if(!S.habits.length)return 'resting — plant a habit to begin 🌱';const mo=Math.round(S.habits.reduce((a,h)=>a+habitConsistency(h),0)/S.habits.length);return mo>=70?'in full bloom 🌸':mo>=40?'growing steadily 🌿':mo>0?'just budding 🌱':'resting';}
 function trackerGraphAll(){const allDates=Object.keys(S.trackerLog).sort();if(!allDates.length)return '<div class="empty">Save a tracker reading on Home to start your graph.</div>';
@@ -879,73 +1231,79 @@ function durationHTML(key,secs){secs=secs||0;const mm=Math.floor(secs/60),ss=sec
   const ss2=Array.from({length:60},(_,i)=>i).map(x=>`<option ${x===ss?'selected':''}>${x}</option>`).join('');
   return `<div class="clockpick" data-fdur="${key}"><select class="input cp-min">${ms}</select><small>min</small><select class="input cp-sec">${ss2}</select><small>sec</small></div>`;}
 function readDuration(w){return (+w.querySelector('.cp-min').value)*60+(+w.querySelector('.cp-sec').value);}
-function aspSkillHTML(key,sel){sel=sel||{aspects:[],skillPairs:[]};
-  return `<div class="field aspskill" data-asfield="${key}"><label>Aspect(s) & skills</label><div class="chips asp-row">${aspectKeys().map(k=>`<button type="button" class="chip ${(sel.aspects||[]).includes(k)?'on':''}" data-asp-pick="${k}">${AS(k).emoji} ${AS(k).name}</button>`).join('')}</div><div class="asp-skills">${aspSkillsInner(sel.aspects||[],sel.skillPairs||[])}</div></div>`;}
-function aspSkillsInner(aspects,pairs){if(!aspects.length)return '<p class="muted small" style="margin:4px 0">Pick an aspect to choose its skills (optional).</p>';
-  return aspects.map(k=>`<div style="margin:6px 0 2px"><small class="muted">${AS(k).emoji} ${AS(k).name}</small><div class="chips" style="margin-top:4px">${AS(k).skills.length?AS(k).skills.map(sk=>`<button type="button" class="chip ${pairs.includes(k+'::'+sk)?'on':''}" data-skill-pick="${k}::${esc(sk)}">${esc(sk)}</button>`).join(''):'<span class="muted small">no skills yet</span>'}</div></div>`).join('');}
-function readAspSkill(f){return {aspects:[...f.querySelectorAll('.asp-row .chip.on')].map(c=>c.dataset.aspPick),skillPairs:[...f.querySelectorAll('.asp-skills .chip.on')].map(c=>c.dataset.skillPick)};}
+function aspSkillHTML(key,sel){sel=sel||{aspects:[],skillIds:[]};
+  return `<div class="field aspskill" data-asfield="${key}"><label>Blossom · petal · skill</label><div class="chips asp-row">${aspectKeys().map(k=>`<button type="button" class="chip ${(sel.aspects||[]).includes(k)?'on':''}" data-asp-pick="${k}">${AS(k).emoji} ${esc(AS(k).name)}</button>`).join('')||'<span class="muted small">No blossoms yet — add one in the 🌸 Blossom tab.</span>'}</div><div class="asp-skills">${aspSkillsInner(sel.aspects||[],sel.skillIds||[])}</div></div>`;}
+function aspSkillsInner(aspects,skillIds){if(!aspects.length)return '<p class="muted small" style="margin:4px 0">Pick a blossom to choose its skills (optional).</p>';
+  return aspects.map(k=>{const a=AS(k);return `<div style="margin:8px 0 2px"><small class="muted">${a.emoji} ${esc(a.name)}</small>${blossomPetals(a).map(p=>`<div style="margin:4px 0"><div class="muted small" style="opacity:.7;margin:3px 0">${esc(p.name)}</div><div class="chips">${(p.skills||[]).length?(p.skills||[]).map(sk=>`<button type="button" class="chip ${skillIds.includes(sk.id)?'on':''}" data-skill-pick="${sk.id}">${esc(sk.name)}</button>`).join(''):'<span class="muted small">no skills</span>'}</div></div>`).join('')||'<span class="muted small" style="margin-left:4px">no petals yet</span>'}</div>`;}).join('');}
+function readAspSkill(f){return {aspects:[...f.querySelectorAll('.asp-row .chip.on')].map(c=>c.dataset.aspPick),skillIds:[...f.querySelectorAll('.asp-skills .chip.on')].map(c=>c.dataset.skillPick)};}
+function tagPickerHTML(key,sel){sel=sel||[];return `<div class="field" data-tagfield="${key}"><label>Tags</label><div class="chips">${(S.tags||[]).map(tg=>`<button type="button" class="chip ${sel.includes(tg.id)?'on':''}" data-tag-pick="${tg.id}" style="${sel.includes(tg.id)?'background:'+tg.color+';border-color:'+tg.color+';color:#fff':'border-color:'+tg.color}">${esc(tg.name)}</button>`).join('')||'<span class="muted small">No tags yet — make some in ⚙️ Settings → Tags.</span>'}</div></div>`;}
+function readTags(f){return [...f.querySelectorAll('.chip.on')].map(c=>c.dataset.tagPick);}
+function tagPills(ids){if(!ids||!ids.length)return '';return ids.map(id=>{const tg=(S.tags||[]).find(t=>t.id===id);return tg?`<span class="pill" style="background:${tg.color};border-color:${tg.color};color:#fff;padding:1px 8px;font-size:11px">${esc(tg.name)}</span>`:'';}).join(' ');}
 
 function promptSheet(title,fields,onSave,initial={}){const body=fields.map(f=>{const val=initial[f.k]!=null?initial[f.k]:'';
   if(f.type==='textarea')return `<div class="field"><label>${f.label}</label><textarea class="input" data-f="${f.k}" placeholder="${f.placeholder||''}">${esc(val)}</textarea></div>`;
   if(f.type==='select')return `<div class="field"><label>${f.label}</label><select class="input" data-f="${f.k}">${f.options.map(o=>`<option value="${o[0]}" ${val===o[0]?'selected':''}>${o[1]}</option>`).join('')}</select></div>`;
   if(f.type==='aspect')return `<div class="field"><label>${f.label}</label><div class="chips" data-fchips="${f.k}">${aspectKeys().map(k=>`<button type="button" class="chip ${val===k?'on':''}" data-fchip="${k}">${AS(k).emoji} ${AS(k).name}</button>`).join('')}</div></div>`;
   if(f.type==='aspectskill')return aspSkillHTML(f.k,val||{});
+  if(f.type==='tags')return tagPickerHTML(f.k,val||[]);
   if(f.type==='days')return `<div class="field"><label>${f.label}</label><div class="chips" data-fdays="${f.k}">${DOW.map((dn,i)=>`<button type="button" class="chip ${(val||[]).includes(dn)?'on':''}" data-fday="${dn}">${dn}</button>`).join('')}</div></div>`;
   if(f.type==='clock')return `<div class="field"><label>${f.label}</label>${clockHTML(f.k,val)}</div>`;
   if(f.type==='clockopt')return `<div class="field"><label>${f.label}</label><label class="muted small" style="display:flex;gap:8px;align-items:center;margin:2px 0"><input type="checkbox" data-clockopt-en="${f.k}" ${val?'checked':''}/> Set a time</label><div data-clockopt-wrap="${f.k}" style="${val?'':'display:none'}">${clockHTML(f.k,val||'09:00')}</div></div>`;
   if(f.type==='duration')return `<div class="field"><label>${f.label}</label>${durationHTML(f.k,val)}</div>`;
   return `<div class="field"><label>${f.label}</label><input class="input" type="${f.type||'text'}" data-f="${f.k}" placeholder="${f.placeholder||''}" value="${esc(val)}"/></div>`;}).join('');
   sheet(`<h2>${esc(title)}</h2>${body}<div class="row"><button class="btn" data-act="cancel-sheet">Cancel</button><button class="btn primary" data-act="sheet-save">Save</button></div>`);
-  $('#modal-root')._onSave=()=>{const mr=$('#modal-root');const data={...initial};mr.querySelectorAll('[data-f]').forEach(el=>data[el.dataset.f]=el.value.trim());mr.querySelectorAll('[data-fchips]').forEach(c=>{const on=c.querySelector('.chip.on');data[c.dataset.fchips]=on?on.dataset.fchip:'';});mr.querySelectorAll('[data-fdays]').forEach(c=>{data[c.dataset.fdays]=[...c.querySelectorAll('.chip.on')].map(x=>x.dataset.fday);});mr.querySelectorAll('[data-fclock]').forEach(w=>data[w.dataset.fclock]=readClock(w));mr.querySelectorAll('[data-fdur]').forEach(w=>data[w.dataset.fdur]=readDuration(w));mr.querySelectorAll('[data-clockopt-en]').forEach(cb=>{if(!cb.checked)data[cb.dataset.clockoptEn]='';});mr.querySelectorAll('[data-asfield]').forEach(f=>data[f.dataset.asfield]=readAspSkill(f));onSave(data);closeSheet();};}
+  $('#modal-root')._onSave=()=>{const mr=$('#modal-root');const data={...initial};mr.querySelectorAll('[data-f]').forEach(el=>data[el.dataset.f]=el.value.trim());mr.querySelectorAll('[data-fchips]').forEach(c=>{const on=c.querySelector('.chip.on');data[c.dataset.fchips]=on?on.dataset.fchip:'';});mr.querySelectorAll('[data-fdays]').forEach(c=>{data[c.dataset.fdays]=[...c.querySelectorAll('.chip.on')].map(x=>x.dataset.fday);});mr.querySelectorAll('[data-fclock]').forEach(w=>data[w.dataset.fclock]=readClock(w));mr.querySelectorAll('[data-fdur]').forEach(w=>data[w.dataset.fdur]=readDuration(w));mr.querySelectorAll('[data-clockopt-en]').forEach(cb=>{if(!cb.checked)data[cb.dataset.clockoptEn]='';});mr.querySelectorAll('[data-asfield]').forEach(f=>data[f.dataset.asfield]=readAspSkill(f));mr.querySelectorAll('[data-tagfield]').forEach(f=>data[f.dataset.tagfield]=readTags(f));onSave(data);closeSheet();};}
 
 /* COSMOS wizard */
 let wiz=null;
 /* simple, cozy goal creator (goals are NOT the COSMOS wizard — that's for habits) */
+function deriveBlossoms(aspects,skillIds){const set=new Set(aspects||[]);(skillIds||[]).forEach(id=>{const fs=findSkill(id);if(fs)set.add(fs.bid);});return [...set];}
 function openGoalCreator(editId,preset={}){const g=editId?S.goals.find(x=>x.id===editId):null;
-  const init=g?{name:g.name,term:g.term||'short',as:{aspects:itemAspects(g),skillPairs:g.skillPairs||[]},date:g.targetDate||'',why:g.why||'',importance:String(g.importance||3)}:{term:preset.term||'short',as:{aspects:preset.aspect?[preset.aspect]:[],skillPairs:(preset.aspect&&preset.skill)?[preset.aspect+'::'+preset.skill]:[]},importance:'3'};
+  const init=g?{name:g.name,term:g.term||'short',as:{aspects:itemAspects(g),skillIds:g.skillIds||[]},date:g.targetDate||'',why:g.why||'',importance:String(g.importance||3),tags:g.tagIds||[]}:{term:preset.term||'short',as:{aspects:preset.aspect?[preset.aspect]:[],skillIds:preset.skillId?[preset.skillId]:[]},importance:'3',tags:[]};
   promptSheet(g?'Edit goal':'New goal',[
     {k:'name',label:'My goal is to…',placeholder:'e.g. Run a 5K without stopping'},
     {k:'term',label:'Timeframe',type:'select',options:[['short','🌱 Short-term (days–weeks)'],['long','🌳 Long-term (months+)']]},
     {k:'as',label:'',type:'aspectskill'},
     {k:'date',label:'Target date (optional)',type:'date'},
     {k:'importance',label:'How important is it? (more = more XP)',type:'select',options:[['2','Nice to have'],['3','Meaningful'],['4','Important'],['5','Top priority']]},
+    {k:'tags',label:'',type:'tags'},
     {k:'why',label:'Why it matters (optional)',type:'textarea',placeholder:'What will reaching this give you?'},
-  ],d=>{if(!d.name)return;const as=d.as||{};const aspects=as.aspects&&as.aspects.length?as.aspects:[aspectKeys()[0]];const imp=parseInt(d.importance)||3;
-    const fields={name:d.name,term:d.term||'short',aspect:aspects[0],aspects,skill:(as.skillPairs[0]||'').split('::')[1]||'',skills:(as.skillPairs||[]).map(s=>s.split('::')[1]),skillPairs:as.skillPairs||[],targetDate:d.date||'',why:d.why||'',importance:imp,difficulty:imp,effort:imp};
+  ],d=>{if(!d.name)return;const as=d.as||{};const skillIds=as.skillIds||[];const aspects=deriveBlossoms(as.aspects,skillIds);const imp=parseInt(d.importance)||3;
+    const fields={name:d.name,term:d.term||'short',aspect:aspects[0]||'',aspects,skillIds,targetDate:d.date||'',why:d.why||'',importance:imp,difficulty:imp,effort:imp,tagIds:d.tags||[]};
     if(g)Object.assign(g,fields);else S.goals.push({id:uid(),...fields,progress:0,xpGiven:0,createdAt:Date.now()});S.settings.onboarded=true;save();render();},init);}
 
 function openCosmos(kind,editId,preset={}){let base;
   if(editId){const arr=kind==='habit'?S.habits:S.goals;const it=arr.find(x=>x.id===editId);
-    base={name:it.name,aspects:it.aspects&&it.aspects.length?it.aspects.slice():(it.aspect?[it.aspect]:[]),skillPairs:it.skillPairs?it.skillPairs.slice():(it.skill&&it.aspect?[it.aspect+'::'+it.skill]:[]),importance:it.importance||3,difficulty:it.difficulty||3,effort:it.effort||3,goalIds:(it.goalIds||[]).slice(),...it.cosmos,startt:(it.cosmos||{}).start||'',endt:(it.cosmos||{}).end||''};base._id=editId;}
-  else base={name:'',aspects:preset.aspect?[preset.aspect]:[],skillPairs:(preset.aspect&&preset.skill)?[preset.aspect+'::'+preset.skill]:[],goalIds:preset.goalId?[preset.goalId]:[],days:[]};
+    base={name:it.name,aspects:it.aspects&&it.aspects.length?it.aspects.slice():(it.aspect?[it.aspect]:[]),skillIds:(it.skillIds||[]).slice(),importance:it.importance||3,difficulty:it.difficulty||3,effort:it.effort||3,goalIds:(it.goalIds||[]).slice(),tagIds:(it.tagIds||[]).slice(),...it.cosmos,startt:(it.cosmos||{}).start||'',endt:(it.cosmos||{}).end||''};base._id=editId;}
+  else base={name:'',aspects:preset.aspect?[preset.aspect]:[],skillIds:preset.skillId?[preset.skillId]:[],goalIds:preset.goalId?[preset.goalId]:[],tagIds:[],days:[]};
   wiz={kind,step:0,data:base};renderWiz();}
-const WIZ_STEPS=[{L:'C',t:'Clarify',d:'Purpose & measurable goal'},{L:'O',t:'Orient',d:'Days, time, place & feeling'},{L:'S',t:'Stack',d:'Anchor an existing habit'},{L:'M',t:'Motivate',d:'Friction removers & rewards'},{L:'O',t:'Observe',d:'MVV / Standard / Stretch + milestones'},{L:'S',t:'Study',d:'Logging & review'}];
+const WIZ_STEPS=[{L:'C',t:'Clarify',d:'What it is, where it grows & why'},{L:'O',t:'Orient',d:'When & where you’ll do it'},{L:'S',t:'Stack & Motivate',d:'Anchor it, make it easy & rewarding'},{L:'S',t:'Refine',d:'Standard, stretch & review — all optional'}];
 function renderWiz(){const s=wiz.step,st=WIZ_STEPS[s],d=wiz.data;
-  const fields={0:[['name','Habit name','e.g. Morning hangboard'],['goalIds','Part of goal(s) (optional)','','goalsmulti'],['aspectskill','aspectskill'],['importance','Importance','','scale'],['difficulty','Difficulty','','scale'],['effort','Time / effort','','scale'],['purpose','Purpose — why it matters','Build grip strength','ta'],['metric','How you\'ll measure it','Added weight × 5 sets']],
-    1:[['days','days'],['repeat','Times per chosen day','','rep'],['startt','Start time','','clock'],['endt','End time','','clock'],['place','Location','Living room'],['feeling','Desired feeling','Steady, grounded']],
-    2:[['anchor','Existing habit / cue','put my mug in the sink'],['tinyAction','Tiny action (MVV) it triggers','2-min warm-up + 1 set']],
-    3:[['friction1','Remove friction #1','Lay out gear night before'],['friction2','Remove friction #2','Phone on Do Not Disturb'],['reward1','Reward #1','Tick the streak'],['reward2','Reward #2','5 min music'],['backup','If/Then backup (≤24h)','Do 2 MVV sets at 5:30 PM']],
-    4:[['mvv','Minimum viable (2–5 min)','1×7s hang'],['standard','Standard','5×7s hangs'],['stretch','Stretch','+1–2 sets'],['m1','Milestone 1','+5 lbs'],['m1d','Milestone 1 date','','date'],['m2','Milestone 2','+10 lbs'],['m2d','Milestone 2 date','','date']],
-    5:[['log','Daily log method','In-app streak'],['weekly','Weekly target','3 / week'],['review','Review time/place','Sun 6 PM'],['reflect','Reflection prompt','What worked best?','ta']]}[s];
+  const fields={0:[['name','Habit name','e.g. Morning walk'],['goalIds','Part of goal(s) (optional)','','goalsmulti'],['aspectskill','aspectskill'],['tagIds','tags','','tags'],['importance','Importance','','scale'],['difficulty','Difficulty','','scale'],['effort','Time / effort','','scale'],['purpose','Why it matters (optional)','Feel clear and energised','ta'],['metric','How you’ll measure it (optional)','10 minutes outside']],
+    1:[['days','days'],['repeat','Times per chosen day','','rep'],['unit','Unit label (optional)','e.g. glasses, reps, min'],['startt','Start time','','clock'],['endt','End time','','clock'],['place','Location (optional)','Neighborhood']],
+    2:[['anchor','After I… (existing cue, optional)','finish my morning coffee'],['tinyAction','…I’ll start with (2-min version)','put my shoes on'],['friction1','Make it easier (optional)','Lay clothes out the night before'],['reward1','Reward (optional)','Tick the streak'],['backup','If I miss, my backup is (optional)','A 2-min version after dinner']],
+    3:[['standard','Standard version (optional)','20-minute walk'],['stretch','Stretch version (optional)','40-minute walk'],['m1','Milestone (optional)','Walk 5 days in a row'],['m1d','Milestone date','','date'],['review','Weekly review time (optional)','Sunday evening'],['reflect','Reflection prompt (optional)','What made it easy?','ta']]}[s];
   const fhtml=fields.map(f=>{const[k,label,ph,type]=f;const val=d[k]!=null?d[k]:'';
-    if(label==='aspectskill')return aspSkillHTML('wiz',{aspects:d.aspects||[],skillPairs:d.skillPairs||[]});
+    if(label==='aspectskill')return aspSkillHTML('wiz',{aspects:d.aspects||[],skillIds:d.skillIds||[]});
+    if(type==='tags')return tagPickerHTML('wiz',d.tagIds||[]);
     if(label==='days')return `<div class="field"><label>Day(s) — leave empty for daily</label><div class="chips">${DOW.map(dn=>`<button type="button" class="chip ${(d.days||[]).includes(dn)?'on':''}" data-wday="${dn}">${dn}</button>`).join('')}</div></div>`;
     if(type==='clock')return `<div class="field"><label>${label}</label>${clockHTML(k,val)}</div>`;
     if(type==='goalsmulti'){const sel=d.goalIds||[];return `<div class="field"><label>${label}</label>${S.goals.length?`<div class="chips">${S.goals.map(g=>`<button type="button" class="chip ${sel.includes(g.id)?'on':''}" data-wgoal="${g.id}">${esc((g.term==='long'?'🌳 ':'🌱 ')+g.name)}</button>`).join('')}</div>`:'<p class="muted small" style="margin:2px 0">No goals yet — create one first to link habits.</p>'}</div>`;}
     if(type==='scale'){const cur=val||3;return `<div class="field"><label>${label} <span class="muted small">— affects XP earned</span></label><select class="input" data-w="${k}">${[[1,'Very low'],[2,'Low'],[3,'Medium'],[4,'High'],[5,'Very high']].map(o=>`<option value="${o[0]}" ${cur==o[0]?'selected':''}>${o[1]}</option>`).join('')}</select></div>`;}
-    if(type==='rep'){const cur=val||1;return `<div class="field"><label>${label}</label><select class="input" data-w="${k}">${Array.from({length:12},(_,i)=>i+1).map(n=>`<option value="${n}" ${cur==n?'selected':''}>${n}×</option>`).join('')}</select></div>`;}
+    if(type==='rep'){const cur=val||1;return `<div class="field"><label>${label}</label><input class="input" type="number" min="1" max="99" data-w="${k}" value="${cur}"/></div>`;}
     if(type==='ta')return `<div class="field"><label>${label}</label><textarea class="input" data-w="${k}" placeholder="${ph||''}">${esc(val)}</textarea></div>`;
     return `<div class="field"><label>${label}</label><input class="input" type="${type||'text'}" data-w="${k}" placeholder="${ph||''}" value="${esc(val)}"/></div>`;}).join('');
-  sheet(`<div style="position:relative"><span class="step-letter">${st.L}</span><div class="steps">${WIZ_STEPS.map((_,i)=>`<i class="${i<=s?'on':''}"></i>`).join('')}</div><h2 style="margin-bottom:2px">${st.t}</h2><p class="muted small" style="margin:0 0 14px">${st.d}</p>${fhtml}<div class="row" style="margin-top:8px">${s>0?`<button class="btn" data-act="wiz-prev">‹ Back</button>`:''}<button class="btn primary" data-act="wiz-next">${s<5?'Next ›':'✓ Save Card'}</button></div></div>`);}
+  sheet(`<div style="position:relative"><span class="step-letter">${st.L}</span><div class="steps">${WIZ_STEPS.map((_,i)=>`<i class="${i<=s?'on':''}"></i>`).join('')}</div><h2 style="margin-bottom:2px">${st.t}</h2><p class="muted small" style="margin:0 0 14px">${st.d}</p>${fhtml}<div class="row" style="margin-top:8px">${s>0?`<button class="btn" data-act="wiz-prev">‹</button>`:''}<button class="btn gold" data-act="wiz-save">✓ Save</button>${s<WIZ_STEPS.length-1?`<button class="btn primary" data-act="wiz-next">Next ›</button>`:''}</div><p class="muted small" style="text-align:center;margin:8px 0 0">Step ${s+1} of ${WIZ_STEPS.length} · only a name is required</p></div>`);}
 function wizCollect(){const mr=$('#modal-root');mr.querySelectorAll('[data-w]').forEach(el=>wiz.data[el.dataset.w]=el.value.trim());
-  const af=mr.querySelector('.aspskill');if(af){const r=readAspSkill(af);wiz.data.aspects=r.aspects;wiz.data.skillPairs=r.skillPairs;}
+  const af=mr.querySelector('.aspskill');if(af){const r=readAspSkill(af);wiz.data.aspects=r.aspects;wiz.data.skillIds=r.skillIds;}
   if(mr.querySelector('[data-wday]'))wiz.data.days=[...mr.querySelectorAll('[data-wday].on')].map(x=>x.dataset.wday);
   if(mr.querySelector('[data-wgoal]'))wiz.data.goalIds=[...mr.querySelectorAll('[data-wgoal].on')].map(x=>x.dataset.wgoal);
+  const tf=mr.querySelector('[data-tagfield]');if(tf)wiz.data.tagIds=readTags(tf);
   mr.querySelectorAll('[data-fclock]').forEach(w=>wiz.data[w.dataset.fclock]=readClock(w));}
 function timeWindow(s,e){if(!s&&!e)return '';const f=t=>{if(!t)return '';let[h,m]=t.split(':').map(Number);const ap=h<12?'AM':'PM';return ((h%12)||12)+':'+String(m).padStart(2,'0')+' '+ap;};return e?f(s)+'–'+f(e):f(s);}
-function wizSave(){const d=wiz.data;const cosmos={purpose:d.purpose,goal:d.goal,metric:d.metric,days:d.days||[],repeat:Math.max(1,parseInt(d.repeat)||1),start:d.startt||'',end:d.endt||'',time:timeWindow(d.startt,d.endt),place:d.place,feeling:d.feeling,anchor:d.anchor,tinyAction:d.tinyAction,friction1:d.friction1,friction2:d.friction2,reward1:d.reward1,reward2:d.reward2,backup:d.backup,mvv:d.mvv,standard:d.standard,stretch:d.stretch,milestones:[d.m1?{text:d.m1,date:d.m1d}:null,d.m2?{text:d.m2,date:d.m2d}:null].filter(Boolean),log:d.log,weekly:d.weekly,review:d.review,reflect:d.reflect};
-  const aspects=(d.aspects&&d.aspects.length)?d.aspects:[aspectKeys()[0]];const skillPairs=d.skillPairs||[];
-  const common={aspect:aspects[0],aspects,skill:(skillPairs[0]||'').split('::')[1]||'',skills:skillPairs.map(s=>s.split('::')[1]),skillPairs,goalIds:d.goalIds||[],importance:parseInt(d.importance)||3,difficulty:parseInt(d.difficulty)||3,effort:parseInt(d.effort)||3,cosmos};
+function wizSave(){const d=wiz.data;const cosmos={purpose:d.purpose,goal:d.goal,metric:d.metric,days:d.days||[],repeat:Math.max(1,parseInt(d.repeat)||1),unit:d.unit||'',start:d.startt||'',end:d.endt||'',time:timeWindow(d.startt,d.endt),place:d.place,feeling:d.feeling,anchor:d.anchor,tinyAction:d.tinyAction,friction1:d.friction1,friction2:d.friction2,reward1:d.reward1,reward2:d.reward2,backup:d.backup,mvv:d.mvv,standard:d.standard,stretch:d.stretch,milestones:[d.m1?{text:d.m1,date:d.m1d}:null,d.m2?{text:d.m2,date:d.m2d}:null].filter(Boolean),log:d.log,weekly:d.weekly,review:d.review,reflect:d.reflect};
+  const skillIds=d.skillIds||[];const aspects=deriveBlossoms(d.aspects,skillIds);
+  const common={aspect:aspects[0]||'',aspects,skillIds,goalIds:d.goalIds||[],tagIds:d.tagIds||[],importance:parseInt(d.importance)||3,difficulty:parseInt(d.difficulty)||3,effort:parseInt(d.effort)||3,cosmos};
   if(wiz.kind==='habit'){if(d._id){const h=S.habits.find(x=>x.id===d._id);Object.assign(h,{name:d.name||'Habit',...common});}else S.habits.push({id:uid(),name:d.name||'Habit',...common,logs:{},createdAt:Date.now()});}
   else{if(d._id){const g=S.goals.find(x=>x.id===d._id);Object.assign(g,{name:d.name||'Goal',...common,targetDate:d.m2d||d.m1d||g.targetDate});}else S.goals.push({id:uid(),name:d.name||'Goal',...common,progress:0,targetDate:d.m2d||d.m1d||'',createdAt:Date.now()});}
   S.settings.onboarded=true;save();closeSheet();wiz=null;render();toast('🌸 COSMOS Card saved');}
@@ -964,22 +1322,45 @@ function settingsThemeBox(){const cts=S.settings.customThemes||[];
     <button class="btn sm block" style="margin-top:10px;color:var(--pink)" data-act="del-ct" data-id="${ct.id}">🗑 Delete this theme</button></div>`;}
 function settingsColorGrid(){return [['bg','Background'],['card','Boxes'],['text','Text'],['line','Borders'],['green-soft','Buttons'],['pink','Accent'],['gold','Highlight'],['muted','Subtle text']].map(([v,l])=>`<label class="muted small" style="display:flex;align-items:center;gap:8px"><input type="color" data-themevar="${v}" value="${cssColorHex(v)}" style="width:34px;height:30px;border:none;background:none;padding:0">${l}</label>`).join('');}
 function settingsParticleBox(){return `<div class="chips">${Object.keys(PARTICLE_TYPES).map(t=>`<button class="chip ${(S.settings.particles||[]).includes(t)?'on':''}" data-act="toggle-particle" data-p="${t}">${PARTICLE_TYPES[t].label}</button>`).join('')}<button class="chip ${(S.settings.particles||[]).length?'':'on'}" data-act="particles-off">Off</button></div>
-  <div style="margin-top:8px">${(S.settings.customParticles||[]).map((cp,i)=>`<span class="pill">${esc(cp.emoji)} <span data-act="del-custom-particle" data-i="${i}" style="color:var(--pink);cursor:pointer">✕</span></span> `).join('')}</div>
-  <button class="btn sm" style="margin-top:6px" data-act="add-custom-particle">＋ Custom particle</button>`;}
+  <div class="chips" style="margin-top:8px">${(S.settings.customParticles||[]).map((cp,i)=>`<span style="display:inline-flex;align-items:center;background:var(--bg-2);border:1px solid var(--line);border-radius:999px;overflow:hidden"><button class="chip ${cp.on!==false?'on':''}" style="border:none;border-radius:0;padding:5px 9px" data-act="toggle-custom-particle" data-i="${i}">${esc(cp.emoji)}</button><button style="padding:5px 6px;color:var(--muted)" data-act="edit-custom-particle" data-i="${i}">✎</button><button style="padding:5px 8px 5px 4px;color:var(--pink)" data-act="del-custom-particle" data-i="${i}">✕</button></span>`).join('')}</div>
+  <button class="btn sm" style="margin-top:6px" data-act="add-custom-particle">＋ Custom particle</button>
+  <div class="chips" style="margin-top:10px"><button class="chip ${S.settings.clickSparkle?'on':''}" data-act="toggle-click-sparkle">${S.settings.clickSparkle?'✨ Click effect: on':'✨ Click effect: off'}</button><button class="chip" data-act="set-click-emoji">Icon: ${S.settings.clickEmoji?esc(S.settings.clickEmoji):'✨ sparkle'}</button></div>`;}
+function openParticleForm(i){const cp=i>=0?S.settings.customParticles[i]:{emoji:'',color:'#ffffff',mode:'fall',count:14,size:16,sizeVar:25,speed:1};
+  promptSheet(i>=0?'Edit particle':'Custom particle',[{k:'emoji',label:'Emoji or character',placeholder:'⭐ / ✦ / 🍩'},{k:'color',label:'Color (for non-emoji)',type:'color'},{k:'mode',label:'Motion',type:'select',options:[['fall','↓ Fall down'],['rise','↑ Float up'],['drift','✦ Drift around'],['streakLR','→ Streak right'],['streakRL','← Streak left'],['twinkle','🌟 Twinkle']]},{k:'speed',label:'Speed',type:'select',options:[['0.5','Slow'],['1','Normal'],['2','Fast']]},{k:'count',label:'How many',type:'number',placeholder:'14'},{k:'size',label:'Size (px)',type:'number',placeholder:'16'},{k:'sizeVar',label:'Size variation',type:'select',options:[['0','None'],['25','Small'],['50','Medium'],['80','Big']]}],
+  d=>{if(!d.emoji&&i<0)return;const obj={on:i>=0?cp.on!==false:true,emoji:(d.emoji||cp.emoji||'✦').slice(0,2),color:d.color||'#ffffff',mode:d.mode||'fall',speed:parseFloat(d.speed)||1,count:Math.min(120,Math.max(1,parseInt(d.count)||14)),size:Math.min(80,Math.max(4,parseInt(d.size)||16)),sizeVar:parseInt(d.sizeVar)||0};
+    if(i>=0)S.settings.customParticles[i]=obj;else S.settings.customParticles.push(obj);save();startParticles();},{emoji:cp.emoji,color:cp.color,mode:cp.mode,speed:String(cp.speed||1),count:cp.count,size:cp.size||16,sizeVar:String(cp.sizeVar||0)});
+  $('#modal-root')._returnTo=openSettings;}
 function settingsLabelChips(){return `<button class="chip ${S.settings.editLabels?'on':''}" data-act="toggle-editlabels">${S.settings.editLabels?'On — tap a heading to rename':'Off'}</button>${Object.keys(S.labels||{}).length?`<button class="chip" data-act="reset-labels">Reset labels</button>`:''}`;}
+function settingsTagsBox(){return `<div class="chips">${(S.tags||[]).map(tg=>`<span style="display:inline-flex;align-items:center;background:var(--bg-2);border:1px solid ${tg.color};border-radius:999px;overflow:hidden"><span style="padding:5px 9px;color:${tg.color};font-weight:600;font-size:13px">${esc(tg.name)}</span><button style="padding:5px 5px;color:var(--muted)" data-act="edit-tag" data-id="${tg.id}">✎</button><button style="padding:5px 8px 5px 3px;color:var(--pink)" data-act="del-tag" data-id="${tg.id}">✕</button></span>`).join('')}</div><button class="btn sm" style="margin-top:6px" data-act="new-tag">＋ New tag</button>`;}
 function settingsEmojiChip(){return `<button class="chip ${S.settings.showEmojis?'on':''}" data-act="toggle-emojis">${S.settings.showEmojis?'😊 Showing emojis':'Emojis off'}</button>`;}
 function settingsSoundChips(){return `<button class="chip ${S.settings.chime?'on':''}" data-act="toggle-chime">🔔 Check-in chime</button>`;}
 function settingsAmbienceBox(){const tracks=S.settings.tracks||[];return `${tracks.length?`<div class="card tight">${tracks.map(tr=>`<div class="list-item"><button class="iconbtn" style="width:30px;height:30px;font-size:12px" data-act="play-track" data-id="${tr.id}">▶</button><span class="li-text">🎵 ${esc(tr.name)}</span><button class="btn sm ${S.settings.alarmTrack===tr.id?'gold':''}" data-act="set-alarm-track" data-id="${tr.id}">🔔 alarm</button><button class="iconbtn" style="width:30px;height:30px;font-size:12px" data-act="del-track" data-id="${tr.id}">✕</button></div>`).join('')}</div>`:'<p class="muted small" style="margin:2px 0 8px">Add an mp3 to use as your alarm/timer sound.</p>'}
   <button class="btn sm" data-act="upload-music">＋ Add mp3</button>`;}
 function openSettings(){sheet(`<h2>⚙️ Settings</h2>`+settingsBody());$('#modal-root')._onSettingsSave=settingsSave;}
+function settingsDisplayBox(){const cur=S.settings.blossomDisplay||'forest';const D=DISPLAYS[cur]||DISPLAYS.forest;const h=aspectHex(aspectKeys()[0])||'#7aa6e0';
+  return `<div class="chips">${DISPLAY_LIST.map(id=>`<button class="chip ${cur===id?'on':''}" data-act="set-blossom-display" data-display="${id}">${DISPLAYS[id].label}</button>`).join('')}</div>
+   <div class="display-preview"><span>${D.blossom(8,h,44)}</span><span>${D.petal(6,h,40)}</span><span>${D.skill(9,h,34)}</span><small class="muted">blossom · petal · skill</small></div>`;}
+function settingsXpHealthBox(){const s=S.settings,H=s.health||{habits:true,goals:true,trackers:true};
+  return `<div class="muted small" style="margin-bottom:8px">XP rewards & how fast levels arrive. <b>Health</b> is a 0–100 snapshot of how consistently you're keeping up <i>right now</i> — it rises with good habits/goals/trackers over the window below and drifts down when you fall off. It isn't XP and doesn't reset daily.</div>
+   <label class="set-row"><span>XP per action <span class="muted small">(higher = more)</span></span><input class="input mini" type="number" min="1" max="40" data-xpset="xpScale" value="${s.xpScale||6}"></label>
+   <label class="set-row"><span>Level length <span class="muted small">(higher = slower)</span></span><input class="input mini" type="number" min="10" max="500" step="5" data-xpset="xpCurve" value="${s.xpCurve||50}"></label>
+   <label class="set-row"><span>Health window <span class="muted small">(days)</span></span><input class="input mini" type="number" min="3" max="90" data-xpset="healthWindow" value="${s.healthWindow||14}"></label>
+   <div style="margin-top:6px"><span class="muted small">Health reflects:</span><div class="chips" style="margin-top:4px"><button class="chip ${H.habits!==false?'on':''}" data-act="health-toggle" data-part="habits">Habits</button><button class="chip ${H.goals!==false?'on':''}" data-act="health-toggle" data-part="goals">Goals</button><button class="chip ${H.trackers!==false?'on':''}" data-act="health-toggle" data-part="trackers">Trackers</button></div></div>`;}
+function settingsDebugBox(){return `<div class="muted small" style="margin-bottom:8px">Jump anything to any level for testing. Levels are computed from XP, so this just sets XP.</div>
+   <button class="btn sm block" data-act="debug-set-levels">🎚️ Set blossom / petal / skill level…</button>
+   <div class="row" style="margin-top:6px"><button class="btn sm" data-act="debug-maxall">Max all skills</button><button class="btn sm" style="color:var(--pink)" data-act="debug-resetxp">Reset all XP</button></div>`;}
 function settingsBody(){return `
   <div class="field"><label>Your name</label><input class="input" data-set="name" value="${esc(S.profile.name)}" placeholder="Name"/></div>
   <div class="field"><label>Purpose statement</label><textarea class="input" data-set="purpose">${esc(S.profile.purpose)}</textarea></div>
   <div class="field"><label>Home quote</label><input class="input" data-set="quote" value="${esc(S.profile.quote)}"/></div>
   <div class="field"><label>App name (shown in header & tab)</label><input class="input" data-set="appname" value="${esc(S.settings.appName)}" placeholder="The Blossom"/></div>
   <div class="field"><label>🎨 Themes</label><div id="themeBox">${settingsThemeBox()}</div></div>
+  <div class="field"><label>🌱 Growth display <span class="muted small">— how blossoms, petals & skills look</span></label><div id="displayBox">${settingsDisplayBox()}</div></div>
+  <div class="field"><label>🎚️ Leveling & Health</label><div id="xpBox">${settingsXpHealthBox()}</div></div>
+  <div class="field"><label>🐞 Debug <span class="muted small">— testing tools</span></label><div id="debugBox">${settingsDebugBox()}</div></div>
   <div class="field"><label>✨ Ambient particles (pick any)</label><div id="pbox">${settingsParticleBox()}</div></div>
   <div class="field"><label>Emojis in titles & buttons</label><div class="chips" id="emojiChips">${settingsEmojiChip()}</div></div>
+  <div class="field"><label>🏷 Tags <span class="muted small">— colored labels for notes, tasks, goals & habits</span></label><div id="tagsBox">${settingsTagsBox()}</div></div>
   <div class="field"><label>✎ Edit labels mode</label><div class="chips" id="labelChips">${settingsLabelChips()}</div></div>
   <div class="field"><label>🔔 Sounds & feel</label><div class="chips" id="soundChips">${settingsSoundChips()}</div></div>
   <div class="field"><label>🔔 Custom alarm sound (mp3)</label><div id="ambBox">${settingsAmbienceBox()}</div></div>
@@ -1022,6 +1403,17 @@ function resolveImages(){document.querySelectorAll('#screen img[data-img], #moda
 async function migrateImages(){let changed=false;const conv=async(o)=>{if(!o.html||o.html.indexOf('data:image')<0)return;const div=document.createElement('div');div.innerHTML=o.html;for(const im of [...div.querySelectorAll('img[src^="data:image"]')]){try{const blob=await (await fetch(im.getAttribute('src'))).blob();const iid=uid();await idbPut('img:'+iid,blob);im.removeAttribute('src');im.setAttribute('data-img',iid);changed=true;}catch(e){}}o.html=div.innerHTML;};
   for(const n of S.notes)await conv(n);for(const j of S.journal)await conv(j);
   if(changed){S.meta.imgMigrated=true;saveNow();render();}else S.meta.imgMigrated=true;}
+let _peekId=null;
+function showPeek(node,act){let name='',sub='';
+  if(act==='open-petal'){const fp=findPetal(node.dataset.petal);if(fp){name=fp.petal.name;sub='Petal · Lv '+levelFromXp(petalXP(fp.petal));}}
+  else if(act==='open-skill'){const fs=findSkill(node.dataset.skill);if(fs){name=fs.skill.name;sub='Skill · Lv '+levelFromXp(skillXP(fs.skill.id));}}
+  else{const k=node.dataset.aspect;name=AS(k).name;sub='Blossom · Lv '+levelFromXp(aspectXP(k));}
+  let tip=document.getElementById('peekTip');if(!tip){tip=document.createElement('div');tip.id='peekTip';tip.className='peek-tip';document.body.appendChild(tip);}
+  tip.innerHTML=`<b>${esc(name||'?')}</b><span>${esc(sub)} · tap again to open</span>`;tip.style.display='block';
+  const r=node.getBoundingClientRect(),tw=tip.offsetWidth,th=tip.offsetHeight;
+  let x=Math.max(8,Math.min(innerWidth-tw-8,r.left+r.width/2-tw/2)),y=r.top-th-8;if(y<8)y=r.bottom+8;
+  tip.style.left=x+'px';tip.style.top=y+'px';}
+function clearPeek(){_peekId=null;const t=document.getElementById('peekTip');if(t)t.style.display='none';}
 document.addEventListener('click',e=>{
   const sp=e.target.closest('a.subpage');if(sp){flushEditor();go({screen:'note',id:sp.dataset.id});return;}
   // click anywhere in the empty lower area of a page -> add/continue a line there
@@ -1029,6 +1421,10 @@ document.addEventListener('click',e=>{
   if(S.settings.editLabels){const lab=e.target.closest('#screen .section-h h3, #screen .empty');if(lab){const def=lab.dataset.def!==undefined?lab.dataset.def:lab.textContent;promptSheet('Rename label',[{k:'text',label:'Text (include emoji you want)'}],d=>{if(d.text===''||d.text===def)delete S.labels[def];else S.labels[def]=d.text;save();render();},{text:S.labels[def]!==undefined?S.labels[def]:def});return;}}
   if(!S.settings.editLabels&&!homeEditing){const sh=e.target.closest('#screen .hsec>.section-h');if(sh&&!e.target.closest('[data-act]')&&sh.parentElement.classList.contains('hsec')){const sid=sh.parentElement.dataset.hsec;S.home.collapsed=S.home.collapsed||[];const i=S.home.collapsed.indexOf(sid);if(i>=0)S.home.collapsed.splice(i,1);else S.home.collapsed.push(sid);save();render();return;}}
   const el=e.target.closest('[data-act]');if(!el)return;const a=el.dataset.act,id=el.dataset.id;
+  // two-tap in the Cosmos scene: first tap names it, second tap opens it
+  const isSceneNode=el.closest('.growth-scene')&&(el.classList.contains('petal')||el.classList.contains('gstar'));
+  if(isSceneNode&&(a==='open-petal'||a==='open-skill'||a==='open-aspect')){const pid=a+':'+(el.dataset.petal||el.dataset.skill||el.dataset.aspect||'');
+    if(_peekId!==pid){_peekId=pid;showPeek(el,a);return;}clearPeek();}else if(_peekId)clearPeek();
   const od=el.dataset.owner!=null?el:el.closest('[data-owner]');const ownerT=od?od.dataset.owner:undefined,oid=od?od.dataset.oid:undefined;
   if(a==='doc-edit')return; // editing
   switch(a){
@@ -1071,6 +1467,7 @@ document.addEventListener('click',e=>{
     case 'new-quicknote':case 'new-note-here':{const n=addNote(el.dataset.parent||null);go({screen:'note',id:n.id});}break;
     case 'note-mode':break;
     case 'note-tag':{const n=getNote(id),t=el.dataset.tag;n.tags=n.tags.includes(t)?n.tags.filter(x=>x!==t):[...n.tags,t];touch(n);save();render();}break;
+    case 'note-tagid':{const n=getNote(id),t=el.dataset.tag;n.tagIds=n.tagIds||[];n.tagIds=n.tagIds.includes(t)?n.tagIds.filter(x=>x!==t):[...n.tagIds,t];touch(n);save();render();}break;
     case 'note-menu':noteMenu(id);break;
     case 'note-pin':{const n=getNote(id);n.pinned=!n.pinned;touch(n);save();closeSheet();render();}break;
     case 'note-icon':{const n=getNote(id);promptSheet('Page icon (emoji)',[{k:'icon',label:'Paste an emoji'}],d=>{if(d.icon)n.icon=d.icon.trim().slice(0,2);touch(n);save();render();},{icon:n.icon});}break;
@@ -1095,7 +1492,7 @@ document.addEventListener('click',e=>{
     case 'new-todo':newTodoSheet(el.dataset.date||calSel||todayStr());break;
     case 'toggle-todo':{const td=S.todos.find(x=>x.id===id);const dd=el.dataset.date||todayStr();const rec=td.days&&td.days.length;let nowDone;if(rec){td.doneDates=td.doneDates||{};if(td.doneDates[dd]){delete td.doneDates[dd];nowDone=false;}else{td.doneDates[dd]=1;nowDone=true;}}else{td.done=!td.done;nowDone=td.done;}if(itemAspects(td).length)gainItemXP(td,nowDone?8:-8);save();render();}break;
     case 'del-todo':S.todos=S.todos.filter(x=>x.id!==id);save();render();break;
-    case 'edit-todo':{const td=S.todos.find(x=>x.id===id);if(!td)break;promptSheet('Edit task',[{k:'text',label:'Task'},{k:'as',label:'',type:'aspectskill'},{k:'date',label:'Date (one-off)',type:'date'},{k:'days',label:'…or repeat on these days',type:'days'},{k:'time',label:'Time',type:'clockopt'}],d=>{td.text=d.text;const as=d.as||{};td.aspect=(as.aspects||[])[0]||'';td.aspects=as.aspects||[];td.skillPairs=as.skillPairs||[];td.date=d.date||td.date;td.days=d.days||[];td.time=d.time||'';save();render();},{text:td.text,as:{aspects:itemAspects(td),skillPairs:td.skillPairs||[]},date:td.date,days:td.days||[],time:td.time||''});}break;
+    case 'edit-todo':{const td=S.todos.find(x=>x.id===id);if(!td)break;promptSheet('Edit task',[{k:'text',label:'Task'},{k:'as',label:'',type:'aspectskill'},{k:'date',label:'Date (one-off)',type:'date'},{k:'days',label:'…or repeat on these days',type:'days'},{k:'time',label:'Time',type:'clockopt'}],d=>{td.text=d.text;const as=d.as||{};const sk=as.skillIds||[];td.aspects=deriveBlossoms(as.aspects,sk);td.aspect=td.aspects[0]||'';td.skillIds=sk;td.date=d.date||td.date;td.days=d.days||[];td.time=d.time||'';save();render();},{text:td.text,as:{aspects:itemAspects(td),skillIds:td.skillIds||[]},date:td.date,days:td.days||[],time:td.time||''});}break;
 
     /* habits */
     case 'checkin':{const h=S.habits.find(x=>x.id===id);const dd=el.dataset.date||todayStr();const rep=habitRepeat(h);const cur=h.logs[dd]||0;const wasDone=cur>=rep;const next=cur>=rep?0:cur+1;const nowDone=next>=rep;if(next===0)delete h.logs[dd];else h.logs[dd]=next;if(nowDone&&!wasDone){gainItemXP(h,xpWeight(h));playChime();}if(!nowDone&&wasDone)gainItemXP(h,-xpWeight(h));save();render();}break;
@@ -1107,10 +1504,11 @@ document.addEventListener('click',e=>{
     case 'del-goal':if(confirm('Delete this goal?')){S.goals=S.goals.filter(x=>x.id!==id);save();back();}break;
 
     /* cosmos */
-    case 'new-cosmos':{const kind=el.dataset.kind;if(kind==='goal')openGoalCreator(null,{aspect:el.dataset.aspect,term:el.dataset.term,skill:el.dataset.skill});else openCosmos('habit',null,{aspect:el.dataset.aspect,skill:el.dataset.skill,goalId:el.dataset.goalid});}break;
+    case 'new-cosmos':{const kind=el.dataset.kind;if(kind==='goal')openGoalCreator(null,{aspect:el.dataset.aspect,term:el.dataset.term,skillId:el.dataset.skillid});else openCosmos('habit',null,{aspect:el.dataset.aspect,skillId:el.dataset.skillid,goalId:el.dataset.goalid});}break;
     case 'edit-cosmos':{if(el.dataset.kind==='goal')openGoalCreator(id);else openCosmos('habit',id);}break;
     case 'wiz-prev':wizCollect();wiz.step--;renderWiz();break;
     case 'wiz-next':wizCollect();if(wiz.step<5){wiz.step++;renderWiz();}else wizSave();break;
+    case 'wiz-save':wizCollect();wizSave();break;
 
     /* alarms & timers */
     case 'open-alarms':ensureAudio();requestNotify();go({screen:'alarms'});break;
@@ -1162,10 +1560,21 @@ document.addEventListener('click',e=>{
 
     /* blossom */
     case 'open-aspect':go({screen:'aspect',aspect:el.dataset.aspect});break;
-    case 'open-skill':go({screen:'skill',aspect:el.dataset.aspect,skill:el.dataset.skill});break;
-    case 'add-aspect':promptSheet('New aspect (new petal)',[{k:'name',label:'Aspect name',placeholder:'e.g. Spiritual / Financial'},{k:'emoji',label:'Emoji',placeholder:'🌟'}],d=>{if(d.name){const key='asp_'+uid();S.aspects[key]={name:d.name,emoji:(d.emoji||'🌱').slice(0,2),hex:ASPECT_PALETTE[(aspectKeys().length)%ASPECT_PALETTE.length],builtin:false,skills:[]};S.aspectOrder.push(key);save();render();toast('🌼 New petal added');}});break;
-    case 'edit-aspect':{const k=el.dataset.aspect;const a=AS(k);const fields=[{k:'name',label:'Name'},{k:'emoji',label:'Emoji'},{k:'color',label:'Petal color',type:'color'}];if(!a.builtin)fields.push({k:'del',label:'Type DELETE to remove (keeps data)'});promptSheet('Edit aspect',fields,d=>{if(!a.builtin&&(d.del||'').toUpperCase()==='DELETE'){delete S.aspects[k];S.aspectOrder=S.aspectOrder.filter(x=>x!==k);save();back();}else{a.name=d.name||a.name;a.emoji=(d.emoji||a.emoji).slice(0,2);if(d.color)a.hex=d.color;save();render();}},{name:a.name,emoji:a.emoji,color:a.hex});}break;
-    case 'add-skill':{const k=el.dataset.aspect;promptSheet('New skill',[{k:'name',label:'Skill name',placeholder:'e.g. Public Speaking'}],d=>{if(d.name&&!AS(k).skills.includes(d.name)){AS(k).skills.push(d.name);save();render();}});}break;
+    case 'open-petal':go({screen:'petal',aspect:el.dataset.aspect,petal:el.dataset.petal});break;
+    case 'open-skill':go({screen:'skill',skill:el.dataset.skill});break;
+    case 'add-blossom':openBlossomCatalog();break;
+    case 'cat-toggle':{const i=+el.dataset.i;if(_catSel.has(i))_catSel.delete(i);else _catSel.add(i);renderBlossomCatalog();}break;
+    case 'cat-add-selected':{if(!_catSel.size)break;let lastKey='';[...BLOSSOM_CATALOG.keys()].filter(i=>_catSel.has(i)).forEach(i=>{lastKey=addCatalogBlossom(BLOSSOM_CATALOG[i]);});const n=_catSel.size;_catSel=new Set();closeSheet();if(n===1)go({screen:'aspect',aspect:lastKey});else setTab('blossom');toast('🌼 Added '+n+' blossom'+(n===1?'':'s'));}break;
+    case 'cat-custom-blossom':promptSheet('Custom blossom',[{k:'name',label:'Name',placeholder:'e.g. Creative'},{k:'emoji',label:'Emoji',placeholder:'🌟'},{k:'desc',label:'Description (optional)'}],d=>{if(d.name){const key='asp_'+uid();S.aspects[key]={name:d.name,emoji:(d.emoji||'🌱').slice(0,2),hex:ASPECT_PALETTE[aspectKeys().length%ASPECT_PALETTE.length],desc:d.desc||'',builtin:false,petals:[]};S.aspectOrder.push(key);save();go({screen:'aspect',aspect:key});toast('🌼 Blossom added');}});break;
+    case 'cat-petal':{const b=S.aspects[el.dataset.bid];const cat=catFor(b);const p=cat&&cat.petals.find(x=>x.n===el.dataset.name);if(p){b.petals=blossomPetals(b);b.petals.push(_catPetal(p));save();closeSheet();render();}}break;
+    case 'cat-custom-petal':{const b=S.aspects[el.dataset.bid];promptSheet('New petal',[{k:'name',label:'Petal name'},{k:'desc',label:'Description (optional)'}],d=>{if(d.name){b.petals=blossomPetals(b);b.petals.push({id:'pt_'+uid(),name:d.name,desc:d.desc||'',skills:[]});save();render();}});}break;
+    case 'cat-skill':{const fp=findPetal(el.dataset.petal);if(fp){fp.petal.skills=fp.petal.skills||[];fp.petal.skills.push(_catSkill(el.dataset.name,el.dataset.desc));save();closeSheet();render();}}break;
+    case 'cat-custom-skill':{const pid=el.dataset.petal;promptSheet('New skill',[{k:'name',label:'Skill name',placeholder:'e.g. Public Speaking'},{k:'desc',label:'Short description (optional)'}],d=>{if(d.name){const fp=findPetal(pid);if(fp){fp.petal.skills=fp.petal.skills||[];fp.petal.skills.push(_catSkill(d.name,d.desc));save();render();}}});}break;
+    case 'edit-aspect':{const k=el.dataset.aspect;const a=AS(k);const fields=[{k:'name',label:'Name'},{k:'emoji',label:'Emoji'},{k:'desc',label:'Description (optional)'},{k:'color',label:'Blossom color',type:'color'},{k:'del',label:'Type DELETE to remove (keeps habits/goals)'}];promptSheet('Edit blossom',fields,d=>{if((d.del||'').toUpperCase()==='DELETE'){delete S.aspects[k];S.aspectOrder=S.aspectOrder.filter(x=>x!==k);save();back();}else{a.name=d.name||a.name;a.emoji=(d.emoji||a.emoji).slice(0,2);a.desc=d.desc||'';if(d.color)a.hex=d.color;save();render();}},{name:a.name,emoji:a.emoji,desc:a.desc||'',color:a.hex});}break;
+    case 'add-petal':{const k=el.dataset.aspect;openPetalCatalog(k);}break;
+    case 'edit-petal':{const k=el.dataset.aspect,fp=findPetal(el.dataset.petal);if(!fp)break;const p=fp.petal;promptSheet('Edit petal',[{k:'name',label:'Petal name'},{k:'desc',label:'Description (optional)'},{k:'del',label:'Type DELETE to remove (keeps habits/goals)'}],d=>{if((d.del||'').toUpperCase()==='DELETE'){const b=S.aspects[k];b.petals=blossomPetals(b).filter(x=>x.id!==p.id);save();back();}else{p.name=d.name||p.name;p.desc=d.desc||'';save();render();}},{name:p.name,desc:p.desc||''});}break;
+    case 'add-skill':{const k=el.dataset.aspect,pid=el.dataset.petal;openSkillCatalog(k,pid);}break;
+    case 'edit-skill':{const fs=findSkill(el.dataset.skill);if(!fs)break;const sk=fs.skill,p=fs.petal;promptSheet('Edit skill',[{k:'name',label:'Skill name'},{k:'desc',label:'Short description (optional)'},{k:'del',label:'Type DELETE to remove (keeps XP/logs)'}],d=>{if((d.del||'').toUpperCase()==='DELETE'){p.skills=(p.skills||[]).filter(x=>x.id!==sk.id);save();back();}else{sk.name=d.name||sk.name;sk.desc=d.desc||'';const rn=S.notes.find(n=>n.kind==='skill'&&n.skillId===sk.id);if(rn)rn.title=sk.name;save();render();}},{name:sk.name,desc:sk.desc||''});}break;
     case 'add-map':{const k=el.dataset.aspect;promptSheet('New group',[{k:'name',label:'Group name',placeholder:'e.g. Body / Subjects / Climbing Routes'},{k:'emoji',label:'Emoji',placeholder:'🗂'}],d=>{if(d.name){const m=addMap(k,d.name,(d.emoji||'🗂').slice(0,2));save();go({screen:'map',id:m.id});}});}break;
     case 'open-map':go({screen:'map',id});break;
     case 'add-map-page':{const m=getNote(id);promptSheet('New page',[{k:'name',label:'Name',placeholder:'e.g. Chest, Biceps…'},{k:'emoji',label:'Emoji (optional)'}],d=>{if(d.name){const c=addNote(m.id,d.name);if(d.emoji)c.icon=d.emoji.slice(0,2);save();go({screen:'note',id:c.id});}});}break;
@@ -1193,9 +1602,25 @@ document.addEventListener('click',e=>{
     case 'set-theme':{S.settings.theme=el.dataset.theme;const ct=activeCustomTheme();if(ct)ct.theme=el.dataset.theme;applyTheme();save();{const b=$('#themeBox');if(b)b.innerHTML=settingsThemeBox();}}break;
     case 'toggle-particle':{const t=el.dataset.p;S.settings.particles=S.settings.particles||[];S.settings.particles=S.settings.particles.includes(t)?S.settings.particles.filter(x=>x!==t):[...S.settings.particles,t];save();startParticles();const pb=$('#pbox');if(pb)pb.innerHTML=settingsParticleBox();}break;
     case 'particles-off':S.settings.particles=[];save();startParticles();{const pb=$('#pbox');if(pb)pb.innerHTML=settingsParticleBox();}break;
-    case 'add-custom-particle':settingsSave();promptSheet('Custom particle',[{k:'emoji',label:'Emoji or character',placeholder:'⭐ / ✦ / 🍩'},{k:'color',label:'Color (for non-emoji)',type:'color'},{k:'mode',label:'Motion',type:'select',options:[['fall','Fall down'],['rise','Float up'],['drift','Drift around']]},{k:'count',label:'How many',type:'number',placeholder:'12'}],d=>{if(d.emoji){S.settings.customParticles.push({emoji:d.emoji.slice(0,2),color:d.color||'#ffffff',mode:d.mode||'fall',count:Math.min(60,Math.max(1,parseInt(d.count)||12))});save();startParticles();}});$('#modal-root')._returnTo=openSettings;break;
+    case 'toggle-click-sparkle':S.settings.clickSparkle=!S.settings.clickSparkle;save();{const pb=$('#pbox');if(pb)pb.innerHTML=settingsParticleBox();}break;
+    case 'set-blossom-display':S.settings.blossomDisplay=el.dataset.display;save();render();{const b=$('#displayBox');if(b)b.innerHTML=settingsDisplayBox();}break;
+    case 'health-toggle':{const part=el.dataset.part;S.settings.health=S.settings.health||{habits:true,goals:true,trackers:true};S.settings.health[part]=S.settings.health[part]===false;save();render();{const b=$('#xpBox');if(b)b.innerHTML=settingsXpHealthBox();}}break;
+    case 'debug-set-levels':{settingsSave();let html='<h2>🎚️ Set levels</h2><p class="muted small" style="margin:0 0 8px">Change a skill\'s level — petals & blossoms roll up automatically.</p>';
+      if(!aspectKeys().length)html+='<div class="empty">Add a blossom first.</div>';
+      aspectKeys().forEach(k=>{const a=AS(k);html+=`<div style="margin:10px 0 2px"><b>${a.emoji} ${esc(a.name)}</b> <span class="muted small">Lv ${levelFromXp(aspectXP(k))}</span></div>`;blossomPetals(a).forEach(p=>{html+=`<div class="muted small" style="margin:5px 0 2px">${esc(p.name)}</div>`;(p.skills||[]).forEach(sk=>{html+=`<label class="set-row" style="padding-left:10px"><span>${esc(sk.name)}</span><input class="input mini" type="number" min="1" max="99" data-dbglevel="${sk.id}" value="${levelFromXp(skillXP(sk.id))}"></label>`;});});});
+      html+='<button class="btn block" style="margin-top:12px" data-act="debug-done">Done</button>';sheet(html);$('#modal-root')._returnTo=openSettings;}break;
+    case 'debug-done':closeSheet();render();break;
+    case 'debug-maxall':aspectKeys().forEach(k=>blossomPetals(AS(k)).forEach(p=>(p.skills||[]).forEach(sk=>{S.xp['s:'+sk.id]=totalXpForLevel(20);})));save();render();toast('🐞 Maxed all skills to Lv 20');break;
+    case 'debug-resetxp':if(confirm('Reset ALL XP & levels to zero?')){S.xp={};save();render();toast('🐞 XP reset');}break;
+    case 'set-click-emoji':settingsSave();promptSheet('Click effect icon',[{k:'ch',label:'Emoji or character (leave blank for ✨ sparkle)',placeholder:'⭐ / 🌸 / ✦'}],d=>{S.settings.clickEmoji=(d.ch||'').slice(0,2);save();},{ch:S.settings.clickEmoji||''});$('#modal-root')._returnTo=openSettings;break;
+    case 'add-custom-particle':settingsSave();openParticleForm(-1);break;
+    case 'edit-custom-particle':settingsSave();openParticleForm(+el.dataset.i);break;
+    case 'toggle-custom-particle':{const cp=S.settings.customParticles[+el.dataset.i];if(cp){cp.on=cp.on===false;save();startParticles();const pb=$('#pbox');if(pb)pb.innerHTML=settingsParticleBox();}}break;
     case 'del-custom-particle':S.settings.customParticles.splice(+el.dataset.i,1);save();startParticles();{const pb=$('#pbox');if(pb)pb.innerHTML=settingsParticleBox();}break;
     case 'reset-colors':S.settings.colors={};S.settings.gradient='';applyTheme();save();{const g=$('#colorGrid');if(g)g.innerHTML=settingsColorGrid();}break;
+    case 'new-tag':settingsSave();promptSheet('New tag',[{k:'name',label:'Tag name',placeholder:'e.g. Work, Health, Idea'},{k:'color',label:'Color',type:'color'}],d=>{if(d.name){S.tags.push({id:'tg'+uid(),name:d.name,color:d.color||'#5B8DEF'});save();}});$('#modal-root')._returnTo=openSettings;break;
+    case 'edit-tag':{settingsSave();const tg=S.tags.find(x=>x.id===id);promptSheet('Edit tag',[{k:'name',label:'Name'},{k:'color',label:'Color',type:'color'},{k:'del',label:'Type DELETE to remove'}],d=>{if((d.del||'').toUpperCase()==='DELETE'){S.tags=S.tags.filter(x=>x.id!==id);[...S.notes,...S.habits,...S.goals,...S.todos].forEach(it=>{if(it.tagIds)it.tagIds=it.tagIds.filter(x=>x!==id);});}else{tg.name=d.name||tg.name;tg.color=d.color||tg.color;}save();});$('#modal-root')._returnTo=openSettings;}break;
+    case 'del-tag':S.tags=S.tags.filter(x=>x.id!==id);[...S.notes,...S.habits,...S.goals,...S.todos].forEach(it=>{if(it.tagIds)it.tagIds=it.tagIds.filter(x=>x!==id);});save();{const b=$('#tagsBox');if(b)b.innerHTML=settingsTagsBox();}break;
     case 'toggle-editlabels':S.settings.editLabels=!S.settings.editLabels;save();{const l=$('#labelChips');if(l)l.innerHTML=settingsLabelChips();}applyLabels();break;
     case 'reset-labels':S.labels={};save();{const l=$('#labelChips');if(l)l.innerHTML=settingsLabelChips();}render();break;
     case 'toggle-emojis':S.settings.showEmojis=!S.settings.showEmojis;save();render();{const c=$('#emojiChips');if(c)c.innerHTML=settingsEmojiChip();}break;
@@ -1228,13 +1653,16 @@ document.addEventListener('input',e=>{
   if(a==='note-title'){const n=getNote(id);n.title=el.value;touch(n);save();const t=$('#appbar .title h2');if(t)t.textContent=(n.icon+' '+(n.title||'Untitled'));}
   if(a==='jentry-title'){const j=ownerOf('journal',id);j.title=el.value;touch(j);save();}
   if(a==='goal-progress'){const g=S.goals.find(x=>x.id===id);const nv=parseInt(el.value);g.progress=nv;syncGoalXP(g);el.nextElementSibling.textContent=nv+'%';save();}
+  if(a==='habit-count'){const h=S.habits.find(x=>x.id===id);const t=todayStr();const was=habitDone(h,t);const nv=parseInt(el.value);if(nv<=0)delete h.logs[t];else h.logs[t]=nv;const now=habitDone(h,t);if(now&&!was){gainItemXP(h,xpWeight(h));playChime();}if(!now&&was)gainItemXP(h,-xpWeight(h));const lbl=el.previousElementSibling&&el.previousElementSibling.querySelector('b');if(lbl)lbl.textContent=(h.logs[t]||0)+' / '+habitRepeat(h)+((h.cosmos&&h.cosmos.unit)?' '+h.cosmos.unit:'');save();}
   if(a==='note-search')noteSearch(el.value);
   if(a==='jrnl-jump'){journalCursor=el.value;render();}
   if(a==='rec-jump'){recCursor=el.value;render();}
 });
 /* change (checkboxes in doc) */
 document.addEventListener('change',e=>{if(e.target.matches('.docedit input[type=checkbox]')){if(e.target.checked)e.target.setAttribute('checked','checked');else e.target.removeAttribute('checked');flushEditor();}
-  if(e.target.matches('[data-clockopt-en]')){const w=$('#modal-root').querySelector(`[data-clockopt-wrap="${e.target.dataset.clockoptEn}"]`);if(w)w.style.display=e.target.checked?'':'none';}});
+  if(e.target.matches('[data-clockopt-en]')){const w=$('#modal-root').querySelector(`[data-clockopt-wrap="${e.target.dataset.clockoptEn}"]`);if(w)w.style.display=e.target.checked?'':'none';}
+  if(e.target.matches('[data-xpset]')){const k=e.target.dataset.xpset;let v=parseInt(e.target.value)||0;v=Math.max(+e.target.min||1,Math.min(+e.target.max||999,v));S.settings[k]=v;save();render();}
+  if(e.target.matches('[data-dbglevel]')){const id=e.target.dataset.dbglevel,lv=Math.max(1,parseInt(e.target.value)||1);S.xp['s:'+id]=totalXpForLevel(lv);save();}});
 /* Enter inside notes: keep new lines working everywhere, incl. inside toggles */
 document.addEventListener('keydown',e=>{
   if(e.key!=='Enter'||e.shiftKey)return;
@@ -1246,16 +1674,17 @@ document.addEventListener('keydown',e=>{
 });
 /* in-place pickers (no sheet rebuild) */
 document.addEventListener('click',e=>{
-  const ap=e.target.closest('[data-asp-pick]');if(ap){ap.classList.toggle('on');const field=ap.closest('.aspskill');const aspects=[...field.querySelectorAll('.asp-row .chip.on')].map(c=>c.dataset.aspPick);const pairs=[...field.querySelectorAll('.asp-skills .chip.on')].map(c=>c.dataset.skillPick).filter(p=>aspects.includes(p.split('::')[0]));field.querySelector('.asp-skills').innerHTML=aspSkillsInner(aspects,pairs);if(wiz){wiz.data.aspects=aspects;wiz.data.skillPairs=pairs;}return;}
-  const sp2=e.target.closest('[data-skill-pick]');if(sp2){sp2.classList.toggle('on');if(wiz){const field=sp2.closest('.aspskill');wiz.data.skillPairs=[...field.querySelectorAll('.asp-skills .chip.on')].map(c=>c.dataset.skillPick);}return;}
+  const ap=e.target.closest('[data-asp-pick]');if(ap){ap.classList.toggle('on');const field=ap.closest('.aspskill');const aspects=[...field.querySelectorAll('.asp-row .chip.on')].map(c=>c.dataset.aspPick);const valid=new Set();aspects.forEach(k=>blossomPetals(AS(k)).forEach(p=>(p.skills||[]).forEach(s=>valid.add(s.id))));const skillIds=[...field.querySelectorAll('.asp-skills .chip.on')].map(c=>c.dataset.skillPick).filter(id=>valid.has(id));field.querySelector('.asp-skills').innerHTML=aspSkillsInner(aspects,skillIds);if(wiz){wiz.data.aspects=aspects;wiz.data.skillIds=skillIds;}return;}
+  const sp2=e.target.closest('[data-skill-pick]');if(sp2){sp2.classList.toggle('on');if(wiz){const field=sp2.closest('.aspskill');wiz.data.skillIds=[...field.querySelectorAll('.asp-skills .chip.on')].map(c=>c.dataset.skillPick);}return;}
   const ad=e.target.closest('[data-wday]');if(ad){ad.classList.toggle('on');if(wiz)wiz.data.days=[...$('#modal-root').querySelectorAll('[data-wday].on')].map(x=>x.dataset.wday);return;}
   const ag=e.target.closest('[data-wgoal]');if(ag){ag.classList.toggle('on');if(wiz)wiz.data.goalIds=[...$('#modal-root').querySelectorAll('[data-wgoal].on')].map(x=>x.dataset.wgoal);return;}
   const fc=e.target.closest('[data-fchip]');if(fc){const wrap=fc.closest('[data-fchips]');wrap.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));fc.classList.add('on');return;}
   const fd=e.target.closest('[data-fday]');if(fd){fd.classList.toggle('on');return;}
+  const tp=e.target.closest('[data-tag-pick]');if(tp){const on=!tp.classList.contains('on');tp.classList.toggle('on');const tg=(S.tags||[]).find(t=>t.id===tp.dataset.tagPick);if(tg)tp.style.cssText=on?('background:'+tg.color+';border-color:'+tg.color+';color:#fff'):('border-color:'+tg.color);if(wiz){const tf=tp.closest('[data-tagfield]');if(tf)wiz.data.tagIds=readTags(tf);}return;}
 });
 function noteSearch(q){const box=$('#noteSearchResults');if(!box)return;q=q.trim().toLowerCase();if(!q){box.innerHTML='';return;}const hits=S.notes.filter(n=>n.kind!=='skill'&&n.kind!=='map'&&((n.title||'')+' '+htmlPreview(n.html)).toLowerCase().includes(q)).slice(0,12);box.innerHTML=hits.length?('<div style="margin-top:10px">'+hits.map(noteTileHTML).join('')+'</div>'):'<div class="empty">No matches</div>';}
 
-function eventSheet(id,date){const ev=id?S.events.find(x=>x.id===id):null;ensureAudio();requestNotify();promptSheet(id?'Edit event':'New event',[{k:'title',label:'Title'},{k:'date',label:'Date',type:'date'},{k:'start',label:'Start',type:'clock'},{k:'end',label:'End',type:'clock'},{k:'as',label:'',type:'aspectskill'},{k:'remind',label:'Remind me',type:'select',options:[['','No reminder'],['0','At start time'],['5','5 min before'],['10','10 min before'],['15','15 min before'],['30','30 min before'],['60','1 hour before']]},{k:'note',label:'Note (optional)',type:'textarea'}],d=>{if(!d.title)return;const as=d.as||{};const fields={title:d.title,date:d.date||date||todayStr(),start:d.start,end:d.end,aspect:(as.aspects||[])[0]||'',aspects:as.aspects||[],skillPairs:as.skillPairs||[],remind:d.remind||'',note:d.note};if(ev)Object.assign(ev,fields);else S.events.push({id:uid(),...fields});save();render();bgSync();},ev?{title:ev.title,date:ev.date,start:ev.start,end:ev.end,as:{aspects:itemAspects(ev),skillPairs:ev.skillPairs||[]},remind:ev.remind||'',note:ev.note}:{date:date||calSel||todayStr(),start:'09:00',end:'10:00'});}
+function eventSheet(id,date){const ev=id?S.events.find(x=>x.id===id):null;ensureAudio();requestNotify();promptSheet(id?'Edit event':'New event',[{k:'title',label:'Title'},{k:'date',label:'Start date',type:'date'},{k:'endDate',label:'End date (for multi-day)',type:'date'},{k:'start',label:'Start time',type:'clock'},{k:'end',label:'End time',type:'clock'},{k:'as',label:'',type:'aspectskill'},{k:'remind',label:'Remind me',type:'select',options:[['','No reminder'],['0','At start time'],['5','5 min before'],['10','10 min before'],['15','15 min before'],['30','30 min before'],['60','1 hour before']]},{k:'note',label:'Note (optional)',type:'textarea'}],d=>{if(!d.title)return;const as=d.as||{};const ed=(d.endDate&&d.endDate>=(d.date||date||todayStr()))?d.endDate:'';const sk=as.skillIds||[];const asp=deriveBlossoms(as.aspects,sk);const fields={title:d.title,date:d.date||date||todayStr(),endDate:ed,start:d.start,end:d.end,aspect:asp[0]||'',aspects:asp,skillIds:sk,remind:d.remind||'',note:d.note};if(ev)Object.assign(ev,fields);else S.events.push({id:uid(),...fields});save();render();bgSync();},ev?{title:ev.title,date:ev.date,endDate:ev.endDate||'',start:ev.start,end:ev.end,as:{aspects:itemAspects(ev),skillIds:ev.skillIds||[]},remind:ev.remind||'',note:ev.note}:{date:date||calSel||todayStr(),start:'09:00',end:'10:00'});}
 /* routine builder */
 let routineDraft=null;
 function routineSheet(rid){const r=rid?S.routines.find(x=>x.id===rid):null;routineDraft=r?{id:r.id,name:r.name,items:r.blocks.map(b=>({title:b.title,start:b.start||'',aspect:b.aspect||''}))}:{id:null,name:'',items:[]};renderRoutineEditor();}
@@ -1272,7 +1701,7 @@ function renderRoutineEditor(){const d=routineDraft;
 function applyRoutineFlow(rid,date){if(!rid){if(!S.routines.length){toast('Create a routine first');return;}sheet(`<h2>Apply routine to ${date?fmtShort(date):'a day'}</h2>${S.routines.map(r=>`<button class="btn block" style="margin-bottom:8px" data-act="apply-routine" data-id="${r.id}" data-date="${date||calSel||todayStr()}">${esc(r.name)} · ${r.blocks.length} blocks</button>`).join('')}`);return;}const r=S.routines.find(x=>x.id===rid);const d=date||calSel||todayStr();r.blocks.forEach(b=>S.events.push({id:uid(),title:b.title,date:d,start:b.start,end:'',aspect:b.aspect,note:'(from '+r.name+')'}));save();closeSheet();toast(`Applied ${r.name}`);render();}
 
 $('#fab').addEventListener('click',()=>{const ctx=$('#fab').dataset.ctx;
-  if(ctx==='skill'){const v=view();const root=skillRootNote(v.aspect,v.skill);const n=addNote(root.id);go({screen:'note',id:n.id});return;}
+  if(ctx==='skill'){const v=view();const fs=findSkill(v.skill);if(fs){const root=skillRootNote(fs.skill.id,fs.skill.name);const n=addNote(root.id);go({screen:'note',id:n.id});}return;}
   if(ctx==='map'){const v=view();const c=addNote(v.id);go({screen:'note',id:c.id});return;}
   quickCapture();});
 function quickCapture(){sheet(`<h2>＋ Quick add</h2><p class="muted small" style="margin:0 0 10px">What's on your mind?</p>
@@ -1283,7 +1712,7 @@ function quickCapture(){sheet(`<h2>＋ Quick add</h2><p class="muted small" styl
   <div class="menu-item" data-act="qc-goal"><span class="mi-ic">🎯</span>Goal</div>
   <div class="menu-item" data-act="qc-journal"><span class="mi-ic">📖</span>Journal entry</div>
   <div class="menu-item" data-act="qc-template"><span class="mi-ic">✨</span>Start from a template</div>`);}
-function newTodoSheet(dd){dd=dd||todayStr();promptSheet('New task',[{k:'text',label:'Task'},{k:'as',label:'',type:'aspectskill'},{k:'date',label:'Date (one-off)',type:'date'},{k:'days',label:'…or repeat on these days',type:'days'},{k:'time',label:'Time',type:'clockopt'}],d=>{if(d.text){const as=d.as||{};S.todos.push({id:uid(),text:d.text,done:false,doneDates:{},date:d.date||dd,days:d.days||[],aspect:(as.aspects||[])[0]||'',aspects:as.aspects||[],skillPairs:as.skillPairs||[],time:d.time||''});save();render();}},{date:dd});}
+function newTodoSheet(dd){dd=dd||todayStr();promptSheet('New task',[{k:'text',label:'Task'},{k:'as',label:'',type:'aspectskill'},{k:'tags',label:'',type:'tags'},{k:'date',label:'Date (one-off)',type:'date'},{k:'days',label:'…or repeat on these days',type:'days'},{k:'time',label:'Time',type:'clockopt'}],d=>{if(d.text){const as=d.as||{};const sk=as.skillIds||[];const asp=deriveBlossoms(as.aspects,sk);S.todos.push({id:uid(),text:d.text,done:false,doneDates:{},date:d.date||dd,days:d.days||[],aspect:asp[0]||'',aspects:asp,skillIds:sk,tagIds:d.tags||[],time:d.time||''});save();render();}},{date:dd});}
 const TEMPLATES=[
   {t:'habit',name:'Drink water',aspect:'physical',skill:'Nutrition',repeat:6,importance:2,difficulty:1,effort:1},
   {t:'habit',name:'Move for 20 minutes',aspect:'physical',skill:'Endurance',importance:3,difficulty:2,effort:3},
@@ -1296,9 +1725,9 @@ const TEMPLATES=[
   {t:'goal',name:'Get fit',term:'long',aspect:'physical',importance:4},
 ];
 function openTemplates(){sheet(`<h2>✨ Templates</h2><p class="muted small" style="margin:0 0 8px">Gentle starters — tap to add, then tweak anytime.</p>${TEMPLATES.map((tp,i)=>`<div class="menu-item" data-act="apply-template" data-i="${i}"><span class="mi-ic">${tp.t==='goal'?(tp.term==='long'?'🌳':'🌱'):'🔥'}</span>${esc(tp.name)} <span class="muted small" style="margin-left:auto">${AS(tp.aspect).name}</span></div>`).join('')}`);}
-function applyTemplate(i){const tp=TEMPLATES[i];if(!tp)return;const sp=tp.skill?[tp.aspect+'::'+tp.skill]:[];
-  if(tp.t==='habit')S.habits.push({id:uid(),name:tp.name,aspect:tp.aspect,aspects:[tp.aspect],skill:tp.skill||'',skills:tp.skill?[tp.skill]:[],skillPairs:sp,goalIds:[],importance:tp.importance||3,difficulty:tp.difficulty||3,effort:tp.effort||3,cosmos:{days:[],repeat:tp.repeat||1},logs:{},createdAt:Date.now()});
-  else S.goals.push({id:uid(),name:tp.name,term:tp.term||'short',aspect:tp.aspect,aspects:[tp.aspect],skill:'',skills:[],skillPairs:[],importance:tp.importance||3,difficulty:tp.importance||3,effort:tp.importance||3,progress:0,xpGiven:0,why:'',targetDate:'',createdAt:Date.now()});
+function applyTemplate(i){const tp=TEMPLATES[i];if(!tp)return;const asp=S.aspects[tp.aspect]?[tp.aspect]:[];
+  if(tp.t==='habit')S.habits.push({id:uid(),name:tp.name,aspect:asp[0]||'',aspects:asp,skillIds:[],goalIds:[],importance:tp.importance||3,difficulty:tp.difficulty||3,effort:tp.effort||3,cosmos:{days:[],repeat:tp.repeat||1},logs:{},createdAt:Date.now()});
+  else S.goals.push({id:uid(),name:tp.name,term:tp.term||'short',aspect:asp[0]||'',aspects:asp,skillIds:[],importance:tp.importance||3,difficulty:tp.importance||3,effort:tp.importance||3,progress:0,xpGiven:0,why:'',targetDate:'',createdAt:Date.now()});
   save();closeSheet();render();toast('Added ✓ — tweak it anytime');}
 setInterval(()=>{const c=$('#liveclock');if(c)c.innerHTML=liveClockHTML();
   const now=new Date();const hm=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');const dkey=todayStr()+' '+hm;
@@ -1319,37 +1748,65 @@ const PARTICLE_TYPES={
   leaves:{label:'🍂 Leaves',behavior:'fall',chars:['🍂','🍁'],size:[12,20],count:14},
   hearts:{label:'💗 Hearts',behavior:'fall',chars:['💗','💕'],size:[10,18],count:14},
   stars:{label:'✨ Stars',behavior:'whizz',colors:['#ffffff','#fff6cc'],count:40},
+  sparkle:{label:'🌟 Sparkle',behavior:'twinkle',colors:['#fff6cc','#ffffff','#cdb4ff'],size:[3,9],count:38},
   fireflies:{label:'🟡 Fireflies',behavior:'drift',colors:['#ffe08a','#d4ac60'],count:24},
   techy:{label:'💻 Techy',behavior:'matrix',colors:['#52ffae','#3df0a0'],count:48},
   bubbles:{label:'🫧 Bubbles',behavior:'rise',chars:['🫧','○'],size:[8,18],count:16},
 };
 const pick=a=>a[Math.floor(Math.random()*a.length)];const rnd=([a,b])=>a+Math.random()*(b-a);
 let particles=[],pRAF=null;const pcanvas=$('#particles'),pctx=pcanvas.getContext('2d');
-function sizeCanvas(){pcanvas.width=innerWidth;pcanvas.height=innerHeight;}
+const fxcanvas=$('#fxcanvas'),fxctx=fxcanvas.getContext('2d');
+function sizeCanvas(){pcanvas.width=innerWidth;pcanvas.height=innerHeight;fxcanvas.width=innerWidth;fxcanvas.height=innerHeight;}
 function activeSpecs(){const out=[];(S.settings.particles||[]).forEach(t=>{const c=PARTICLE_TYPES[t];if(c)out.push({...c,type:t});});
-  (S.settings.customParticles||[]).forEach(cp=>out.push({behavior:cp.mode||'fall',chars:[cp.emoji||'✦'],colors:[cp.color||'#ffffff'],size:[12,22],count:cp.count||12,custom:true}));return out;}
-function startParticles(){cancelAnimationFrame(pRAF);sizeCanvas();const specs=activeSpecs();particles=[];
+  (S.settings.customParticles||[]).forEach(cp=>{if(cp.on===false)return;const base=cp.size||16,vr=(cp.sizeVar||0)/100;out.push({behavior:cp.mode||'fall',chars:[cp.emoji||'✦'],colors:[cp.color||'#ffffff'],size:[Math.max(4,base*(1-vr)),base*(1+vr)],count:cp.count||14,speed:cp.speed||1,custom:true});});return out;}
+let fx=[];// ephemeral burst particles (e.g. click sparkles)
+function startParticles(){cancelAnimationFrame(pRAF);pRAF=null;sizeCanvas();const specs=activeSpecs();particles=[];
   let budget=170;specs.forEach(sp=>{let n=sp.count||16;if(budget<=0)n=0;n=Math.min(n,budget);budget-=n;for(let i=0;i<n;i++)particles.push(makeParticle(sp,true));});
-  if(!particles.length){pctx.clearRect(0,0,pcanvas.width,pcanvas.height);return;}
-  (function loop(){pctx.clearRect(0,0,pcanvas.width,pcanvas.height);for(const p of particles)stepDraw(p);pRAF=requestAnimationFrame(loop);})();}
+  ensureParticleLoop();}
+function ensureParticleLoop(){if(pRAF)return;if(!particles.length&&!fx.length){pctx.clearRect(0,0,pcanvas.width,pcanvas.height);fxctx.clearRect(0,0,fxcanvas.width,fxcanvas.height);return;}
+  (function loop(){pctx.clearRect(0,0,pcanvas.width,pcanvas.height);for(const p of particles)stepDraw(p);
+    fxctx.clearRect(0,0,fxcanvas.width,fxcanvas.height);for(let i=fx.length-1;i>=0;i--){if(!stepFx(fx[i]))fx.splice(i,1);}
+    if(particles.length||fx.length){pRAF=requestAnimationFrame(loop);}else{pRAF=null;pctx.clearRect(0,0,pcanvas.width,pcanvas.height);fxctx.clearRect(0,0,fxcanvas.width,fxcanvas.height);}})();}
+function drawSparkle(ctx,x,y,r,a,color){if(a<=0.01)return;ctx.save();ctx.translate(x,y);ctx.globalAlpha=a;ctx.fillStyle=color;
+  const lo=r,sh=r*0.3;ctx.beginPath();ctx.moveTo(0,-lo);ctx.lineTo(sh,-sh);ctx.lineTo(lo,0);ctx.lineTo(sh,sh);ctx.lineTo(0,lo);ctx.lineTo(-sh,sh);ctx.lineTo(-lo,0);ctx.lineTo(-sh,-sh);ctx.closePath();ctx.fill();
+  ctx.globalAlpha=a*0.55;ctx.beginPath();ctx.arc(0,0,r*0.26,0,6.28);ctx.fill();ctx.restore();ctx.globalAlpha=1;}
+function spawnClickBurst(x,y){const ce=(S.settings.clickEmoji||'').trim();const emoji=!!ce;const cols=['#fff6cc','#ffffff','#cdb4ff','#ffd58a'];const n=8+Math.floor(Math.random()*4);
+  for(let i=0;i<n;i++){const ang=Math.random()*6.28,sp=1.2+Math.random()*3.2;fx.push({x,y,vx:Math.cos(ang)*sp,vy:Math.sin(ang)*sp-0.6,r:2.5+Math.random()*4,s:14+Math.random()*12,ch:ce,emoji,life:1,decay:0.015+Math.random()*0.02,tw:Math.random()*6.28,color:pick(cols)});}
+  ensureParticleLoop();}
+function stepFx(f){f.x+=f.vx;f.y+=f.vy;f.vy+=0.045;f.vx*=0.97;f.tw+=0.3;f.life-=f.decay;if(f.life<=0)return false;const a=Math.max(0,f.life);
+  if(f.emoji){fxctx.save();fxctx.globalAlpha=a;fxctx.font=f.s+'px serif';fxctx.textAlign='center';fxctx.textBaseline='middle';fxctx.fillStyle=f.color;fxctx.fillText(f.ch,f.x,f.y);fxctx.restore();fxctx.globalAlpha=1;}
+  else drawSparkle(fxctx,f.x,f.y,f.r*(0.6+0.4*Math.abs(Math.sin(f.tw))),a,f.color);return true;}
 function makeParticle(sp,init){const w=pcanvas.width,h=pcanvas.height,b=sp.behavior;const base={sp,b,x:Math.random()*w};
   if(b==='whizz')return{...base,y:Math.random()*h,vx:-(0.6+Math.random()*1.6),vy:0.15+Math.random()*0.4,r:Math.random()*1.6+0.5,a:Math.random()*0.5+0.25,color:pick(sp.colors||['#fff'])};
   if(b==='rain')return{...base,y:init?Math.random()*h:-20,vy:6+Math.random()*5,len:8+Math.random()*10,a:0.25+Math.random()*0.3,color:pick(sp.colors||['#9bd0ff'])};
   if(b==='snow')return{...base,y:init?Math.random()*h:-10,vy:0.5+Math.random(),sway:Math.random()*6.28,r:rnd(sp.size||[2,4]),a:0.4+Math.random()*0.5,color:pick(sp.colors||['#fff'])};
   if(b==='matrix')return{...base,y:init?Math.random()*h:-10,vy:2+Math.random()*3,ch:Math.random()<0.5?'0':'1',s:11+Math.random()*5,a:0.3+Math.random()*0.5,color:pick(sp.colors||['#52ffae'])};
-  if(b==='drift')return{...base,y:Math.random()*h,vx:(Math.random()-0.5)*0.5,vy:(Math.random()-0.5)*0.5,r:1.6+Math.random()*2,a:0.3+Math.random()*0.5,tw:Math.random()*6.28,color:pick(sp.colors||['#ffe08a'])};
+  if(b==='twinkle'){const emoji=!!sp.chars;return{...base,y:Math.random()*h,r:rnd(sp.size||[3,8]),s:rnd(sp.size||[14,24]),ch:pick(sp.chars||['']),emoji,tw:Math.random()*6.28,tws:0.012+Math.random()*0.03,relocated:false,color:pick(sp.colors||['#fff6cc'])};}
+  const sp_=sp.speed||1;
+  if(b==='drift')return{...base,y:Math.random()*h,vx:(Math.random()-0.5)*0.5*sp_,vy:(Math.random()-0.5)*0.5*sp_,r:1.6+Math.random()*2,a:0.3+Math.random()*0.5,tw:Math.random()*6.28,color:pick(sp.colors||['#ffe08a']),s:rnd(sp.size||[12,22]),ch:pick(sp.chars||['']),emoji:!!sp.chars};
+  if(b==='streakLR'||b==='streakRL'){const dir=b==='streakLR'?1:-1;return{...base,x:dir>0?-25:w+25,y:Math.random()*h*0.92+h*0.04,vx:dir*(1.6+Math.random()*2.8)*sp_,vy:(Math.random()-0.5)*0.3,s:rnd(sp.size||[12,22]),a:0.3+Math.random()*0.45,ch:pick(sp.chars||['✦']),color:pick(sp.colors||['#fff'])};}
   const rise=b==='rise';
-  return{...base,y:init?Math.random()*h:(rise?h+15:-20),vy:(0.3+Math.random()*0.7)*(rise?-1:1),vx:(Math.random()-0.5)*0.5,rot:Math.random()*6.28,vr:(Math.random()-0.5)*0.05,s:rnd(sp.size||[10,20]),a:0.28+Math.random()*0.4,ch:pick(sp.chars||['✦']),color:pick(sp.colors||['#ffffff'])};}
+  return{...base,y:init?Math.random()*h:(rise?h+15:-20),vy:(0.3+Math.random()*0.7)*(rise?-1:1)*sp_,vx:(Math.random()-0.5)*0.5,rot:Math.random()*6.28,vr:(Math.random()-0.5)*0.05,s:rnd(sp.size||[10,20]),a:0.28+Math.random()*0.4,ch:pick(sp.chars||['✦']),color:pick(sp.colors||['#ffffff'])};}
 function stepDraw(p){const w=pcanvas.width,h=pcanvas.height;
   if(p.b==='whizz'){p.x+=p.vx;p.y+=p.vy;if(p.x<-5||p.y>h+5){Object.assign(p,makeParticle(p.sp,false));p.x=w+5;p.y=Math.random()*h;}pctx.globalAlpha=p.a;pctx.fillStyle=p.color;pctx.beginPath();pctx.arc(p.x,p.y,p.r,0,6.28);pctx.fill();pctx.globalAlpha=1;return;}
   if(p.b==='rain'){p.y+=p.vy;if(p.y>h+12)Object.assign(p,makeParticle(p.sp,false));pctx.globalAlpha=p.a;pctx.strokeStyle=p.color;pctx.lineWidth=1.3;pctx.beginPath();pctx.moveTo(p.x,p.y);pctx.lineTo(p.x-1.5,p.y+p.len);pctx.stroke();pctx.globalAlpha=1;return;}
   if(p.b==='snow'){p.sway+=0.02;p.y+=p.vy;p.x+=Math.sin(p.sway)*0.4;if(p.y>h+6)Object.assign(p,makeParticle(p.sp,false));pctx.globalAlpha=p.a;pctx.fillStyle=p.color;pctx.beginPath();pctx.arc(p.x,p.y,p.r,0,6.28);pctx.fill();pctx.globalAlpha=1;return;}
   if(p.b==='matrix'){p.y+=p.vy;if(p.y>h+10)Object.assign(p,makeParticle(p.sp,false));pctx.globalAlpha=p.a;pctx.fillStyle=p.color;pctx.font=p.s+'px monospace';pctx.fillText(p.ch,p.x,p.y);pctx.globalAlpha=1;return;}
-  if(p.b==='drift'){p.tw+=0.05;p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>w||p.y<0||p.y>h)Object.assign(p,makeParticle(p.sp,false));pctx.globalAlpha=p.a*(0.4+0.6*Math.abs(Math.sin(p.tw)));pctx.fillStyle=p.color;pctx.beginPath();pctx.arc(p.x,p.y,p.r,0,6.28);pctx.fill();pctx.globalAlpha=1;return;}
+  if(p.b==='twinkle'){p.tw+=p.tws;const s=Math.sin(p.tw);
+    if(s<=0){if(!p.relocated){p.x=Math.random()*w;p.y=Math.random()*h;p.r=rnd(p.sp.size||[3,8]);p.s=rnd(p.sp.size||[14,24]);p.ch=pick(p.sp.chars||['']);p.color=pick(p.sp.colors||['#fff6cc']);p.relocated=true;}}
+    else{p.relocated=false;const a=s*0.95;
+      if(p.emoji){pctx.save();pctx.globalAlpha=a;pctx.font=p.s+'px serif';pctx.textAlign='center';pctx.textBaseline='middle';pctx.fillStyle=p.color;pctx.fillText(p.ch,p.x,p.y);pctx.restore();pctx.globalAlpha=1;}
+      else drawSparkle(pctx,p.x,p.y,p.r*(0.5+0.5*s),a,p.color);}
+    return;}
+  if(p.b==='drift'){p.tw+=0.05;p.x+=p.vx;p.y+=p.vy;if(p.x<-10||p.x>w+10||p.y<-10||p.y>h+10)Object.assign(p,makeParticle(p.sp,false));pctx.globalAlpha=p.a*(0.4+0.6*Math.abs(Math.sin(p.tw)));if(p.emoji){pctx.font=p.s+'px serif';pctx.fillStyle=p.color;pctx.fillText(p.ch,p.x,p.y);}else{pctx.fillStyle=p.color;pctx.beginPath();pctx.arc(p.x,p.y,p.r,0,6.28);pctx.fill();}pctx.globalAlpha=1;return;}
+  if(p.b==='streakLR'||p.b==='streakRL'){p.x+=p.vx;p.y+=p.vy;if(p.x<-30||p.x>w+30)Object.assign(p,makeParticle(p.sp,false));pctx.globalAlpha=p.a;pctx.font=p.s+'px serif';pctx.fillStyle=p.color;pctx.fillText(p.ch,p.x,p.y);pctx.globalAlpha=1;return;}
   p.y+=p.vy;p.x+=p.vx+Math.sin(p.y/40)*0.3;p.rot+=p.vr;
   if((p.vy>0&&p.y>h+20)||(p.vy<0&&p.y<-20))Object.assign(p,makeParticle(p.sp,false));
   pctx.save();pctx.translate(p.x,p.y);pctx.rotate(p.rot);pctx.globalAlpha=p.a;pctx.font=p.s+'px serif';pctx.fillStyle=p.color;pctx.fillText(p.ch,0,0);pctx.restore();pctx.globalAlpha=1;}
 addEventListener('resize',()=>{sizeCanvas();});
+// click sparkle burst
+addEventListener('pointerdown',e=>{if(S.settings&&S.settings.clickSparkle&&!e.target.closest('input,textarea,select'))spawnClickBurst(e.clientX,e.clientY);});
+// swipe to change the Blossom view
 
 /* ===== PWA + BACKGROUND ALARMS ===== */
 let swReg=null;
@@ -1371,6 +1828,8 @@ async function bgSync(){
 /* BOOT */
 applyTheme();render();startParticles();
 if(!S.meta.imgMigrated)migrateImages();
+// If localStorage was blocked or empty at boot, try recovering a backup from IndexedDB
+if(!storageOK||storageWasEmpty){(async()=>{try{const j=await idbGet('save:state');if(j){const cur=JSON.stringify(S);const rec=JSON.stringify(migrate(JSON.parse(j)));if(rec!==cur&&(!storageOK||(S.aspects&&Object.keys(S.aspects).length===0))){S=migrate(JSON.parse(j));applyTheme();render();startParticles();}}}catch(e){}})();}
 </script>
 </body>
 </html>

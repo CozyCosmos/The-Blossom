@@ -1,21 +1,61 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="112" fill="#0E1A13"/>
-  <rect width="512" height="512" rx="112" fill="url(#g)" opacity="0.5"/>
   <defs>
-    <radialGradient id="g" cx="50%" cy="38%" r="70%">
-      <stop offset="0%" stop-color="#1f3d29"/><stop offset="100%" stop-color="#0E1A13"/>
+    <radialGradient id="sky" cx="50%" cy="40%" r="75%">
+      <stop offset="0%" stop-color="#2a2150"/>
+      <stop offset="55%" stop-color="#171436"/>
+      <stop offset="100%" stop-color="#0B0A1E"/>
     </radialGradient>
+    <radialGradient id="halo" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffe9b0" stop-opacity="0.55"/>
+      <stop offset="55%" stop-color="#b07ce8" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#b07ce8" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="pA" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stop-color="#3f8f6b"/><stop offset="100%" stop-color="#74e0a6"/></linearGradient>
+    <linearGradient id="pB" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stop-color="#5b7de8"/><stop offset="100%" stop-color="#9fc0ff"/></linearGradient>
+    <linearGradient id="pC" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stop-color="#9a63d8"/><stop offset="100%" stop-color="#d3a6f5"/></linearGradient>
+    <linearGradient id="pD" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stop-color="#e8a14b"/><stop offset="100%" stop-color="#ffd58a"/></linearGradient>
+    <radialGradient id="core" cx="50%" cy="45%" r="60%"><stop offset="0%" stop-color="#fff4d0"/><stop offset="100%" stop-color="#e8b04b"/></radialGradient>
   </defs>
-  <g transform="translate(256,256)">
-    <g id="petals">
-      <!-- 5 petals around center -->
-      <g transform="rotate(-90)"><path d="M0,0 C -78,-46 -86,-156 0,-206 C 86,-156 78,-46 0,0 Z" fill="#52B788" opacity="0.9"/></g>
-      <g transform="rotate(-18)"><path d="M0,0 C -78,-46 -86,-156 0,-206 C 86,-156 78,-46 0,0 Z" fill="#5B8DEF" opacity="0.9"/></g>
-      <g transform="rotate(54)"><path d="M0,0 C -78,-46 -86,-156 0,-206 C 86,-156 78,-46 0,0 Z" fill="#B07CE8" opacity="0.9"/></g>
-      <g transform="rotate(126)"><path d="M0,0 C -78,-46 -86,-156 0,-206 C 86,-156 78,-46 0,0 Z" fill="#E8B04B" opacity="0.9"/></g>
-      <g transform="rotate(198)"><path d="M0,0 C -78,-46 -86,-156 0,-206 C 86,-156 78,-46 0,0 Z" fill="#F4A4B0" opacity="0.9"/></g>
-    </g>
-    <circle r="46" fill="#D4AC60"/>
-    <circle r="46" fill="none" stroke="#fff" stroke-opacity="0.4" stroke-width="3"/>
+
+  <rect width="512" height="512" rx="116" fill="url(#sky)"/>
+
+  <!-- scattered stars -->
+  <g fill="#fff">
+    <circle cx="86" cy="96" r="2.6" opacity="0.85"/>
+    <circle cx="150" cy="60" r="1.6" opacity="0.6"/>
+    <circle cx="420" cy="90" r="2.2" opacity="0.8"/>
+    <circle cx="452" cy="160" r="1.5" opacity="0.55"/>
+    <circle cx="64" cy="220" r="1.7" opacity="0.6"/>
+    <circle cx="70" cy="400" r="2.3" opacity="0.8"/>
+    <circle cx="150" cy="452" r="1.6" opacity="0.6"/>
+    <circle cx="372" cy="450" r="2" opacity="0.7"/>
+    <circle cx="450" cy="392" r="2.6" opacity="0.85"/>
+    <circle cx="436" cy="300" r="1.5" opacity="0.5"/>
+    <circle cx="248" cy="40" r="1.6" opacity="0.55"/>
+  </g>
+
+  <!-- twinkle sparkles -->
+  <g fill="#fff6cc">
+    <path d="M120 150 l5 16 16 5 -16 5 -5 16 -5 -16 -16 -5 16 -5 z" opacity="0.95"/>
+    <path d="M404 230 l4 13 13 4 -13 4 -4 13 -4 -13 -13 -4 13 -4 z" opacity="0.85"/>
+    <path d="M150 372 l3.5 11 11 3.5 -11 3.5 -3.5 11 -3.5 -11 -11 -3.5 11 -3.5 z" fill="#cdb4ff" opacity="0.9"/>
+  </g>
+
+  <!-- soft glow behind flower -->
+  <circle cx="256" cy="262" r="180" fill="url(#halo)"/>
+
+  <!-- orbit ring -->
+  <ellipse cx="256" cy="262" rx="172" ry="150" fill="none" stroke="#cdb4ff" stroke-opacity="0.22" stroke-width="3"/>
+  <circle cx="256" cy="112" r="5" fill="#fff" opacity="0.85"/>
+
+  <!-- 4-petal cosmos flower -->
+  <g transform="translate(256,262)">
+    <g transform="rotate(0)"><path d="M0,0 C -40,-44 -34,-128 0,-160 C 34,-128 40,-44 0,0 Z" fill="url(#pC)" opacity="0.96"/></g>
+    <g transform="rotate(90)"><path d="M0,0 C -40,-44 -34,-128 0,-160 C 34,-128 40,-44 0,0 Z" fill="url(#pD)" opacity="0.96"/></g>
+    <g transform="rotate(180)"><path d="M0,0 C -40,-44 -34,-128 0,-160 C 34,-128 40,-44 0,0 Z" fill="url(#pA)" opacity="0.96"/></g>
+    <g transform="rotate(270)"><path d="M0,0 C -40,-44 -34,-128 0,-160 C 34,-128 40,-44 0,0 Z" fill="url(#pB)" opacity="0.96"/></g>
+    <circle r="40" fill="url(#core)"/>
+    <circle r="40" fill="none" stroke="#fff" stroke-opacity="0.45" stroke-width="3"/>
+    <circle r="13" fill="#fff" opacity="0.5"/>
   </g>
 </svg>
