@@ -1,35 +1,37 @@
-/* Service worker (docs/09): versioned cache-first app shell.
-   User data lives in IndexedDB and is never touched by updates. */
+/* The Blossom — service worker (offline shell + alarm notifications) */
+const CACHE = 'blossom-v6';
+const ASSETS = ['./', './index.html', './manifest.webmanifest', './icon.svg'];
 
-importScripts('./sw-assets.js'); // defines self.SW_ASSETS (generated list)
-
-const CACHE = 'blossom-v3';
-
-self.addEventListener('install', (e) => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(self.SW_ASSETS)));
+self.addEventListener('install', e => {
+  e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));
 });
-
-self.addEventListener('activate', (e) => {
+self.addEventListener('activate', e => {
   e.waitUntil(
-    caches.keys()
-      .then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k))))
+    caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k))))
       .then(() => self.clients.claim())
   );
 });
-
-self.addEventListener('message', (e) => {
-  if (e.data === 'SKIP_WAITING') self.skipWaiting();
+self.addEventListener('fetch', e => {
+  const req = e.request;
+  if (req.method !== 'GET') return;
+  const isHTML = req.mode === 'navigate' || (req.headers.get('accept') || '').includes('text/html');
+  if (isHTML) {
+    // network-first for the app shell so updates show, fall back to cache offline
+    e.respondWith(
+      fetch(req).then(resp => { const c = resp.clone(); caches.open(CACHE).then(cc => cc.put('./index.html', c)); return resp; })
+        .catch(() => caches.match('./index.html'))
+    );
+  } else {
+    e.respondWith(caches.match(req).then(r => r || fetch(req).then(resp => {
+      const c = resp.clone(); caches.open(CACHE).then(cc => cc.put(req, c)); return resp;
+    }).catch(() => r)));
+  }
 });
-
-self.addEventListener('fetch', (e) => {
-  const url = new URL(e.request.url);
-  if (e.request.method !== 'GET' || url.origin !== location.origin) return;
-  e.respondWith(
-    caches.match(e.request, { ignoreSearch: true }).then(hit =>
-      hit ||
-      fetch(e.request).catch(() => {
-        if (e.request.mode === 'navigate') return caches.match('./index.html');
-      })
-    )
-  );
+// Focus/open the app when an alarm notification is tapped
+self.addEventListener('notificationclick', e => {
+  e.notification.close();
+  e.waitUntil(self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(cs => {
+    for (const c of cs) { if ('focus' in c) return c.focus(); }
+    if (self.clients.openWindow) return self.clients.openWindow('./');
+  }));
 });
